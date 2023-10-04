@@ -154,6 +154,7 @@ static inline int readd(int *up){
         result = (result*10) + (c-'0');
         c = readc();
     }
+	if(negative) result = -result;
     *up = result;
     return result;
 }
