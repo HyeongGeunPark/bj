@@ -396,8 +396,57 @@ int mystrcmp(const void *a, const void *b){
 }
 
 /*----------------------------------------------------------------------------*/
+#define N_MAX 500000
 int main()
 {
+	// variables to use
+    char buf[21];
+    int n,m;
+	int len=0;
+	int i;
+
+	// data structures to use
+	hashtable_init(names);
+	char **found = (char**)malloc(sizeof(char *) * N_MAX);
+
+
+	//name input in hash (unheards)
+    readbuf_f();
+    readd(&n);
+	readd(&m);
+    for (i = 0; i < n; i++) {
+		reads(buf);
+		hashtable_add(&names, buf, 1);
+    }
+
+	//name read (unseen) and try to find it in the hashtable
+	for(i=0;i<m;i++){
+		reads(buf);
+		if(hashtable_find(&names, buf)>0){
+			found[len] = (char*)malloc(sizeof(char) * strlen(buf));
+			strcpy(found[len++],buf);
+		}
+	}
+
+	// sort the found names
+	qsort(found, len, sizeof(char*), mystrcmp);
+	
+	//print reseult
+	writed(len);
+	for(i=0;i<len;i++){
+		writes(found[i]);
+	}
+    writebuf_f();
+
+	// data structures delete
+	// hashtable free
+	hashtable_del_all(&names);
+	hashtable_free(&names);
+	// string array free
+	for(i=0;i<len;i++){
+		free(found[i]);
+	}
+	free(found);
 
     return 0;
 }

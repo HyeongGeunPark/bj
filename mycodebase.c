@@ -5,7 +5,7 @@
 /*----------------------------------------------------------------------------*/
 
 // buffered input output related things
-#define BUF_SIZE 10000   // size of input, output buffer for buffered IO functions
+#define BUF_SIZE 100000   // size of input, output buffer for buffered IO functions
 #define STDOUT_FD 1
 #define STDIN_FD 0
 
@@ -72,6 +72,9 @@ static inline void writed(int d){
         sign = 1;
         d = -d;
     }
+	else if(d==0){
+		*bp-- = '0';
+	}
     while(d>0){
         i=d%10;
         *bp-- = i + '0';
@@ -88,12 +91,10 @@ static inline void writed(int d){
 // read from stdin to BUF manually
 // this function should be called at the first
 static inline void readbuf_f(void){
-    char *p = BUF;
+    p = BUF;
     int r_return = read(STDIN_FD, BUF, BUF_SIZE);
-    if(r_return<=0){
-        p = pl = BUF;
-        *p = 0;
-        return;
+    if(r_return<0){
+		r_return = 0;
     }
     pl = BUF + r_return;
     *pl = 0;
@@ -116,11 +117,13 @@ static inline char readbuf_first(){
     return *p;
 }
 // flush the read buffer, find first character(ascii 33~)
+/*
 static inline void readbuf_flush(){
-    while(readbuf_first()<33){
+    while(readbuf_first()<33 && p<pl){
         readc();
     }
 }
+*/
 // same function with isalpha(char) from string.h
 static inline int isalp(char c){
     return ( c >= 'a' && c <= 'z') || ( c >= 'A' && c <= 'Z');
@@ -136,7 +139,7 @@ static inline int readd(int *up){
     int result = 0;
     char negative = 0;
     *up = 0;
-    readbuf_flush();
+    //readbuf_flush();
     while (1) {
         c = readc();
         if (isnum(c)) {
@@ -148,12 +151,17 @@ static inline int readd(int *up){
             break;
         }
     }
+	do{
+        result = (result*10) + (c-'0');
+	}while(isnum(c=readc()));
+	/*
     while(1){
         if (!isnum(c))
             break;
         result = (result*10) + (c-'0');
         c = readc();
     }
+	*/
 	if(negative) result = -result;
     *up = result;
     return result;
@@ -161,8 +169,9 @@ static inline int readd(int *up){
 // read a string, consisted only of alphabets, from buffered input
 static inline void reads(char *dest){
     char c;
-    readbuf_flush();
-    while(!isalp(c=readc()));
+    //readbuf_flush();
+    while(!isalp(c=readc())){
+	}
     do{
         *dest++ = c;
     }while(isalp(c=readc()));
@@ -193,7 +202,7 @@ static inline void reads(char *dest){
 // hashtable related things
 // hashtable with linked list(collision handle)
 #include<string.h>
-#define BUCKET_SIZE 100003
+#define BUCKET_SIZE 500009 // this thing should be preferably bigger than x1.3 of total data number
 #define HASH_VAL 29
 struct hashitem{
     char *key;
@@ -311,21 +320,84 @@ static inline void hashtable_free(struct hashtable *t){
 }
 
 /*----------------------------------------------------------------------------*/
-#define N_MAX 100
+
+// linked list related things
+// windows default stack size : 1MB
+// use dynamic allocation for big data structures
+
+//#include<stdlib.h>
+//#include<string.h>
+
+/*
+struct linkedlist{
+	int len;
+	struct llnode *next;
+};
+
+struct llnode{
+	char *data;
+	struct llnode *next;
+};
+
+#define ll_init(name) struct linkedlist (name) = {.len = 0, .next = NULL}
+
+// initialize a node, only for internal use
+static inline struct llnode *__llnode_init(char *data){
+	struct llnode *newnode = (struct llnode*)malloc(sizeof(struct llnode));
+	newnode->next = NULL;
+	newnode->data = (char*)malloc(sizeof(char)*(strlen(data)+1));
+	strcpy(newnode->data, data);
+	return newnode;
+}
+
+// add a node
+static inline void ll_add(struct linkedlist *head, char *data){
+	struct llnode *pos = head->next;
+	if(pos == NULL){
+		head->next = __llnode_init(data);
+		head->len++;
+	}
+	else{
+		while(pos->next!=NULL)
+			pos = pos->next;
+		pos->next = __llnode_init(data);
+		head->len++;
+	}
+}
+
+// return the length of the linked list
+static inline int ll_len(struct linkedlist *head){
+	return head->len;
+}
+
+// access all nodes
+#define ll_for_each(head, pos)\
+	struct llnode *(pos);\
+	for((pos) = (&head)->next; (pos)!=NULL; (pos)=(pos)->next)
+
+// delete all nodes
+static inline void ll_del_all(struct linkedlist *head){
+	struct llnode *pos = head->next;
+	struct llnode *next = NULL;
+	while(pos!=NULL){
+		next = pos->next;
+		free(pos);
+		pos = next;
+	}
+	head->len = 0;
+	head->next = NULL;
+}
+*/
+/*----------------------------------------------------------------------------*/
+
+// wrapper of strcmp for qsort
+int mystrcmp(const void *a, const void *b){
+	return strcmp(*(char**)a, *(char**)b);
+}
+
+/*----------------------------------------------------------------------------*/
 int main()
 {
-    int arr[N_MAX];
-    int n;
-
-
-    readbuf_f();
-    readd(&n);
-    for (int i = 0; i < n; i++) {
-        readd(&arr[i]);
-        writed(arr[i]);
-    }
-    writebuf_f();
-    
 
     return 0;
 }
