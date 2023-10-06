@@ -3,7 +3,7 @@ obj=$(patsubst %.c,%.o,$(src))
 detected_obj=$(wildcard *.o)
 out=$(patsubst %.c,%.out,$(src))
 detected_out=$(wildcard *.out)
-temp=$(wildcard *~) $(wildcard .*.un~) df
+temp=$(wildcard *~) $(wildcard .*.un~) $(wildcard df)
 debug=debug.out
 mainout=main.out
 
@@ -45,6 +45,9 @@ ifeq ($(OS),Windows_NT)
 else
 	./$(mainout)
 endif
+
+prime: prime.exe
+	./prime.exe
 
 clean:
 ifneq ($(detected_out),)

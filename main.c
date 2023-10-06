@@ -166,15 +166,15 @@ static inline int readd(int *up){
     *up = result;
     return result;
 }
-// read a string, consisted only of alphabets, from buffered input
+// read a string, consisted with characters, from buffered input
 static inline void reads(char *dest){
     char c;
     //readbuf_flush();
-    while(!isalp(c=readc())){
+    while(33>(c=readc())){
 	}
     do{
         *dest++ = c;
-    }while(isalp(c=readc()));
+    }while(32<(c=readc()));
     *dest=0;
 }
 
@@ -202,7 +202,7 @@ static inline void reads(char *dest){
 // hashtable related things
 // hashtable with linked list(collision handle)
 #include<string.h>
-#define BUCKET_SIZE 500009 // this thing should be preferably bigger than x1.3 of total data number
+#define BUCKET_SIZE 150001 // this thing should be preferably bigger than x1.3 of total data number
 #define HASH_VAL 29
 struct hashitem{
     char *key;
