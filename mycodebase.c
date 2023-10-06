@@ -166,15 +166,15 @@ static inline int readd(int *up){
     *up = result;
     return result;
 }
-// read a string, consisted only of alphabets, from buffered input
+// read a string, consisted with characters, from buffered input
 static inline void reads(char *dest){
     char c;
     //readbuf_flush();
-    while(!isalp(c=readc())){
+    while(33>(c=readc())){
 	}
     do{
         *dest++ = c;
-    }while(isalp(c=readc()));
+    }while(32<(c=readc()));
     *dest=0;
 }
 
@@ -202,11 +202,11 @@ static inline void reads(char *dest){
 // hashtable related things
 // hashtable with linked list(collision handle)
 #include<string.h>
-#define BUCKET_SIZE 500009 // this thing should be preferably bigger than x1.3 of total data number
+#define BUCKET_SIZE 150001 // this thing should be preferably bigger than x1.3 of total data number
 #define HASH_VAL 29
 struct hashitem{
     char *key;
-    int value;
+    char *value;
     struct hashitem *next;
 };
 
@@ -224,24 +224,26 @@ static inline int hash(char *s){
     int result = 0;
     while(*s != 0){
         result *= HASH_VAL;
-        result += ((*s++)-'A');
+        result += ((*s++)-32);
         result %= BUCKET_SIZE;
     }
     return result;
 }
 
 // initialize an item
-static inline struct hashitem *hashitem_init(char *key, int value){
+static inline struct hashitem *hashitem_init(char *key, char *value){
     struct hashitem *i = calloc(1, sizeof(struct hashitem));
     int len = strlen(key)+1;
     i->key = malloc(len+1);
     memcpy(i->key, key, len+1);
-    i->value = value;
+	len = strlen(value)+1;
+    i->value = malloc(len+1);
+	memcpy(i->value, value, len+1);
     i->next = NULL;
     return i;
 }
 // add an element
-static inline void hashtable_add(struct hashtable *t, char *key, int value){
+static inline void hashtable_add(struct hashtable *t, char *key, char *value){
     struct hashitem *n = hashitem_init(key, value);
     int i = hash(key);
     if(t->items[i] == NULL){    // bucket is empty
@@ -249,8 +251,9 @@ static inline void hashtable_add(struct hashtable *t, char *key, int value){
         t->count++;
     }
     else{ // collision control
-        struct hashitem *temp = t->items[i];        while(temp->next != NULL){
-            if(strcmp(key, temp->key)==0) return;   // input try with same key
+        struct hashitem *temp = t->items[i];
+		while(temp->next != NULL){
+            if(strcmp(key, temp->key)==0) return;   // ignore input with same key
             temp = temp->next;
         }
         temp->next = n;
@@ -269,12 +272,14 @@ static inline void hashtable_del(struct hashtable *t, char *key){
                 // element in first
                 t->items[i] = temp->next;
                 free(temp->key);
+				free(temp->value);
                 free(temp);
                 t->count--;
             }
             else{
                 prev->next = temp->next;
                 free(temp->key);
+				free(temp->value);
                 free(temp);
                 t->count--;
             }
@@ -287,7 +292,7 @@ static inline void hashtable_del(struct hashtable *t, char *key){
     }
 }
 // find an element with key and return its value
-static inline int hashtable_find(struct hashtable *t, char *key){
+static inline char *hashtable_find(struct hashtable *t, char *key){
     int i = hash(key);
     struct hashitem *temp = t->items[i];
     while(temp != NULL){
@@ -297,7 +302,7 @@ static inline int hashtable_find(struct hashtable *t, char *key){
         temp = temp->next;
     }
     // not found
-    return -1;
+    return NULL;
 }
 // delete all elements in the hashtable
 static inline void hashtable_del_all(struct hashtable *t){
@@ -308,6 +313,7 @@ static inline void hashtable_del_all(struct hashtable *t){
         while(temp!=NULL){
             struct hashitem *next = temp->next;
             free(temp->key);
+			free(temp->value);
             free(temp);
             temp = next;
         }
