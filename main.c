@@ -410,37 +410,7 @@ static inline int mycmp(const void *a, const void *b){
 
 int main()
 {
-	// variables to use
-	int n, m;
-	int i;
-	char *found;
-	char buf[2][21];
 
-	// data structures to use
-	hashtable_init(h);
-
-	// input
-	readbuf_f();
-	readd(&n);
-	readd(&m);
-	for(i=0;i<n;i++){
-		reads(buf[0]);	// key
-		reads(buf[1]);	// value
-		hashtable_add(&h,buf[0],buf[1]);
-	}
-
-	// hashtable search and print
-	for(i=0;i<m;i++){
-		reads(buf[0]);
-		found = hashtable_find(&h,buf[0]);
-		if(found!=NULL)
-			writes(found);
-	}
-	writebuf_f();
-
-	// free data structures
-	hashtable_del_all(&h);
-	hashtable_free(&h);
     return 0;
 }
 
