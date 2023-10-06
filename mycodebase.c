@@ -389,16 +389,21 @@ static inline void ll_del_all(struct linkedlist *head){
 }
 */
 /*----------------------------------------------------------------------------*/
-
+/*
 // wrapper of strcmp for qsort
 int mystrcmp(const void *a, const void *b){
 	return strcmp(*(char**)a, *(char**)b);
 }
 
+// int compare function for qsort (ascending)
+static inline int mycmp(const void *a, const void *b){
+	return (*(int*)a)-(*(int*)b);
+}
+*/
 /*----------------------------------------------------------------------------*/
+
 int main()
 {
-
     return 0;
 }
 

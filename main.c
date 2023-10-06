@@ -394,37 +394,16 @@ static inline void ll_del_all(struct linkedlist *head){
 int mystrcmp(const void *a, const void *b){
 	return strcmp(*(char**)a, *(char**)b);
 }
-*/
-/*----------------------------------------------------------------------------*/
+
+// int compare function for qsort (ascending)
 static inline int mycmp(const void *a, const void *b){
 	return (*(int*)a)-(*(int*)b);
 }
+*/
+/*----------------------------------------------------------------------------*/
 
 int main()
 {
-	int n;
-	int p[1000];
-
-	readbuf_f();
-	readd(&n);
-	int i;
-	for(i=0;i<n;i++){
-		readd(&p[i]);
-	}
-
-	//sort
-	qsort(p, n, sizeof(int), mycmp);
-
-	// calculate time sum
-	int time=0;
-	for(i=0;i<n;i++){
-		time += (n-i)*p[i];
-	}
-	writed(time);
-	writebuf_f();
-
-
-
     return 0;
 }
 
