@@ -3,7 +3,7 @@ obj=$(patsubst %.c,%.o,$(src))
 detected_obj=$(wildcard *.o)
 out=$(patsubst %.c,%.out,$(src))
 detected_out=$(wildcard *.out)
-temp=$(wildcard *~)
+temp=$(wildcard *~) $(wildcard .*.un~) df
 debug=debug.out
 mainout=main.out
 
@@ -47,5 +47,9 @@ else
 endif
 
 clean:
+ifneq ($(detected_out),)
 	$(RM) $(detected_out)
+endif
+ifneq ($(temp),)
 	$(RM) $(temp)
+endif
