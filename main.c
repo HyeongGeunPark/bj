@@ -389,15 +389,36 @@ static inline void ll_del_all(struct linkedlist *head){
 }
 */
 /*----------------------------------------------------------------------------*/
-
+/*
 // wrapper of strcmp for qsort
 int mystrcmp(const void *a, const void *b){
 	return strcmp(*(char**)a, *(char**)b);
 }
-
+*/
 /*----------------------------------------------------------------------------*/
 int main()
 {
+	int coins[10];
+	int n;
+	int value;
+
+	readbuf_f();
+	readd(&n);
+	readd(&value);
+	int i;
+	for(i=n-1;i>=0;i--){
+		readd(&coins[i]);
+	}
+
+	int count=0;
+	for(i=0;i<n;i++){
+		count += value/coins[i];
+		value %= coins[i];
+	}
+
+	writed(count);
+	writebuf_f();
+
 
     return 0;
 }
