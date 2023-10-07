@@ -16,8 +16,6 @@ debug:=debug.exe
 mainout:=main.exe
 endif
 
-
-
 all: $(mainout)
 
 %.out:%.c

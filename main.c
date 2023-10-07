@@ -2,6 +2,31 @@
 #include <math.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+
+/*----------------------------------------------------------------------------*/
+
+// variadic function support macros
+// do not accept 0-adic function
+// usage:
+//	1. define a macro to use
+//		#define myfunc(...) vrg(function_name, __VA__ARGS__)
+//	2. defint macros corresponding each variable number
+//		#define function_name1(a) <corresponding action 1>
+//		#define function_name2(a,b) <corresponding action 2>
+//		...
+//	3. call the variadic function
+//		myfunc(a); -> corresponding action 1
+//		myfunc(a,b); -> corresponding action 2
+
+// count the number of arguments
+// i.e., vrg_argn(1,2) -> vrg_cnt(1,2,6,5,4,3,2,1,0) -> vrg3 = 6, vrg4 = 5, ..., vrgN = 2
+#define vrg_cnt(vrg1, vrg2, vrg3, vrg4, vrg5, vrg6, vrgN, ...) vrgN
+#define vrg_argn(...) vrg_cnt(__VA_ARGS__, 6, 5, 4, 3, 2, 1, 0)
+#define vrg_cat0(x,y) x##y
+#define vrg_cat(x, y) vrg_cat0(x,y)
+#define vrg(vrg_f, ...) vrg_cat(vrg_f, vrg_argn(__VA_ARGS__))(__VA_ARGS__)
+
 /*----------------------------------------------------------------------------*/
 
 // buffered input output related things
@@ -39,6 +64,7 @@ static inline void writebuf_f(){
     write(STDOUT_FD, WBUF, (wp-WBUF));
     wp = WBUF;
 }
+
 // writebuf: if WBUF is full, dump all WBUF to stdout
 // only for internal use, do not use it directly
 static inline void __writebuf(){
@@ -46,24 +72,35 @@ static inline void __writebuf(){
         writebuf_f();
     }
 }
+
 // write a character
 static inline void writec(char c){
     __writebuf();
     *wp++ = c;
 }
-// write a \0 padded string
-// automatically adds '\n' to the end
+
+// write from \0 padded string to write buffer
+// variadic function: second argument can be used to specify ending character
+//						default value is '\n'
 // do not check string size, so be careful with segfault
-static inline void writes(char *c){
-    while(*c != 0 ){
-        writec(*c++);
+#define writes(...) vrg(writes_, __VA_ARGS__)
+#define writes_1(cp) __writes(cp, '\n')
+#define writes_2(cp, end) __writes(cp, end)
+static inline void __writes(char *cp, char end){
+    while(*cp != 0 ){
+        writec(*cp++);
     }
-    writec('\n');
+    writec(end);
 }
+
 // convert an unsigned decimal to character string and write it
-// automatically adds '\n' to the end
+// variadic function: second argument can be used to specify ending character
+//						default value is '\n'
+#define writed(...) vrg(writed_, __VA_ARGS__)
+#define writed_1(d) __writed(d, '\n')
+#define writed_2(d, end) __writed(d, end)
 #define WUD_SIZE 30
-static inline void writed(int d){
+static inline void __writed(int d, char end){
     int i;
     char sign = 0;
     char buf[WUD_SIZE];
@@ -86,8 +123,9 @@ static inline void writed(int d){
     while(bp < (buf + WUD_SIZE - 1)){
         writec(*(++bp));
     }
-    writec('\n');
+    writec(end);
 }
+
 // read from stdin to BUF manually
 // this function should be called at the first
 static inline void readbuf_f(void){
@@ -99,6 +137,7 @@ static inline void readbuf_f(void){
     pl = BUF + r_return;
     *pl = 0;
 }
+
 // check the BUF is already all used and if so,
 // read available amount of characters from stdin to BUF
 // only for internal use
@@ -107,23 +146,18 @@ static inline void __readbuf(void){
         readbuf_f();
     }
 }
+
 // read a character from buffered input
 static inline char readc(void){
     __readbuf();
     return *p++;
 }
+
 // return the first character in input buffer
 static inline char readbuf_first(){
     return *p;
 }
-// flush the read buffer, find first character(ascii 33~)
-/*
-static inline void readbuf_flush(){
-    while(readbuf_first()<33 && p<pl){
-        readc();
-    }
-}
-*/
+
 // same function with isalpha(char) from string.h
 static inline int isalp(char c){
     return ( c >= 'a' && c <= 'z') || ( c >= 'A' && c <= 'Z');
@@ -133,13 +167,13 @@ static inline int isalp(char c){
 static inline int isnum(char c){
     return (c >= '0' && c <= '9');
 }
-// read an unsiged integer from buffered input
+
+// read an integer from buffered input
 static inline int readd(int *up){
     char c;
     int result = 0;
     char negative = 0;
     *up = 0;
-    //readbuf_flush();
     while (1) {
         c = readc();
         if (isnum(c)) {
@@ -154,19 +188,13 @@ static inline int readd(int *up){
 	do{
         result = (result*10) + (c-'0');
 	}while(isnum(c=readc()));
-	/*
-    while(1){
-        if (!isnum(c))
-            break;
-        result = (result*10) + (c-'0');
-        c = readc();
-    }
-	*/
 	if(negative) result = -result;
     *up = result;
     return result;
 }
-// read a string, consisted with characters, from buffered input
+
+// read a string, consisted with non-control characters(>32), from buffered input
+// make null-padded string
 static inline void reads(char *dest){
     char c;
     //readbuf_flush();
@@ -179,8 +207,8 @@ static inline void reads(char *dest){
 }
 
 /*----------------------------------------------------------------------------*/
-/*
 // bitmap related things
+//#include<stdlib.h>
 
 // do not try to access the bitmap by its name directly
 #define bit_to_long(bit) (((bit)>>6) + 1)  // 2^6 = 64, long is 64bits
@@ -193,10 +221,33 @@ static inline void reads(char *dest){
 #define bmap_reset(name, bit) name[bit_to_index(bit)] &= ~(((long)1)<<(bit_to_offset(bit)))
 #define bmap_toggle(name, bit) name[bit_to_index(bit)] ^= (((long)1)<<(bit_to_offset(bit)))
 #define bmap_get(name, bit) ((name[bit_to_index(bit)]>>(bit_to_offset(bit))) & ((long)1))
-#define bmap_set_all_long(name, bit) name[bit_to_index(bit)] |= 0xffffffff
-#define bmap_reset_all_long(name, bit) name[bit_to_index(bit)] &= 0
+#define bmap_set_long(name, bit) name[bit_to_index(bit)] |= (long)0xffffffff
+#define bmap_reset_long(name, bit) name[bit_to_index(bit)] &= 0
+#define bmap_set_all(name, bit) memset(name, 0, sizeof(long)*bit_to_long(bit))
+#define bmap_reset_all(name, bit) memset(name, (char)0xFF, sizeof(long)*bit_to_long(bit))
 
-*/
+// 2D bitmap
+
+struct bmap2_size{
+	int m;
+	int len;
+};
+
+const static struct bmap2_size bmap2_size_zero = {.m=0, .len=0};
+
+#define __bmap2_size_init(name, a, b) struct bmap2_size name_size = {.m = (b), .len=(a)*(b)}
+#define bmap2_init(name, n, m) __bmap2_size_init(name,n,m);bmap_init(name, name_size.len)
+#define bmap2_init_dynamic(name, n, m) __bmap2_size_init(name,n,m);bmap_init_dynamic(name, name_size.len)
+#define bmap2_free(name) free(name);name_size = bmap2_size_zero
+#define bmap2_index_to_bit(name,i,j) ((i)*(name_size.m)+(j))
+#define bmap2_set(name, i, j) bmap_set(name, bmap2_index_to_bit(name,i,j))
+#define bmap2_reset(name, i, j) bmap_reset(name, bmap2_index_to_bit(name,i,j))
+#define bmap2_toggle(name, i, j) bmap_toggle(name, bmap2_index_to_bit(name,i,j))
+#define bmap2_get(name, i, j) bmap_get(name, bmap2_index_to_bit(name,i,j))
+#define bmap2_set_all(name) memset(name, (char)0xFF, ((name_size.len>>3)+1))
+#define bmap2_reset_all(name) memset(name, 0, ((name_size.len>>3)+1))
+#define bmap2_toggle_all(name) for(int i=0;i<(bit_to_long(name_size.len));i++) name[i]^=(long)0xffffffff
+
 /*----------------------------------------------------------------------------*/
 
 // hashtable related things
@@ -417,28 +468,6 @@ static inline int mycmp(const void *a, const void *b){
 
 int main()
 {
-	int n;
-	int stair[300];
-	readbuf_f();
-	readd(&n);
-	int i;
-	for(i=0;i<n;i++){
-		readd(&stair[i]);
-	}
-
-	// d p
-	int score[300] = {0};
-	// base cases
-	score[0]=stair[0];
-	score[1]=stair[0]+stair[1];
-	score[2]=stair[2] + max(stair[0], stair[1]);
-	for(i=3;i<n;i++){
-		score[i] = stair[i] + max(score[i-3]+stair[i-1], score[i-2]);
-	}
-	// print
-	writed(score[n-1]);
-	writebuf_f();
-
-    return 0;
+	return 0;
 }
 
