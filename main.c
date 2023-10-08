@@ -242,7 +242,7 @@ static inline void reads(char *dest){
 #define bmap_set(name, bit) name[bit_to_index(bit)] |= (((size_t)1)<<(bit_to_offset(bit)))
 #define bmap_reset(name, bit) name[bit_to_index(bit)] &= ~(((size_t)1)<<(bit_to_offset(bit)))
 #define bmap_toggle(name, bit) name[bit_to_index(bit)] ^= (((size_t)1)<<(bit_to_offset(bit)))
-#define bmap_get(name, bit) ((name[bit_to_index(bit)]>>((size_t)bit_to_offset(bit))) & ((size_t)1))
+#define bmap_get(name, bit) ((int)((name[bit_to_index(bit)]>>((size_t)bit_to_offset(bit))) & ((size_t)1)))
 #define bmap_set_long(name, bit) name[bit_to_index(bit)] |= BIT_FULL
 #define bmap_reset_long(name, bit) name[bit_to_index(bit)] &= 0
 #define bmap_set_all(name, bit) memset(name, 0, sizeof(size_t)*bit_to_long(bit))
@@ -650,12 +650,6 @@ int main()
 		bmap2_set(graph, temp2-1, temp1-1);
 
 	}
-	for(int i=0;i<n;i++){
-		for(int j=0;j<n;j++){
-			printf("%d ", bmap2_get(graph, i, j));
-		}
-		printf("\n");
-	}
 
 
 	// BFS
@@ -668,10 +662,6 @@ int main()
 		// get last entry
 		struct ilist *temp = list_last_entry(&q, typeof(*(temp)), list);
 		struct ilist *t;
-		list_for_each_entry(t, &q, list){
-			printf("%d->", t->data+1);
-		}
-		printf("\n");
 		list_del(&(temp->list));
 		for(i=0;i<n;i++){
 			if(bmap2_get(graph, temp->data, i) && !(bmap_get(found, i))){
