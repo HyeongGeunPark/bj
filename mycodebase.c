@@ -400,6 +400,113 @@ static inline void hashtable_free(struct hashtable *t){
     free(t->items);
 }
 
+// hashtable with integer value
+
+struct hashitem_i{
+    char *key;
+    int value;
+    struct hashitem_i *next;
+};
+
+struct hashtable_i{
+    struct hashitem_i **items;
+    int size;
+    int count;
+};
+
+#define hashtable_init_i(name) struct hashtable_i name =\
+{.items=calloc(BUCKET_SIZE, sizeof(struct hashitem_i*)), .size=BUCKET_SIZE, .count=0}
+
+// initialize an item
+static inline struct hashitem_i *hashitem_init_i(char *key, int value){
+    struct hashitem_i *i = calloc(1, sizeof(struct hashitem_i));
+    int len = strlen(key)+1;
+    i->key = malloc(len+1);
+    memcpy(i->key, key, len+1);
+	i->value = value;
+    i->next = NULL;
+    return i;
+}
+// add an element
+static inline void hashtable_add_i(struct hashtable_i *t, char *key, int value){
+    struct hashitem_i *n = hashitem_init_i(key, value);
+    int i = hash(key);
+    if(t->items[i] == NULL){    // bucket is empty
+        t->items[i] = n;
+        t->count++;
+    }
+    else{ // collision control
+        struct hashitem_i *temp = t->items[i];
+		while(temp->next != NULL){
+            if(strcmp(key, temp->key)==0) return;   // ignore input with same key
+            temp = temp->next;
+        }
+        temp->next = n;
+        t->count++;
+    }
+}
+// delete an element
+static inline void hashtable_del_i(struct hashtable_i *t, char *key){
+    int i = hash(key);
+    
+    struct hashitem_i *temp = t->items[i];
+    struct hashitem_i *prev = NULL;
+    while(temp != NULL){
+        if(strcmp(key, temp->key)==0){   // key found
+            if(prev == NULL){
+                // element in first
+                t->items[i] = temp->next;
+                free(temp->key);
+                free(temp);
+                t->count--;
+            }
+            else{
+                prev->next = temp->next;
+                free(temp->key);
+                free(temp);
+                t->count--;
+            }
+            return;
+        }
+        else{
+            prev = temp;
+            temp = temp->next;
+        }
+    }
+}
+// find an element with key and return its value
+static inline int *hashtable_find_i(struct hashtable_i *t, char *key){
+    int i = hash(key);
+    struct hashitem_i *temp = t->items[i];
+    while(temp != NULL){
+        if(strcmp(key, temp->key)==0){  // key found
+            return &(temp->value);
+        }
+        temp = temp->next;
+    }
+    // not found
+    return NULL;
+}
+// delete all elements in the hashtable
+static inline void hashtable_del_all_i(struct hashtable_i *t){
+    int i;
+    for(i=0;i<t->size;i++){
+        struct hashitem_i *temp = t->items[i];
+        t->items[i] = NULL;
+        while(temp!=NULL){
+            struct hashitem_i *next = temp->next;
+            free(temp->key);
+            free(temp);
+            temp = next;
+        }
+    }
+    t->count = 0;
+}
+// delete hashtable
+static inline void hashtable_free_i(struct hashtable_i *t){
+    free(t->items);
+}
+
 /*----------------------------------------------------------------------------*/
 
 // generic circular double linked list
