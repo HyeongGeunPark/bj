@@ -1,32 +1,36 @@
 #define N_MAX 50000
 #include<stdio.h>
+#include<math.h>
 
 #define min(a,b) (((a)>(b))?(b):(a))
-
-int arr[N_MAX+1] = {0, 1, };
-
-void solve(int n){
-	int temp;
-	arr[n] = 5;
-	for(int i=1; (temp = n-i*i)>=0; i++){
-		if(temp==0){
-			arr[n] = 1;
-			return;
-		}
-		if(arr[temp] == 0){
-			solve(temp);
-		}
-		arr[n] = min(arr[n], arr[temp]+1);
-	}
-}
 
 int main(void){
 	int n;
 	scanf("%d", &n);
-	solve(n);
+	int s = (int)sqrt(n);
+	int ans;
 
-	printf("%d", arr[n]);
-
+	int i,j,k;
+	for(i=0;i<=s;i++){
+		for(j=i;j<=s;j++){
+			for(k=j;k<=s;k++){
+				if(n != ( (i*i) + (j*j) + (k*k)))
+					continue;
+				if(i==0 && j==0){
+					ans = 1;
+					goto print;
+				}
+				if(i==0){
+					ans = 2;
+					goto print;
+				}
+				ans = 3;
+				goto print;
+			}
+		}
+	}
+	ans=4;
+print: printf("%d", ans);
 	return 0;
 }
 
