@@ -261,6 +261,7 @@ const static struct bmap2_size bmap2_size_zero = {.m=0, .len=0};
 #define __bmap2_size_init(name, a, b) struct bmap2_size name_size = {.m = (b), .len=(a)*(b)}
 //#define bmap2_init(name, n, m) __bmap2_size_init(name,n,m);bmap_init(name, name_size.len)
 #define bmap2_init_dynamic(name, n, m) __bmap2_size_init(name,n,m);bmap_init_dynamic(name, name_size.len)
+#define bmap2_resize(name,a,b) name_size.m=(b);name_size.len=((a)*(b));free(name);name=calloc(bit_to_long(name_size.len))
 #define bmap2_free(name) free(name);name_size = bmap2_size_zero
 #define bmap2_index_to_bit(name,i,j) ((i)*(name_size.m)+(j))
 #define bmap2_set(name, i, j) bmap_set(name, bmap2_index_to_bit(name,i,j))
@@ -710,6 +711,20 @@ struct list_head *ilist_create(int data){
 	n->data = data;
 	return &(n->list);
 }
+
+// int 2 list (coordinate)
+
+struct i2list{
+	int x;
+	int y;
+	struct list_head list;
+};
+
+struct list_head *i2list_create(int x, int y){
+	struct i2list *n = malloc(sizeof(struct i2list));
+	n->data = data;
+	return &(n->list);
+};
 
 /*----------------------------------------------------------------------------*/
 /*
