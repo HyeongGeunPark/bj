@@ -245,8 +245,8 @@ static inline void reads(char *dest){
 #define bmap_get(name, bit) ((int)((name[bit_to_index(bit)]>>((size_t)bit_to_offset(bit))) & ((size_t)1)))
 #define bmap_set_long(name, bit) name[bit_to_index(bit)] |= BIT_FULL
 #define bmap_reset_long(name, bit) name[bit_to_index(bit)] &= 0
-#define bmap_set_all(name, bit) memset(name, 0, sizeof(size_t)*bit_to_long(bit))
-#define bmap_reset_all(name, bit) memset(name, (char)0xFF, sizeof(size_t)*bit_to_long(bit))
+#define bmap_reset_all(name, bit) memset(name, 0, sizeof(size_t)*bit_to_long(bit))
+#define bmap_set_all(name, bit) memset(name, (char)0xFF, sizeof(size_t)*bit_to_long(bit))
 #define bmap_toggle_all(name, bit) for(int i=0;i<(bit_to_long(bit);i++) name[i]^=BIT_FULL
 
 // 2D bitmap
@@ -754,68 +754,70 @@ static inline int mycmp(const void *a, const void *b){
 
 int main()
 {
+	int n, m;
+	int v;
 	readbuf_f();
-	int t;
-	int n, m, k;
+	readd(&n);
+	readd(&m);
+	readd(&v);
+	bmap2_init_dynamic(graph, n+1, n+1);
+	bmap_init_dynamic(visited, n+1);
+	LIST_HEAD(l);
+	INIT_LIST_HEAD(&l);
 
-	int arr[50][50] = {0,};
-	LIST_HEAD(coord);
-	INIT_LIST_HEAD(&coord);
+	for(int i=0;i<m;i++){
+		int t1;
+		int t2;
+		readd(&t1);
+		readd(&t2);
+		// bidirectional
+		bmap2_set(graph, t1, t2);
+		bmap2_set(graph, t2, t1);
+	}
 
-	readd(&t);
-	int i;
-	for(i=0;i<t;i++){
-		memset(arr, 0, sizeof(int)*50*50);
-		readd(&m);
-		readd(&n);
-		readd(&k);
-		int j;
-		for(j=0;j<k;j++){
-			int t1, t2;
-			readd(&t1);
-			readd(&t2);
-			arr[t1][t2] = -1;
-		}
-		int count=0;
-
-		for(int i=0;i<m;i++){
-			for(int j=0;j<n;j++){
-				if(arr[i][j]==-1){
-					list_add(i2list_create(i,j), &coord);
-					arr[i][j] = (++count);
-				}
-				while(!list_empty(&coord)){
-					struct i2list *p = list_first_entry(&coord, struct i2list, list);
-					if((p->x-1) >= 0 && arr[down(p->x)][p->y] == -1){
-						arr[down(p->x)][p->y] = arr[p->x][p->y];
-						list_add(i2list_create(down(p->x), p->y), &coord);
-					}
-					if((p->x+1) < m && arr[up(p->x,m)][p->y] == -1){
-						arr[up(p->x,m)][p->y] = arr[p->x][p->y];
-						list_add(i2list_create(up(p->x,m), p->y), &coord);
-					}
-					if((p->y-1) >= 0 && arr[p->x][down(p->y)] == -1){
-						arr[p->x][down(p->y)] = arr[p->x][p->y];
-						list_add(i2list_create(p->x, down(p->y)), &coord);
-					}
-					if((p->y+1) < n && arr[p->x][up(p->y,n)] == -1){
-						arr[p->x][up(p->y,n)] = arr[p->x][p->y];
-						list_add(i2list_create(p->x, up(p->y,n)), &coord);
-					}
-					list_del(&(p->list));
-					free(p);
+	// dfs -> stack
+	list_add(ilist_create(v), &l);
+	while(!list_empty(&l)){
+		struct ilist *p = list_first_entry(&l, struct ilist, list);
+		if(!bmap_get(visited, p->data)){
+			writed(p->data, ' ');
+			bmap_set(visited, p->data);
+			for(int i=n;i>0;i--){
+				if(bmap2_get(graph, p->data, i) && !bmap_get(visited, i)){
+					list_add(ilist_create(i), &l);
 				}
 			}
 		}
-/*		for(int i=0;i<m;i++){*/
-/*			for(int j=0;j<n;j++){*/
-/*				writed(arr[i][j], ' ');*/
-/*			}*/
-/*			writec('\n');*/
-/*		}*/
-		writed(count);
+		list_del(&(p->list));
+		free(p);
 	}
-	writebuf_f();	
+
+
+	writec('\n');
+
+	// bfs -> queue
+	bmap_reset_all(visited, n);
+	list_add(ilist_create(v), &l);
+	while(!list_empty(&l)){
+		struct ilist *p = list_last_entry(&l, struct ilist, list);
+		if(!bmap_get(visited, p->data)){
+			writed(p->data, ' ');
+			bmap_set(visited, p->data);
+			for(int i=1;i<=n;i++){
+				if(bmap2_get(graph, p->data, i) && !bmap_get(visited, i)){
+					list_add(ilist_create(i), &l);
+				}
+			}
+		}
+		list_del(&(p->list));
+		free(p);
+	}
+	writec('\n');
+
+	writebuf_f();
+
+	bmap2_free(graph);
+	bmap_free(visited);
 	return 0;
 }
 
