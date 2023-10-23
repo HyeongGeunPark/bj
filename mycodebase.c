@@ -858,20 +858,54 @@ static inline int mycmp(const void *a, const void *b){
 /*----------------------------------------------------------------------------*/
 int main()
 {
-    int n;
+    int n, m;
     readbuf_f();
     readd(&n);
-    max_heap_init(h);
+    readd(&m);
+    bmap_init_dynamic(visited, n+1);
+    bmap2_init_dynamic(graph, n+1, n+1);
+    LIST_HEAD(s);
 
-    for(int i=0;i<n;i++){
-        int temp;
-        readd(&temp);
-        if(temp>0)
-            max_heap_add(&h, temp);
-        else
-            writed(max_heap_del(&h));
+    for(int i=0;i<m;i++){
+        int x, y;
+        readd(&x);
+        readd(&y);
+        bmap2_set(graph,x,y);
+        bmap2_set(graph,y,x);
     }
+
+    // dfs
+    int c;
+    int count = 0;
+    struct ilist *p;
+    while(1){
+        if(list_empty(&s)){
+            for(c=1;c<=n;c++){
+                if(!bmap_get(visited, c)) break;
+            }
+            if(c==n+1) break;
+            count++;
+            bmap_set(visited, c);
+        }
+        else{
+            p = list_first_entry(&s,struct ilist, list);
+            c = p->data;
+            list_del(&(p->list));
+            free(p);
+        }
+        for(int i=1;i<=n;i++){
+            if(bmap2_get(graph, c, i) && !(bmap_get(visited, i))){
+                bmap_set(visited, i);
+                list_add(ilist_create(i), &s);
+            }
+        }
+    }
+
+    writed(count);
     writebuf_f();
+
+    bmap_free(visited);
+    bmap2_free(graph);
 
     return 0;
 }
