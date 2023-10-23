@@ -1,6 +1,6 @@
 // baekjoon gcc optimize options
-/*#pragma GCC optimize("O4,unroll-loops")*/
-/*#pragma GCC target("arch=haswell")*/
+//#pragma GCC optimize("O4,unroll-loops")
+//#pragma GCC target("arch=haswell")
 
 #include <stdio.h> 
 #include <math.h>
@@ -731,6 +731,109 @@ struct list_head *i2list_create(int x, int y){
 	return &(n->list);
 };
 
+
+/*----------------------------------------------------------------------------*/
+
+// min, max heap
+
+#define MM_HEAP_SIZE 100001
+
+struct mm_heap{
+    int *data;
+    int size;
+};
+
+#define mm_heap_init(name) struct mm_heap name={\
+                .data=malloc(sizeof(int)*MM_HEAP_SIZE),\
+                .size=0}
+#define max_heap_init(name) mm_heap_init(name)
+#define min_heap_init(name) mm_heap_init(name)
+
+#define mm_heap_free(name) free((name.data))
+#define max_heap_free(name) mm_heap_free(name)
+#define min_heap_free(name) mm_heap_free(name)
+
+/*  max_heap_add: add a number in the max heap
+    m_heap_add: add a number in the max heap
+*   h: address of a max heap
+*   data: an integer to add
+*/
+static inline void __mm_heap_add(struct mm_heap *h, int data, int minmax){
+    int c = ++(h->size);
+    int p = c/2;
+    while(p>0){
+        // min heap
+        if(minmax==0){
+            if(data >= h->data[p]) break;
+        }
+        // max heap
+        else if(minmax==1){
+            if(data <= h->data[p]) break;
+        }
+
+        h->data[c] = h->data[p];
+        
+        // update c and p
+        c = p;
+        p = c/2;
+    }
+    h->data[c] = data;
+}
+#define max_heap_add(h, data) __mm_heap_add(h, data, 1)
+#define min_heap_add(h, data) __mm_heap_add(h, data, 0)
+
+/*  max_heap_del: delete a number in the max heap and return it
+*   min_heap_del: delete a number in the min heap and return it
+*   h: address of a max heap
+*/
+static inline int __mm_heap_del(struct mm_heap *h, int minmax){
+    if(h->size == 0){
+        return 0;
+    }
+    int r = h->data[1];
+    int temp = h->data[(h->size)--];
+
+    int p = 1;
+    int c = 2;
+    while(c <= h->size){
+        if(c < h->size){
+            // max heap, select bigger child
+            if(minmax==1){
+                if(h->data[c] < h->data[c+1])
+                    c++;
+            }
+            // min heap, select smaller child
+            else if(minmax==0){
+                if(h->data[c] > h->data[c+1]){
+                    c++;
+                }
+            }
+        }
+
+        // exit condition, parent(temp) is smaller/bigger than child
+        if(minmax==1){
+            if(temp >= h->data[c]){
+                break;
+            }
+        }
+        else if(minmax==0){
+            if(temp <= h->data[c]){
+                break;
+            }
+        }
+
+        // non-exit
+        h->data[p] = h->data[c];
+        p = c;
+        c *= 2;
+    }
+
+    h->data[p] = temp;
+    return r;
+}
+#define max_heap_del(h) __mm_heap_del(h, 1)
+#define min_heap_del(h) __mm_heap_del(h, 0)
+
 /*----------------------------------------------------------------------------*/
 /*
 // wrapper of strcmp for qsort
@@ -755,42 +858,21 @@ static inline int mycmp(const void *a, const void *b){
 /*----------------------------------------------------------------------------*/
 int main()
 {
-    // input
-    readbuf_f();
-    int *tree;
     int n;
-    int m;
-    int max_height = 0;
+    readbuf_f();
     readd(&n);
-    readd(&m);
-    tree = malloc(sizeof(int)*n);
-    for(int i=0;i<n;i++){
-        readd(&tree[i]);
-        max_height = max(max_height, tree[i]);
-    }
+    max_heap_init(h);
 
-    // binary search
-    int r = max_height+1;
-    int l = 0;
-    int mid;
-    while(l<r){
-        mid = (r+l)/2;
-        long long tree_l = 0;
-        for(int i=0;i<n;i++){
-            if(tree[i]>mid){
-                tree_l += tree[i] - mid;
-            }
-        }
-        if(tree_l < m){
-            r = mid;
-        }
-        else{
-            l = mid+1;
-        }
+    for(int i=0;i<n;i++){
+        int temp;
+        readd(&temp);
+        if(temp>0)
+            max_heap_add(&h, temp);
+        else
+            writed(max_heap_del(&h));
     }
-    writed(r-1);
     writebuf_f();
-    free(tree);
+
     return 0;
 }
 
