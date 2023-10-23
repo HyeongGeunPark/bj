@@ -1,4 +1,8 @@
-#include <stdio.h>
+// baekjoon gcc optimize options
+/*#pragma GCC optimize("O4,unroll-loops")*/
+/*#pragma GCC target("arch=haswell")*/
+
+#include <stdio.h> 
 #include <math.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -245,8 +249,8 @@ static inline void reads(char *dest){
 #define bmap_get(name, bit) ((int)((name[bit_to_index(bit)]>>((size_t)bit_to_offset(bit))) & ((size_t)1)))
 #define bmap_set_long(name, bit) name[bit_to_index(bit)] |= BIT_FULL
 #define bmap_reset_long(name, bit) name[bit_to_index(bit)] &= 0
-#define bmap_set_all(name, bit) memset(name, 0, sizeof(size_t)*bit_to_long(bit))
-#define bmap_reset_all(name, bit) memset(name, (char)0xFF, sizeof(size_t)*bit_to_long(bit))
+#define bmap_reset_all(name, bit) memset(name, 0, sizeof(size_t)*bit_to_long(bit))
+#define bmap_set_all(name, bit) memset(name, (char)0xFF, sizeof(size_t)*bit_to_long(bit))
 #define bmap_toggle_all(name, bit) for(int i=0;i<(bit_to_long(bit);i++) name[i]^=BIT_FULL
 
 // 2D bitmap
@@ -516,8 +520,8 @@ static inline void hashtable_free_i(struct hashtable_i *t){
 // then the structure can be used as a list node,
 // using list access functions below
 
-#define offsetof(type, member) ((char*) &( ((type*)0)->member ))
-#define container_of(ptr, type, member) (type*)( (char*)ptr - offsetof(type, member) )
+#define _offsetof(type, member) ((char*) &( ((type*)0)->member ))
+#define container_of(ptr, type, member) (type*)( (char*)ptr - _offsetof(type, member) )
 
 struct list_head{
 	struct list_head *prev, *next;
@@ -722,7 +726,8 @@ struct i2list{
 
 struct list_head *i2list_create(int x, int y){
 	struct i2list *n = malloc(sizeof(struct i2list));
-	n->data = data;
+	n->x = x;
+	n->y = y;
 	return &(n->list);
 };
 
@@ -745,61 +750,47 @@ static inline int mycmp(const void *a, const void *b){
 #define max(a,b) (((a)>(b))?(a):(b))
 #define min(a,b) (((a)<(b))?(a):(b))
 
+//#define down(a) ((a)==0?0:(a)-1)
+//#define up(a,n) ((a)==((n)-1)?(n)-1:(a)+1)
 /*----------------------------------------------------------------------------*/
-#define N_MAX 100
-
 int main()
 {
-	// variables to use
-	int n, m;
-	int i, j;
+    // input
+    readbuf_f();
+    int *tree;
+    int n;
+    int m;
+    int max_height = 0;
+    readd(&n);
+    readd(&m);
+    tree = malloc(sizeof(int)*n);
+    for(int i=0;i<n;i++){
+        readd(&tree[i]);
+        max_height = max(max_height, tree[i]);
+    }
 
-	// input n
-	readbuf_f();
-	readd(&n);
-	readd(&m);
-
-	// data structures to use
-	bmap2_init_dynamic(graph, n, n);
-	bmap_init_dynamic(found, n+1);
-
-	// graph input
-	for(i=0;i<m;i++){
-		int temp1, temp2;
-		readd(&temp1);
-		readd(&temp2);
-		bmap2_set(graph, temp1-1, temp2-1);
-		bmap2_set(graph, temp2-1, temp1-1);
-
-	}
-
-
-	// BFS
-	int current = 0;
-	int count = 0;
-	bmap_set(found, 0);
-	LIST_HEAD(q);
-	list_add(ilist_create(0), &q);
-	while(!list_empty(&q)){
-		// get last entry
-		struct ilist *temp = list_last_entry(&q, typeof(*(temp)), list);
-		struct ilist *t;
-		list_del(&(temp->list));
-		for(i=0;i<n;i++){
-			if(bmap2_get(graph, temp->data, i) && !(bmap_get(found, i))){
-				bmap_set(found, i);
-				count++;
-				list_add(ilist_create(i), &q);
-			}
-		}
-		free(temp);
-	}
-
-	printf("%d", count);
-
-	// data structure free
-	bmap2_free(graph);
-	bmap_free(found);
-	return 0;
+    // binary search
+    int r = max_height+1;
+    int l = 0;
+    int mid;
+    while(l<r){
+        mid = (r+l)/2;
+        long long tree_l = 0;
+        for(int i=0;i<n;i++){
+            if(tree[i]>mid){
+                tree_l += tree[i] - mid;
+            }
+        }
+        if(tree_l < m){
+            r = mid;
+        }
+        else{
+            l = mid+1;
+        }
+    }
+    writed(r-1);
+    writebuf_f();
+    free(tree);
+    return 0;
 }
 
