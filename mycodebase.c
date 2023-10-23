@@ -856,53 +856,75 @@ static inline int mycmp(const void *a, const void *b){
 //#define down(a) ((a)==0?0:(a)-1)
 //#define up(a,n) ((a)==((n)-1)?(n)-1:(a)+1)
 /*----------------------------------------------------------------------------*/
-#include <limits.h>
-struct point{
-    int val;
-    int idx;
-};
 
-int point_compare(const void *aa, const void *bb){
-    const struct point *a = (const struct point*)aa;
-    const struct point *b = (const struct point*)bb;
-    return (a->val)-(b->val);
-}
+#define WALL 'X'
+#define SPACE 'O'
+#define DY 'I'
+#define PERSON 'P'
 
-int main()
-{
-    int n;
+int main(void){
+
     readbuf_f();
+    int n,m;
     readd(&n);
+    readd(&m);
 
-    struct point *arr = malloc(sizeof(struct point)*n);
-    int *result = malloc(sizeof(int)*n);
+    int map[600][600];
+    int visited[600][600];
 
-    int i;
+    LIST_HEAD(s);
+
+    int i, j;
     for(i=0;i<n;i++){
-        readd(&arr[i].val);
-        arr[i].idx=i;
-    }
-
-    qsort(arr, n, sizeof(struct point), point_compare);
-
-    int cnt=0;
-    int prev = arr[0].val;
-    result[arr[0].idx] = cnt;
-    for(i=1;i<n;i++){
-        if(prev != arr[i].val){
-            prev = arr[i].val;
-            cnt++;
+        for(j=0;j<m;j++){
+            visited[i][j] = 0;
+            char c = readc();
+            map[i][j] = (int)c;
+            if(map[i][j] == DY){
+                list_add(i2list_create(i,j), &s);
+                visited[i][j]=1;
+            }
         }
-        result[arr[i].idx] = cnt;
+        readc();
     }
 
-    for(i=0;i<n;i++){
-        writed(result[i], ' ');
+    // dfs
+    int cnt=0;
+    int x, y;
+    while(!list_empty(&s)){
+        struct i2list *p = list_first_entry(&s, struct i2list, list);
+        x = p->x;
+        y = p->y;
+
+        if(map[x][y] == PERSON) cnt++;
+        if(x>0 && !visited[x-1][y] && map[x-1][y] != WALL){
+            list_add(i2list_create(x-1,y), &s);
+            visited[x-1][y]=1;
+        }
+        if(x+1<n && !visited[x+1][y] && map[x+1][y] != WALL){
+            list_add(i2list_create(x+1,y), &s);
+            visited[x+1][y]=1;
+        }
+        if(y>0 && !visited[x][y-1] && map[x][y-1] != WALL){
+            list_add(i2list_create(x, y-1), &s);
+            visited[x][y-1]=1;
+        }
+        if(y+1<m && !visited[x][y+1] && map[x][y+1] != WALL){
+            list_add(i2list_create(x, y+1), &s);
+            visited[x][y+1]=1;
+        }
+
+        list_del(&(p->list));
+        free(p);
+    }
+
+    if(cnt==0){
+        writes("TT");
+    }
+    else{
+        writed(cnt);
     }
     writebuf_f();
 
-    free(arr);
-    free(result);
     return 0;
 }
-
