@@ -1,5 +1,5 @@
 // baekjoon gcc optimize options
-//#pragma GCC optimize("O4,unroll-loops")
+//#pragma GCC optimize("Ofast")
 //#pragma GCC target("arch=haswell")
 
 #include <stdio.h> 
@@ -856,57 +856,53 @@ static inline int mycmp(const void *a, const void *b){
 //#define down(a) ((a)==0?0:(a)-1)
 //#define up(a,n) ((a)==((n)-1)?(n)-1:(a)+1)
 /*----------------------------------------------------------------------------*/
+#include <limits.h>
+struct point{
+    int val;
+    int idx;
+};
+
+int point_compare(const void *aa, const void *bb){
+    const struct point *a = (const struct point*)aa;
+    const struct point *b = (const struct point*)bb;
+    return (a->val)-(b->val);
+}
+
 int main()
 {
-    int n, m;
+    int n;
     readbuf_f();
     readd(&n);
-    readd(&m);
-    bmap_init_dynamic(visited, n+1);
-    bmap2_init_dynamic(graph, n+1, n+1);
-    LIST_HEAD(s);
 
-    for(int i=0;i<m;i++){
-        int x, y;
-        readd(&x);
-        readd(&y);
-        bmap2_set(graph,x,y);
-        bmap2_set(graph,y,x);
+    struct point *arr = malloc(sizeof(struct point)*n);
+    int *result = malloc(sizeof(int)*n);
+
+    int i;
+    for(i=0;i<n;i++){
+        readd(&arr[i].val);
+        arr[i].idx=i;
     }
 
-    // dfs
-    int c;
-    int count = 0;
-    struct ilist *p;
-    while(1){
-        if(list_empty(&s)){
-            for(c=1;c<=n;c++){
-                if(!bmap_get(visited, c)) break;
-            }
-            if(c==n+1) break;
-            count++;
-            bmap_set(visited, c);
+    qsort(arr, n, sizeof(struct point), point_compare);
+
+    int cnt=0;
+    int prev = arr[0].val;
+    result[arr[0].idx] = cnt;
+    for(i=1;i<n;i++){
+        if(prev != arr[i].val){
+            prev = arr[i].val;
+            cnt++;
         }
-        else{
-            p = list_first_entry(&s,struct ilist, list);
-            c = p->data;
-            list_del(&(p->list));
-            free(p);
-        }
-        for(int i=1;i<=n;i++){
-            if(bmap2_get(graph, c, i) && !(bmap_get(visited, i))){
-                bmap_set(visited, i);
-                list_add(ilist_create(i), &s);
-            }
-        }
+        result[arr[i].idx] = cnt;
     }
 
-    writed(count);
+    for(i=0;i<n;i++){
+        writed(result[i], ' ');
+    }
     writebuf_f();
 
-    bmap_free(visited);
-    bmap2_free(graph);
-
+    free(arr);
+    free(result);
     return 0;
 }
 
