@@ -1,5 +1,6 @@
 // baekjoon gcc optimize options
-#pragma GCC optimize("O3")
+//#pragma GCC optimize("O4,unroll-loops")
+//#pragma GCC target("arch=haswell")
 
 #include <stdio.h> 
 #include <math.h>
@@ -834,84 +835,6 @@ static inline int __mm_heap_del(struct mm_heap *h, int minmax){
 #define min_heap_del(h) __mm_heap_del(h, 0)
 
 /*----------------------------------------------------------------------------*/
-
-// resizable circular queue
-
-#define QUEUE_SIZE 10000
-
-struct queue{
-    int *data;
-    int size;
-    int f;
-    int r;
-};
-
-#define queue_init(name) struct queue name={\
-        .data=malloc(sizeof(int)*(QUEUE_SIZE+1)), .size=QUEUE_SIZE,\
-        .f=0, .r=0}
-
-#define queue_free(name) free(name.data)
-
-static inline int queue_is_empty(struct queue *q){
-    return (q->f==q->r);
-}
-
-static inline int queue_is_full(struct queue *q){
-    int n = (q->r-q->f);
-    return n==1 || n==-q->size;
-}
-
-static inline void queue_resize(struct queue *q){
-    if(q->f>q->r){
-        q->size += QUEUE_SIZE;
-        q->data = realloc(q->data, sizeof(int)*(q->size+1));
-        return;
-    }
-    else{
-        int *dest = malloc(sizeof(int)*(q->size+QUEUE_SIZE+1));
-        int to_end = (q->size+1)-(q->r);
-        memcpy(dest, q->data+q->r, sizeof(int)*to_end);
-        memcpy(dest + to_end, q->data, sizeof(int)*q->f);
-        free(q->data);
-        q->data = dest;
-        q->r = 0;
-        q->f = q->size;
-        q->size += QUEUE_SIZE;
-    }
-    return;
-}
-
-static inline void queue_add_last(struct queue *q, int n){
-    if(queue_is_full(q)){
-        queue_resize(q);
-    }
-
-    q->data[q->f] = n;
-
-    if(q->f==q->size){
-        q->f=0;
-    }
-    else{
-        q->f++;
-    }
-}
-
-static inline int queue_del(struct queue *q){
-    if(queue_is_empty(q)){
-        printf("queue error: queue is empty\n");
-        return 0;
-    }
-    int r = q->data[q->r];
-    if(q->r==q->size){
-        q->r=0;
-    }
-    else{
-        q->r++;
-    }
-    return r;
-}
-
-/*----------------------------------------------------------------------------*/
 /*
 // wrapper of strcmp for qsort
 int mystrcmp(const void *a, const void *b){
@@ -933,108 +856,57 @@ static inline int mycmp(const void *a, const void *b){
 //#define down(a) ((a)==0?0:(a)-1)
 //#define up(a,n) ((a)==((n)-1)?(n)-1:(a)+1)
 /*----------------------------------------------------------------------------*/
-
-// 2 dimensional integer array
-
-struct int2{
-    int n;
-    int m;
-    int *data;
-};
-
-#define int2_init(name, nn, mm) struct int2 name={\
-        .n=(nn), .m=(mm),\
-        .data=calloc((nn)*(mm), sizeof(int))}
-
-#define int2_free(name) free(name.data);
-
-#define __int2_index(s, x, y) ((x)*(s->m) + (y))
-
-static inline void int2_set(struct int2 *s, int data, int x, int y){
-    if(!(x<s->n && y<s->m)){
-        printf("array error: invalid index\n");
-        return;
-    }
-    s->data[__int2_index(s,x,y)] = data;
-}
-
-static inline int int2_get(struct int2 *s, int x, int y){
-    if(!(x<s->n && y<s->m)){
-        printf("array error: invalid index\n");
-        return 0;
-    }
-    return s->data[__int2_index(s,x,y)];
-}
-
-static inline int int2_get_col_sum(struct int2 *s, int col){
-    if(col>=s->m){
-        printf("array error: invalid index\n");
-        return 0;
-    }
-    int sum=0;
-    int stop = (s->m)*(s->n);
-    for(int i=col;i<stop;i+=(s->m)){
-        sum += s->data[i];
-    }
-    return sum;
-}
-
-static inline int int2_get_row_sum(struct int2 *s, int row){
-    if(row>=s->n){
-        printf("array error: invalid index\n");
-        return 0;
-    }
-    int sum=0;
-    int stop = (row+1)*(s->m);
-    for(int i=(row)*(s->m);i<stop;i++){
-        sum += s->data[i];
-    }
-    return sum;
-}
-
-/*----------------------------------------------------------------------------*/
-
-struct t{
-    int s;
-    int e;
-};
-
-static inline int compare(const void *a, const void *b){
-    const struct t *aa = (const struct t*)a;
-    const struct t *bb = (const struct t*)b;
-    if(aa->e == bb->e){
-        return aa->s - bb->s;
-    }
-    return aa->e - bb->e;
-}
-
-
-int main(void){
-    
+int main()
+{
+    int n, m;
     readbuf_f();
-    int n;
     readd(&n);
-    struct t *time = malloc(sizeof(struct t) * n);
+    readd(&m);
+    bmap_init_dynamic(visited, n+1);
+    bmap2_init_dynamic(graph, n+1, n+1);
+    LIST_HEAD(s);
 
-    for(int i=0;i<n;i++){
-        readd(&(time[i].s));
-        readd(&(time[i].e));
+    for(int i=0;i<m;i++){
+        int x, y;
+        readd(&x);
+        readd(&y);
+        bmap2_set(graph,x,y);
+        bmap2_set(graph,y,x);
     }
 
-    // sort
-    qsort(time, n, sizeof(struct t), compare);
-
-    // select time
-    int cnt = 1;
-    int end = time[0].e;
-    for(int i=1;i<n;i++){
-        if(end <= time[i].s){
-            cnt++;
-            end = time[i].e;
+    // dfs
+    int c;
+    int count = 0;
+    struct ilist *p;
+    while(1){
+        if(list_empty(&s)){
+            for(c=1;c<=n;c++){
+                if(!bmap_get(visited, c)) break;
+            }
+            if(c==n+1) break;
+            count++;
+            bmap_set(visited, c);
+        }
+        else{
+            p = list_first_entry(&s,struct ilist, list);
+            c = p->data;
+            list_del(&(p->list));
+            free(p);
+        }
+        for(int i=1;i<=n;i++){
+            if(bmap2_get(graph, c, i) && !(bmap_get(visited, i))){
+                bmap_set(visited, i);
+                list_add(ilist_create(i), &s);
+            }
         }
     }
 
-    printf("%d\n", cnt);
-    
+    writed(count);
+    writebuf_f();
+
+    bmap_free(visited);
+    bmap2_free(graph);
+
     return 0;
 }
+

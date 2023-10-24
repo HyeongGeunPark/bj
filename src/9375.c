@@ -1,7 +1,4 @@
-// baekjoon gcc optimize options
-#pragma GCC optimize("O3")
-
-#include <stdio.h> 
+#include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -248,8 +245,8 @@ static inline void reads(char *dest){
 #define bmap_get(name, bit) ((int)((name[bit_to_index(bit)]>>((size_t)bit_to_offset(bit))) & ((size_t)1)))
 #define bmap_set_long(name, bit) name[bit_to_index(bit)] |= BIT_FULL
 #define bmap_reset_long(name, bit) name[bit_to_index(bit)] &= 0
-#define bmap_reset_all(name, bit) memset(name, 0, sizeof(size_t)*bit_to_long(bit))
-#define bmap_set_all(name, bit) memset(name, (char)0xFF, sizeof(size_t)*bit_to_long(bit))
+#define bmap_set_all(name, bit) memset(name, 0, sizeof(size_t)*bit_to_long(bit))
+#define bmap_reset_all(name, bit) memset(name, (char)0xFF, sizeof(size_t)*bit_to_long(bit))
 #define bmap_toggle_all(name, bit) for(int i=0;i<(bit_to_long(bit);i++) name[i]^=BIT_FULL
 
 // 2D bitmap
@@ -264,7 +261,6 @@ const static struct bmap2_size bmap2_size_zero = {.m=0, .len=0};
 #define __bmap2_size_init(name, a, b) struct bmap2_size name_size = {.m = (b), .len=(a)*(b)}
 //#define bmap2_init(name, n, m) __bmap2_size_init(name,n,m);bmap_init(name, name_size.len)
 #define bmap2_init_dynamic(name, n, m) __bmap2_size_init(name,n,m);bmap_init_dynamic(name, name_size.len)
-#define bmap2_resize(name,a,b) name_size.m=(b);name_size.len=((a)*(b));free(name);name=calloc(bit_to_long(name_size.len))
 #define bmap2_free(name) free(name);name_size = bmap2_size_zero
 #define bmap2_index_to_bit(name,i,j) ((i)*(name_size.m)+(j))
 #define bmap2_set(name, i, j) bmap_set(name, bmap2_index_to_bit(name,i,j))
@@ -281,131 +277,8 @@ const static struct bmap2_size bmap2_size_zero = {.m=0, .len=0};
 // hashtable related things
 // hashtable with linked list(collision handle)
 #include<string.h>
-#define BUCKET_SIZE 150001 // this thing should be preferably bigger than x1.3 of total data number
+#define BUCKET_SIZE 1000 // this thing should be preferably bigger than x1.3 of total data number
 #define HASH_VAL 29
-struct hashitem{
-    char *key;
-    char *value;
-    struct hashitem *next;
-};
-
-struct hashtable{
-    struct hashitem **items;
-    int size;
-    int count;
-};
-
-#define hashtable_init(name) struct hashtable name =\
-{.items=calloc(BUCKET_SIZE, sizeof(struct hashitem*)), .size=BUCKET_SIZE, .count=0}
-
-static inline int hash(char *s){
-    
-    int result = 0;
-    while(*s != 0){
-        result *= HASH_VAL;
-        result += ((*s++)-32);
-        result %= BUCKET_SIZE;
-    }
-    return result;
-}
-
-// initialize an item
-static inline struct hashitem *hashitem_init(char *key, char *value){
-    struct hashitem *i = calloc(1, sizeof(struct hashitem));
-    int len = strlen(key)+1;
-    i->key = malloc(len+1);
-    memcpy(i->key, key, len+1);
-	len = strlen(value)+1;
-    i->value = malloc(len+1);
-	memcpy(i->value, value, len+1);
-    i->next = NULL;
-    return i;
-}
-// add an element
-static inline void hashtable_add(struct hashtable *t, char *key, char *value){
-    struct hashitem *n = hashitem_init(key, value);
-    int i = hash(key);
-    if(t->items[i] == NULL){    // bucket is empty
-        t->items[i] = n;
-        t->count++;
-    }
-    else{ // collision control
-        struct hashitem *temp = t->items[i];
-		while(temp->next != NULL){
-            if(strcmp(key, temp->key)==0) return;   // ignore input with same key
-            temp = temp->next;
-        }
-        temp->next = n;
-        t->count++;
-    }
-}
-// delete an element
-static inline void hashtable_del(struct hashtable *t, char *key){
-    int i = hash(key);
-    
-    struct hashitem *temp = t->items[i];
-    struct hashitem *prev = NULL;
-    while(temp != NULL){
-        if(strcmp(key, temp->key)==0){   // key found
-            if(prev == NULL){
-                // element in first
-                t->items[i] = temp->next;
-                free(temp->key);
-				free(temp->value);
-                free(temp);
-                t->count--;
-            }
-            else{
-                prev->next = temp->next;
-                free(temp->key);
-				free(temp->value);
-                free(temp);
-                t->count--;
-            }
-            return;
-        }
-        else{
-            prev = temp;
-            temp = temp->next;
-        }
-    }
-}
-// find an element with key and return its value
-static inline char *hashtable_find(struct hashtable *t, char *key){
-    int i = hash(key);
-    struct hashitem *temp = t->items[i];
-    while(temp != NULL){
-        if(strcmp(key, temp->key)==0){  // key found
-            return temp->value;
-        }
-        temp = temp->next;
-    }
-    // not found
-    return NULL;
-}
-// delete all elements in the hashtable
-static inline void hashtable_del_all(struct hashtable *t){
-    int i;
-    for(i=0;i<t->size;i++){
-        struct hashitem *temp = t->items[i];
-        t->items[i] = NULL;
-        while(temp!=NULL){
-            struct hashitem *next = temp->next;
-            free(temp->key);
-			free(temp->value);
-            free(temp);
-            temp = next;
-        }
-    }
-    t->count = 0;
-}
-// delete hashtable
-static inline void hashtable_free(struct hashtable *t){
-    free(t->items);
-}
-
-// hashtable with integer value
-
 struct hashitem_i{
     char *key;
     int value;
@@ -420,6 +293,17 @@ struct hashtable_i{
 
 #define hashtable_init_i(name) struct hashtable_i name =\
 {.items=calloc(BUCKET_SIZE, sizeof(struct hashitem_i*)), .size=BUCKET_SIZE, .count=0}
+
+static inline int hash(char *s){
+    
+    int result = 0;
+    while(*s != 0){
+        result *= HASH_VAL;
+        result += ((*s++)-32);
+        result %= BUCKET_SIZE;
+    }
+    return result;
+}
 
 // initialize an item
 static inline struct hashitem_i *hashitem_init_i(char *key, int value){
@@ -519,8 +403,8 @@ static inline void hashtable_free_i(struct hashtable_i *t){
 // then the structure can be used as a list node,
 // using list access functions below
 
-#define _offsetof(type, member) ((char*) &( ((type*)0)->member ))
-#define container_of(ptr, type, member) (type*)( (char*)ptr - _offsetof(type, member) )
+#define offsetof(type, member) ((char*) &( ((type*)0)->member ))
+#define container_of(ptr, type, member) (type*)( (char*)ptr - offsetof(type, member) )
 
 struct list_head{
 	struct list_head *prev, *next;
@@ -715,202 +599,6 @@ struct list_head *ilist_create(int data){
 	return &(n->list);
 }
 
-// int 2 list (coordinate)
-
-struct i2list{
-	int x;
-	int y;
-	struct list_head list;
-};
-
-struct list_head *i2list_create(int x, int y){
-	struct i2list *n = malloc(sizeof(struct i2list));
-	n->x = x;
-	n->y = y;
-	return &(n->list);
-};
-
-
-/*----------------------------------------------------------------------------*/
-
-// min, max heap
-
-#define MM_HEAP_SIZE 100001
-
-struct mm_heap{
-    int *data;
-    int size;
-};
-
-#define mm_heap_init(name) struct mm_heap name={\
-                .data=malloc(sizeof(int)*MM_HEAP_SIZE),\
-                .size=0}
-#define max_heap_init(name) mm_heap_init(name)
-#define min_heap_init(name) mm_heap_init(name)
-
-#define mm_heap_free(name) free((name.data))
-#define max_heap_free(name) mm_heap_free(name)
-#define min_heap_free(name) mm_heap_free(name)
-
-/*  max_heap_add: add a number in the max heap
-    m_heap_add: add a number in the max heap
-*   h: address of a max heap
-*   data: an integer to add
-*/
-static inline void __mm_heap_add(struct mm_heap *h, int data, int minmax){
-    int c = ++(h->size);
-    int p = c/2;
-    while(p>0){
-        // min heap
-        if(minmax==0){
-            if(data >= h->data[p]) break;
-        }
-        // max heap
-        else if(minmax==1){
-            if(data <= h->data[p]) break;
-        }
-
-        h->data[c] = h->data[p];
-        
-        // update c and p
-        c = p;
-        p = c/2;
-    }
-    h->data[c] = data;
-}
-#define max_heap_add(h, data) __mm_heap_add(h, data, 1)
-#define min_heap_add(h, data) __mm_heap_add(h, data, 0)
-
-/*  max_heap_del: delete a number in the max heap and return it
-*   min_heap_del: delete a number in the min heap and return it
-*   h: address of a max heap
-*/
-static inline int __mm_heap_del(struct mm_heap *h, int minmax){
-    if(h->size == 0){
-        return 0;
-    }
-    int r = h->data[1];
-    int temp = h->data[(h->size)--];
-
-    int p = 1;
-    int c = 2;
-    while(c <= h->size){
-        if(c < h->size){
-            // max heap, select bigger child
-            if(minmax==1){
-                if(h->data[c] < h->data[c+1])
-                    c++;
-            }
-            // min heap, select smaller child
-            else if(minmax==0){
-                if(h->data[c] > h->data[c+1]){
-                    c++;
-                }
-            }
-        }
-
-        // exit condition, parent(temp) is smaller/bigger than child
-        if(minmax==1){
-            if(temp >= h->data[c]){
-                break;
-            }
-        }
-        else if(minmax==0){
-            if(temp <= h->data[c]){
-                break;
-            }
-        }
-
-        // non-exit
-        h->data[p] = h->data[c];
-        p = c;
-        c *= 2;
-    }
-
-    h->data[p] = temp;
-    return r;
-}
-#define max_heap_del(h) __mm_heap_del(h, 1)
-#define min_heap_del(h) __mm_heap_del(h, 0)
-
-/*----------------------------------------------------------------------------*/
-
-// resizable circular queue
-
-#define QUEUE_SIZE 10000
-
-struct queue{
-    int *data;
-    int size;
-    int f;
-    int r;
-};
-
-#define queue_init(name) struct queue name={\
-        .data=malloc(sizeof(int)*(QUEUE_SIZE+1)), .size=QUEUE_SIZE,\
-        .f=0, .r=0}
-
-#define queue_free(name) free(name.data)
-
-static inline int queue_is_empty(struct queue *q){
-    return (q->f==q->r);
-}
-
-static inline int queue_is_full(struct queue *q){
-    int n = (q->r-q->f);
-    return n==1 || n==-q->size;
-}
-
-static inline void queue_resize(struct queue *q){
-    if(q->f>q->r){
-        q->size += QUEUE_SIZE;
-        q->data = realloc(q->data, sizeof(int)*(q->size+1));
-        return;
-    }
-    else{
-        int *dest = malloc(sizeof(int)*(q->size+QUEUE_SIZE+1));
-        int to_end = (q->size+1)-(q->r);
-        memcpy(dest, q->data+q->r, sizeof(int)*to_end);
-        memcpy(dest + to_end, q->data, sizeof(int)*q->f);
-        free(q->data);
-        q->data = dest;
-        q->r = 0;
-        q->f = q->size;
-        q->size += QUEUE_SIZE;
-    }
-    return;
-}
-
-static inline void queue_add_last(struct queue *q, int n){
-    if(queue_is_full(q)){
-        queue_resize(q);
-    }
-
-    q->data[q->f] = n;
-
-    if(q->f==q->size){
-        q->f=0;
-    }
-    else{
-        q->f++;
-    }
-}
-
-static inline int queue_del(struct queue *q){
-    if(queue_is_empty(q)){
-        printf("queue error: queue is empty\n");
-        return 0;
-    }
-    int r = q->data[q->r];
-    if(q->r==q->size){
-        q->r=0;
-    }
-    else{
-        q->r++;
-    }
-    return r;
-}
-
 /*----------------------------------------------------------------------------*/
 /*
 // wrapper of strcmp for qsort
@@ -930,111 +618,42 @@ static inline int mycmp(const void *a, const void *b){
 #define max(a,b) (((a)>(b))?(a):(b))
 #define min(a,b) (((a)<(b))?(a):(b))
 
-//#define down(a) ((a)==0?0:(a)-1)
-//#define up(a,n) ((a)==((n)-1)?(n)-1:(a)+1)
 /*----------------------------------------------------------------------------*/
+#define N_MAX 100
 
-// 2 dimensional integer array
+int main()
+{
+	int t;
+	readbuf_f();
+	readd(&t);
+	hashtable_init_i(clothes);
+	char type_keys[30][21];
+	int i;
+	for(i=0;i<t;i++){
+		char buf_key[21];
+		int n;
+		readd(&n);
+		for(int j=0;j<n;j++){
+			reads(buf_key);	// ignore cloth name
+			reads(buf_key);	// only use cloth type
+			if(hashtable_find_i(&clothes, buf_key)==NULL){
+				strcpy(type_keys[clothes.count], buf_key);
+				hashtable_add_i(&clothes, buf_key, 1);
+			}
+			else{
+				*hashtable_find_i(&clothes, buf_key) += 1;
+			}
+		}
+		// calculation
+		int result = 1;
+		for(int j=0;j<clothes.count;j++){
+			result *= (1 + *(hashtable_find_i(&clothes, type_keys[j])));
+		}
+		writed(result-1);
+		hashtable_del_all_i(&clothes);
+	}
+	writebuf_f();
 
-struct int2{
-    int n;
-    int m;
-    int *data;
-};
-
-#define int2_init(name, nn, mm) struct int2 name={\
-        .n=(nn), .m=(mm),\
-        .data=calloc((nn)*(mm), sizeof(int))}
-
-#define int2_free(name) free(name.data);
-
-#define __int2_index(s, x, y) ((x)*(s->m) + (y))
-
-static inline void int2_set(struct int2 *s, int data, int x, int y){
-    if(!(x<s->n && y<s->m)){
-        printf("array error: invalid index\n");
-        return;
-    }
-    s->data[__int2_index(s,x,y)] = data;
+	return 0;
 }
 
-static inline int int2_get(struct int2 *s, int x, int y){
-    if(!(x<s->n && y<s->m)){
-        printf("array error: invalid index\n");
-        return 0;
-    }
-    return s->data[__int2_index(s,x,y)];
-}
-
-static inline int int2_get_col_sum(struct int2 *s, int col){
-    if(col>=s->m){
-        printf("array error: invalid index\n");
-        return 0;
-    }
-    int sum=0;
-    int stop = (s->m)*(s->n);
-    for(int i=col;i<stop;i+=(s->m)){
-        sum += s->data[i];
-    }
-    return sum;
-}
-
-static inline int int2_get_row_sum(struct int2 *s, int row){
-    if(row>=s->n){
-        printf("array error: invalid index\n");
-        return 0;
-    }
-    int sum=0;
-    int stop = (row+1)*(s->m);
-    for(int i=(row)*(s->m);i<stop;i++){
-        sum += s->data[i];
-    }
-    return sum;
-}
-
-/*----------------------------------------------------------------------------*/
-
-struct t{
-    int s;
-    int e;
-};
-
-static inline int compare(const void *a, const void *b){
-    const struct t *aa = (const struct t*)a;
-    const struct t *bb = (const struct t*)b;
-    if(aa->e == bb->e){
-        return aa->s - bb->s;
-    }
-    return aa->e - bb->e;
-}
-
-
-int main(void){
-    
-    readbuf_f();
-    int n;
-    readd(&n);
-    struct t *time = malloc(sizeof(struct t) * n);
-
-    for(int i=0;i<n;i++){
-        readd(&(time[i].s));
-        readd(&(time[i].e));
-    }
-
-    // sort
-    qsort(time, n, sizeof(struct t), compare);
-
-    // select time
-    int cnt = 1;
-    int end = time[0].e;
-    for(int i=1;i<n;i++){
-        if(end <= time[i].s){
-            cnt++;
-            end = time[i].e;
-        }
-    }
-
-    printf("%d\n", cnt);
-    
-    return 0;
-}

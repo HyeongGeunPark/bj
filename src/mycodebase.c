@@ -1,5 +1,6 @@
 // baekjoon gcc optimize options
-#pragma GCC optimize("O3")
+//#pragma GCC optimize("Ofast")
+//#pragma GCC target("arch=haswell")
 
 #include <stdio.h> 
 #include <math.h>
@@ -994,47 +995,59 @@ static inline int int2_get_row_sum(struct int2 *s, int row){
 
 /*----------------------------------------------------------------------------*/
 
-struct t{
-    int s;
-    int e;
-};
-
-static inline int compare(const void *a, const void *b){
-    const struct t *aa = (const struct t*)a;
-    const struct t *bb = (const struct t*)b;
-    if(aa->e == bb->e){
-        return aa->s - bb->s;
-    }
-    return aa->e - bb->e;
-}
-
-
 int main(void){
     
-    readbuf_f();
-    int n;
-    readd(&n);
-    struct t *time = malloc(sizeof(struct t) * n);
 
-    for(int i=0;i<n;i++){
-        readd(&(time[i].s));
-        readd(&(time[i].e));
+    int n, m;
+    readbuf_f();
+    readd(&n);
+    readd(&m);
+    int2_init(graph, n+1, n+1);
+    for(int i=0;i<m;i++){
+        int x, y;
+        readd(&x);
+        readd(&y);
+        int2_set(&graph, 1, x, y);
+        int2_set(&graph, 1, y, x);
     }
 
-    // sort
-    qsort(time, n, sizeof(struct t), compare);
+    // Floyd-Warshall Algorithm
 
-    // select time
-    int cnt = 1;
-    int end = time[0].e;
-    for(int i=1;i<n;i++){
-        if(end <= time[i].s){
-            cnt++;
-            end = time[i].e;
+    for(int i=1; i<=n; i++){    // select a node
+        for(int a=1; a<=n; a++){    // select a vertice
+            if(a==i) continue; // filter out invalid vertice
+            for(int b=a+1; b<=n; b++){ // the graph is undirected
+                // examine if the vertice can be relaxed
+                int ab = int2_get(&graph, a, b);
+                int ai = int2_get(&graph, a, i);
+                int bi = int2_get(&graph, b, i);
+                if( ai && bi ){
+                    // route a=i, b-i found
+                    int new_value = ai+bi;
+                    if(ab!=0){
+                        new_value = min(new_value, ab);
+                    }
+                    int2_set(&graph, new_value, a, b);
+                    int2_set(&graph, new_value, b, a);
+                }
+            }
         }
     }
 
-    printf("%d\n", cnt);
+    // find smallest kevin bacon number
+    int si = 1;
+    int sv = int2_get_row_sum(&graph, 1);
+
+    for(int i=2; i<=n; i++){
+        int kbn = int2_get_row_sum(&graph, i);
+        if(sv > kbn){
+            si = i;
+            sv = kbn;
+        }
+    }
+    printf("%d", si);
+
+    int2_free(graph);
     
     return 0;
 }

@@ -1,5 +1,6 @@
 // baekjoon gcc optimize options
-#pragma GCC optimize("O3")
+//#pragma GCC optimize("Ofast")
+//#pragma GCC target("arch=haswell")
 
 #include <stdio.h> 
 #include <math.h>
@@ -834,84 +835,6 @@ static inline int __mm_heap_del(struct mm_heap *h, int minmax){
 #define min_heap_del(h) __mm_heap_del(h, 0)
 
 /*----------------------------------------------------------------------------*/
-
-// resizable circular queue
-
-#define QUEUE_SIZE 10000
-
-struct queue{
-    int *data;
-    int size;
-    int f;
-    int r;
-};
-
-#define queue_init(name) struct queue name={\
-        .data=malloc(sizeof(int)*(QUEUE_SIZE+1)), .size=QUEUE_SIZE,\
-        .f=0, .r=0}
-
-#define queue_free(name) free(name.data)
-
-static inline int queue_is_empty(struct queue *q){
-    return (q->f==q->r);
-}
-
-static inline int queue_is_full(struct queue *q){
-    int n = (q->r-q->f);
-    return n==1 || n==-q->size;
-}
-
-static inline void queue_resize(struct queue *q){
-    if(q->f>q->r){
-        q->size += QUEUE_SIZE;
-        q->data = realloc(q->data, sizeof(int)*(q->size+1));
-        return;
-    }
-    else{
-        int *dest = malloc(sizeof(int)*(q->size+QUEUE_SIZE+1));
-        int to_end = (q->size+1)-(q->r);
-        memcpy(dest, q->data+q->r, sizeof(int)*to_end);
-        memcpy(dest + to_end, q->data, sizeof(int)*q->f);
-        free(q->data);
-        q->data = dest;
-        q->r = 0;
-        q->f = q->size;
-        q->size += QUEUE_SIZE;
-    }
-    return;
-}
-
-static inline void queue_add_last(struct queue *q, int n){
-    if(queue_is_full(q)){
-        queue_resize(q);
-    }
-
-    q->data[q->f] = n;
-
-    if(q->f==q->size){
-        q->f=0;
-    }
-    else{
-        q->f++;
-    }
-}
-
-static inline int queue_del(struct queue *q){
-    if(queue_is_empty(q)){
-        printf("queue error: queue is empty\n");
-        return 0;
-    }
-    int r = q->data[q->r];
-    if(q->r==q->size){
-        q->r=0;
-    }
-    else{
-        q->r++;
-    }
-    return r;
-}
-
-/*----------------------------------------------------------------------------*/
 /*
 // wrapper of strcmp for qsort
 int mystrcmp(const void *a, const void *b){
@@ -994,47 +917,59 @@ static inline int int2_get_row_sum(struct int2 *s, int row){
 
 /*----------------------------------------------------------------------------*/
 
-struct t{
-    int s;
-    int e;
-};
-
-static inline int compare(const void *a, const void *b){
-    const struct t *aa = (const struct t*)a;
-    const struct t *bb = (const struct t*)b;
-    if(aa->e == bb->e){
-        return aa->s - bb->s;
-    }
-    return aa->e - bb->e;
-}
-
-
 int main(void){
     
-    readbuf_f();
-    int n;
-    readd(&n);
-    struct t *time = malloc(sizeof(struct t) * n);
 
-    for(int i=0;i<n;i++){
-        readd(&(time[i].s));
-        readd(&(time[i].e));
+    int n, m;
+    readbuf_f();
+    readd(&n);
+    readd(&m);
+    int2_init(graph, n+1, n+1);
+    for(int i=0;i<m;i++){
+        int x, y;
+        readd(&x);
+        readd(&y);
+        int2_set(&graph, 1, x, y);
+        int2_set(&graph, 1, y, x);
     }
 
-    // sort
-    qsort(time, n, sizeof(struct t), compare);
+    // Floyd-Warshall Algorithm
 
-    // select time
-    int cnt = 1;
-    int end = time[0].e;
-    for(int i=1;i<n;i++){
-        if(end <= time[i].s){
-            cnt++;
-            end = time[i].e;
+    for(int i=1; i<=n; i++){    // select a node
+        for(int a=1; a<=n; a++){    // select a vertice
+            if(a==i) continue; // filter out invalid vertice
+            for(int b=a+1; b<=n; b++){ // the graph is undirected
+                // examine if the vertice can be relaxed
+                int ab = int2_get(&graph, a, b);
+                int ai = int2_get(&graph, a, i);
+                int bi = int2_get(&graph, b, i);
+                if( ai && bi ){
+                    // route a=i, b-i found
+                    int new_value = ai+bi;
+                    if(ab!=0){
+                        new_value = min(new_value, ab);
+                    }
+                    int2_set(&graph, new_value, a, b);
+                    int2_set(&graph, new_value, b, a);
+                }
+            }
         }
     }
 
-    printf("%d\n", cnt);
+    // find smallest kevin bacon number
+    int si = 1;
+    int sv = int2_get_row_sum(&graph, 1);
+
+    for(int i=2; i<=n; i++){
+        int kbn = int2_get_row_sum(&graph, i);
+        if(sv > kbn){
+            si = i;
+            sv = kbn;
+        }
+    }
+    printf("%d", si);
+
+    int2_free(graph);
     
     return 0;
 }
