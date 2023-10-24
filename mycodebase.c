@@ -857,74 +857,119 @@ static inline int mycmp(const void *a, const void *b){
 //#define up(a,n) ((a)==((n)-1)?(n)-1:(a)+1)
 /*----------------------------------------------------------------------------*/
 
-#define WALL 'X'
-#define SPACE 'O'
-#define DY 'I'
-#define PERSON 'P'
+// 2 dimensional integer array
+
+struct int2{
+    int n;
+    int m;
+    int *data;
+};
+
+#define int2_init(name, nn, mm) struct int2 name={\
+        .n=(nn), .m=(mm),\
+        .data=calloc((nn)*(mm), sizeof(int))}
+
+#define int2_free(name) free(name.data);
+
+#define __int2_index(s, x, y) ((x)*(s->m) + (y))
+
+static inline void int2_set(struct int2 *s, int data, int x, int y){
+    if(!(x<s->n && y<s->m)){
+        printf("array error: invalid index\n");
+        return;
+    }
+    s->data[__int2_index(s,x,y)] = data;
+}
+
+static inline int int2_get(struct int2 *s, int x, int y){
+    if(!(x<s->n && y<s->m)){
+        printf("array error: invalid index\n");
+        return 0;
+    }
+    return s->data[__int2_index(s,x,y)];
+}
+
+static inline int int2_get_col_sum(struct int2 *s, int col){
+    if(col>=s->m){
+        printf("array error: invalid index\n");
+        return 0;
+    }
+    int sum=0;
+    int stop = (s->m)*(s->n);
+    for(int i=col;i<stop;i+=(s->m)){
+        sum += s->data[i];
+    }
+    return sum;
+}
+
+static inline int int2_get_row_sum(struct int2 *s, int row){
+    if(row>=s->n){
+        printf("array error: invalid index\n");
+        return 0;
+    }
+    int sum=0;
+    int stop = (row+1)*(s->m);
+    for(int i=(row)*(s->m);i<stop;i++){
+        sum += s->data[i];
+    }
+    return sum;
+}
+
+/*----------------------------------------------------------------------------*/
 
 int main(void){
+    
 
+    int n, m;
     readbuf_f();
-    int n,m;
     readd(&n);
     readd(&m);
+    int2_init(graph, n+1, n+1);
+    for(int i=0;i<m;i++){
+        int x, y;
+        readd(&x);
+        readd(&y);
+        int2_set(&graph, 1, x, y);
+        int2_set(&graph, 1, y, x);
+    }
 
-    int map[600][600];
-    int visited[600][600];
+    // Floyd-Warshall Algorithm
 
-    LIST_HEAD(s);
-
-    int i, j;
-    for(i=0;i<n;i++){
-        for(j=0;j<m;j++){
-            visited[i][j] = 0;
-            char c = readc();
-            map[i][j] = (int)c;
-            if(map[i][j] == DY){
-                list_add(i2list_create(i,j), &s);
-                visited[i][j]=1;
+    for(int i=1; i<=n; i++){    // select a node
+        for(int a=1; a<=n; a++){    // select a vertice
+            if(a==i) continue; // filter out invalid vertice
+            for(int b=a+1; b<=n; b++){ // the graph is undirected
+                // examine if the vertice can be relaxed
+                int ab = int2_get(&graph, a, b);
+                int ai = int2_get(&graph, a, i);
+                int bi = int2_get(&graph, b, i);
+                if( ai && bi ){
+                    // route a=i, b-i found
+                    int new_value = ai+bi;
+                    if(ab!=0){
+                        new_value = min(new_value, ab);
+                    }
+                    int2_set(&graph, new_value, a, b);
+                    int2_set(&graph, new_value, b, a);
+                }
             }
         }
-        readc();
     }
 
-    // dfs
-    int cnt=0;
-    int x, y;
-    while(!list_empty(&s)){
-        struct i2list *p = list_first_entry(&s, struct i2list, list);
-        x = p->x;
-        y = p->y;
+    // find smallest kevin bacon number
+    int si = 1;
+    int sv = int2_get_row_sum(&graph, 1);
 
-        if(map[x][y] == PERSON) cnt++;
-        if(x>0 && !visited[x-1][y] && map[x-1][y] != WALL){
-            list_add(i2list_create(x-1,y), &s);
-            visited[x-1][y]=1;
+    for(int i=2; i<=n; i++){
+        int kbn = int2_get_row_sum(&graph, i);
+        if(sv > kbn){
+            si = i;
+            sv = kbn;
         }
-        if(x+1<n && !visited[x+1][y] && map[x+1][y] != WALL){
-            list_add(i2list_create(x+1,y), &s);
-            visited[x+1][y]=1;
-        }
-        if(y>0 && !visited[x][y-1] && map[x][y-1] != WALL){
-            list_add(i2list_create(x, y-1), &s);
-            visited[x][y-1]=1;
-        }
-        if(y+1<m && !visited[x][y+1] && map[x][y+1] != WALL){
-            list_add(i2list_create(x, y+1), &s);
-            visited[x][y+1]=1;
-        }
-
-        list_del(&(p->list));
-        free(p);
     }
+    printf("%d", si);
 
-    if(cnt==0){
-        writes("TT");
-    }
-    else{
-        writed(cnt);
-    }
-    writebuf_f();
-
+    int2_free(graph);
+    
     return 0;
 }
