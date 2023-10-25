@@ -1,5 +1,5 @@
 // baekjoon gcc optimize options
-//#pragma GCC optimize("Ofast")
+#pragma GCC optimize("O3")
 //#pragma GCC target("arch=haswell")
 
 #include <stdio.h> 
@@ -996,58 +996,63 @@ static inline int int2_get_row_sum(struct int2 *s, int row){
 /*----------------------------------------------------------------------------*/
 
 int main(void){
-    
-
     int n, m;
+    int map[100][100];
+
     readbuf_f();
     readd(&n);
     readd(&m);
-    int2_init(graph, n+1, n+1);
-    for(int i=0;i<m;i++){
-        int x, y;
-        readd(&x);
-        readd(&y);
-        int2_set(&graph, 1, x, y);
-        int2_set(&graph, 1, y, x);
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            map[i][j] = readc() - '0';
+        }
+        readc();
     }
 
-    // Floyd-Warshall Algorithm
+    queue_init(q);
+    queue_add_last(&q, 0);
+    queue_add_last(&q, 0);
+    queue_add_last(&q, 1);
+    int goal[2] = {n-1, m-1};
+    int movement[4][2] = { {0, 1},
+                        {-1, 0},
+                        {0, -1},
+                        {1, 0}};
+    int result = -1;
+    while(!queue_is_empty(&q)){
+        // x, y, cost
+        int x, y, cost;
+        x = queue_del(&q);
+        y = queue_del(&q);
+        cost = 1+queue_del(&q);
+        int xx, yy;
 
-    for(int i=1; i<=n; i++){    // select a node
-        for(int a=1; a<=n; a++){    // select a vertice
-            if(a==i) continue; // filter out invalid vertice
-            for(int b=a+1; b<=n; b++){ // the graph is undirected
-                // examine if the vertice can be relaxed
-                int ab = int2_get(&graph, a, b);
-                int ai = int2_get(&graph, a, i);
-                int bi = int2_get(&graph, b, i);
-                if( ai && bi ){
-                    // route a=i, b-i found
-                    int new_value = ai+bi;
-                    if(ab!=0){
-                        new_value = min(new_value, ab);
-                    }
-                    int2_set(&graph, new_value, a, b);
-                    int2_set(&graph, new_value, b, a);
-                }
+        for(int i=0;i<4;i++){
+            xx = x+movement[i][0];
+            yy = y+movement[i][1];
+
+            if( 0 > xx || 0 > yy || xx >= n || yy >= m){
+                continue;
             }
+            
+            if(xx == goal[0] && yy == goal[1]){
+                result = cost;
+                goto solved;
+            }
+
+            if( map[xx][yy] == 0){
+                continue;
+            }
+
+            map[xx][yy] = 0;
+            queue_add_last(&q, xx);
+            queue_add_last(&q, yy);
+            queue_add_last(&q, cost);
         }
     }
+    solved:
+    printf("%d\n", result);
 
-    // find smallest kevin bacon number
-    int si = 1;
-    int sv = int2_get_row_sum(&graph, 1);
-
-    for(int i=2; i<=n; i++){
-        int kbn = int2_get_row_sum(&graph, i);
-        if(sv > kbn){
-            si = i;
-            sv = kbn;
-        }
-    }
-    printf("%d", si);
-
-    int2_free(graph);
-    
     return 0;
+
 }
