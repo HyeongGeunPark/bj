@@ -104,7 +104,7 @@ static inline void __writes(char *cp, char end){
 #define writed_1(d) __writed(d, '\n')
 #define writed_2(d, end) __writed(d, end)
 #define WUD_SIZE 30
-static inline void __writed(int d, char end){
+static inline void __writed(long long d, char end){
     int i;
     char sign = 0;
     char buf[WUD_SIZE];
@@ -930,6 +930,7 @@ static inline int mycmp(const void *a, const void *b){
 
 #define max(a,b) (((a)>(b))?(a):(b))
 #define min(a,b) (((a)<(b))?(a):(b))
+#define abs(a) ((a)<0?-(a):(a))
 
 //#define down(a) ((a)==0?0:(a)-1)
 //#define up(a,n) ((a)==((n)-1)?(n)-1:(a)+1)
@@ -995,64 +996,97 @@ static inline int int2_get_row_sum(struct int2 *s, int row){
 
 /*----------------------------------------------------------------------------*/
 
-int main(void){
-    int n, m;
-    int map[100][100];
+// number theory
 
-    readbuf_f();
-    readd(&n);
-    readd(&m);
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
-            map[i][j] = readc() - '0';
-        }
-        readc();
+// euclidean algorithm
+// returns greatest common divider of a and b
+int gcd(int a, int b){
+    int c;
+    while((c = a%b) != 0){
+        a = b;
+        b = c;
+    }
+    return b;
+}
+
+// lcm: returns least common multiple
+int lcm(int a, int b){
+    return (a*b/gcd(a,b));
+}
+
+struct xgcd_r{
+    long long gcd;
+    // x and y that satisfies a*x + b*y = gcd(a,b)
+    long long x;
+    long long y;
+};
+// extended euclidean algorithm
+int xgcd(int a, int b, struct xgcd_r* result){
+    if( a<0 || b<0) return -1;
+
+    long long x_p = 1;
+    long long x = 0;
+    long long y_p = 0;
+    long long y = 1;
+    long long r_p = a;
+    long long r = b;
+    long long temp, q;
+
+    while(r){
+        // calc next step;
+        q = r_p/r;
+
+        temp = r;
+        r = r_p - r*q;
+        r_p = temp;
+        temp = x;
+        x = x_p - x*q;
+        x_p = temp;
+        temp = y;
+        y = y_p - y*q;
+        y_p = temp;
     }
 
-    queue_init(q);
-    queue_add_last(&q, 0);
-    queue_add_last(&q, 0);
-    queue_add_last(&q, 1);
-    int goal[2] = {n-1, m-1};
-    int movement[4][2] = { {0, 1},
-                        {-1, 0},
-                        {0, -1},
-                        {1, 0}};
-    int result = -1;
-    while(!queue_is_empty(&q)){
-        // x, y, cost
-        int x, y, cost;
-        x = queue_del(&q);
-        y = queue_del(&q);
-        cost = 1+queue_del(&q);
-        int xx, yy;
-
-        for(int i=0;i<4;i++){
-            xx = x+movement[i][0];
-            yy = y+movement[i][1];
-
-            if( 0 > xx || 0 > yy || xx >= n || yy >= m){
-                continue;
-            }
-            
-            if(xx == goal[0] && yy == goal[1]){
-                result = cost;
-                goto solved;
-            }
-
-            if( map[xx][yy] == 0){
-                continue;
-            }
-
-            map[xx][yy] = 0;
-            queue_add_last(&q, xx);
-            queue_add_last(&q, yy);
-            queue_add_last(&q, cost);
-        }
-    }
-    solved:
-    printf("%d\n", result);
+    result->gcd = r_p;
+    result->x = x_p;
+    result->y = y_p;
 
     return 0;
+}
 
+long long gcrt_2(int M, int N, int x, int y){
+    struct xgcd_r s;
+    xgcd(M, N, &s);
+
+    long long d = (y-x);
+    if(d%s.gcd){
+        return -1;
+    }
+    else{
+        long long l = M*N/s.gcd;
+        long long r = x + (M * s.x %l) * ((d/s.gcd)%l);
+        r = (r%l + l)%l;//least positive congruence
+        return r?r:l;
+    }
+}
+
+/*----------------------------------------------------------------------------*/
+
+int main(void){
+    readbuf_f();
+    int t, m, n, x, y;
+    readd(&t);
+    int temp;
+
+    for(int i=0; i<t; i++){
+
+        readd(&m);
+        readd(&n);
+        readd(&x);
+        readd(&y);
+
+        writed(gcrt_2(m, n, x, y));
+    }
+    writebuf_f();
+    return 0;
 }
