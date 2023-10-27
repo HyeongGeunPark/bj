@@ -1107,46 +1107,22 @@ long long gcrt_2(int M, int N, int x, int y){
 /*----------------------------------------------------------------------------*/
 
 int main(void){
-    int g[100][100];
-    int n;
-    int i, j, k;
-    int inf = 1<<20;
     readbuf_f();
+
+    int n;
     readd(&n);
-    for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
-            int temp;
-            readd(&temp);
-            if(temp != 0){
-                g[i][j] = temp;
-            }
-            else{
-                g[i][j] = inf;
-            }
+    absmin_heap_init(h);
+    while(n--){
+        int temp;
+        readd(&temp);
+        if(temp==0){
+            writed(absmin_heap_del(&h));
+        }
+        else{
+            absmin_heap_add(&h, temp);
         }
     }
-
-    // floyd-warshall
-    for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
-            for(k=0;k<n;k++){
-                g[j][k] = min(g[j][k], g[j][i] + g[i][k]);
-            }
-        }
-    }
-
-    // print
-    for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
-            if(g[i][j] == inf){
-                writed(0, ' ');
-            }
-            else{
-                writed(1, ' ');
-            }
-        }
-        writec('\n');
-    }
+    absmin_heap_free(h);
     writebuf_f();
     return 0;
 }
