@@ -1105,48 +1105,70 @@ long long gcrt_2(int M, int N, int x, int y){
 */
 
 /*----------------------------------------------------------------------------*/
+#define WALL 0
+#define UNVISITED -1
 
 int main(void){
-    int g[100][100];
-    int n;
-    int i, j, k;
-    int inf = 1<<20;
+    int map[1000][1000];
+    int n, m;
+    int i, j;
+    int x, y;
+    int xx, yy;
+    int dx[4] = {0, 1, 0, -1};
+    int dy[4] = {1, 0, -1, 0};
+    queue_init(q);
+
     readbuf_f();
     readd(&n);
+    readd(&m);
+
     for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
+        for(j=0;j<m;j++){
             int temp;
             readd(&temp);
-            if(temp != 0){
-                g[i][j] = temp;
-            }
-            else{
-                g[i][j] = inf;
+            switch(temp){
+                case 0:
+                map[i][j] = WALL;
+                break;
+                case 1:
+                map[i][j] = UNVISITED;
+                break;
+                case 2:
+                queue_add_last(&q, i);
+                queue_add_last(&q, j);
+                map[i][j] = WALL;
+                break;
+                default:
             }
         }
     }
-
-    // floyd-warshall
-    for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
-            for(k=0;k<n;k++){
-                g[j][k] = min(g[j][k], g[j][i] + g[i][k]);
+    // bfs
+    while(!queue_is_empty(&q)){
+        x = queue_del(&q);
+        y = queue_del(&q);
+        for(i=0;i<4;i++){
+            xx = x + dx[i];
+            yy = y + dy[i];
+            // out of bound
+            if( xx<0 || xx>=n || yy<0 || yy>=m){
+                continue;
+            }
+            if(map[xx][yy] == UNVISITED){
+                map[xx][yy] = map[x][y] + 1;
+                queue_add_last(&q, xx);
+                queue_add_last(&q, yy);
             }
         }
     }
-
     // print
     for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
-            if(g[i][j] == inf){
-                writed(0, ' ');
-            }
-            else{
-                writed(1, ' ');
-            }
+        for(j=0;j<m;j++){
+            writed(map[i][j], ' ');
         }
         writec('\n');
     }
     writebuf_f();
+
+    queue_free(q);
     return 0;
 }
