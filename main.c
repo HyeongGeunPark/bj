@@ -1118,49 +1118,48 @@ long long gcrt_2(int M, int N, int x, int y){
 /*----------------------------------------------------------------------------*/
 
 int main(void){
-    char buf[32][5];
-    int len[32][32];
-    int t, n;
-    int i, j;
-    int a, b, c;
-    int res;
-
     readbuf_f();
-    readd(&t);
-    for(i=0;i<t;i++){
-        readd(&n);
-        // dove house
-        // 16 house, 33 dove -> at list 1 home with 3+ doves
-        if(n>=33){
-            readn_ignore(5*n);
-            res = 0;
-        }
-        // else: brute force
-        else{
-            res = 16;
-            for(j=0;j<n;j++){
-                reads(buf[j]);
-            }
-            for(a=0;a<n;a++){
-                for(b=a+1;b<n;b++){
-                    len[a][b]=0;
-                    for(c=0;c<4;c++){
-                        if(buf[a][c] != buf[b][c]){
-                            len[a][b]++;
-                        }
-                    }
-                }
-            }
-            for(a=0;a<n;a++){
-                for(b=a+1;b<n;b++){
-                    for(c=b+1;c<n;c++){
-                        res = min(res, len[a][b]+len[b][c]+len[a][c]);
-                    }
-                }
-            }
-        }
-        writed(res);
+    int n, m;
+    int i, j, k;
+    int temp;
+    int crashed[10] = {0};
+    int res;
+    int mag;
+    int r;
+    int found;
+
+    readd(&n);
+    readd(&m);
+    for(i=0;i<m;i++){
+       readd(&temp);
+       crashed[temp] = 1;
     }
+
+    res = abs(n-100);
+    for(i=0;i<res;i++){
+        for(j=-1;j<2;j+=2){
+            found = 1;
+            temp = n + i*j;
+            if(temp<0) continue;
+            mag = 0;
+            do{
+                mag++;
+                r = temp%10;
+                if(crashed[r]){
+                    found=0;
+                    break;
+                }
+                temp/=10;
+            } while(temp);
+            if(found){
+                res = min(res, mag+i);
+                goto print;
+            }
+        }
+    }
+    print:
+    writed(res);
     writebuf_f();
+
     return 0;
 }
