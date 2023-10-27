@@ -34,7 +34,7 @@
 /*----------------------------------------------------------------------------*/
 
 // buffered input output related things
-#define BUF_SIZE 100000   // size of input, output buffer for buffered IO functions
+#define BUF_SIZE 100000  // size of input, output buffer for buffered IO functions
 #define STDOUT_FD 1
 #define STDIN_FD 0
 
@@ -160,6 +160,17 @@ static inline char readc(void){
 // return the first character in input buffer
 static inline char readbuf_first(){
     return *p;
+}
+
+// ignore n characters
+static inline void readn_ignore(int n){
+    int valid_chars = pl - p;
+    while(n>valid_chars){
+        n -= valid_chars;
+        readbuf_f();
+        valid_chars = pl-p;
+    }
+    p += n;
 }
 
 // same function with isalpha(char) from string.h
@@ -748,10 +759,12 @@ struct mm_heap{
                 .size=0}
 #define max_heap_init(name) mm_heap_init(name)
 #define min_heap_init(name) mm_heap_init(name)
+#define absmin_heap_init(name) mm_heap_init(name)
 
 #define mm_heap_free(name) free((name.data))
 #define max_heap_free(name) mm_heap_free(name)
 #define min_heap_free(name) mm_heap_free(name)
+#define absmin_heap_free(name) mm_heap_free(name)
 
 /*  max_heap_add: add a number in the max heap
     m_heap_add: add a number in the max heap
@@ -770,6 +783,13 @@ static inline void __mm_heap_add(struct mm_heap *h, int data, int minmax){
         else if(minmax==1){
             if(data <= h->data[p]) break;
         }
+        // abs min heap
+        else if(minmax == 2){
+            if(abs(data) > abs(h->data[p])) break;
+            else if(abs(data) == abs(h->data[p])){
+                if(data > h->data[p]) break;
+            }
+        }
 
         h->data[c] = h->data[p];
         
@@ -781,6 +801,7 @@ static inline void __mm_heap_add(struct mm_heap *h, int data, int minmax){
 }
 #define max_heap_add(h, data) __mm_heap_add(h, data, 1)
 #define min_heap_add(h, data) __mm_heap_add(h, data, 0)
+#define absmin_heap_add(h, data) __mm_heap_add(h, data, 2)
 
 /*  max_heap_del: delete a number in the max heap and return it
 *   min_heap_del: delete a number in the min heap and return it
@@ -808,17 +829,39 @@ static inline int __mm_heap_del(struct mm_heap *h, int minmax){
                     c++;
                 }
             }
+            // abs min heap
+            else if(minmax==2){
+                if(abs(h->data[c]) > abs(h->data[c+1])){
+                    c++;
+                }
+                else if(abs(h->data[c] == abs(h->data[c+1]))){
+                    if(h->data[c] > h->data[c+1]){
+                        c++;
+                    }
+                }
+            }
         }
 
         // exit condition, parent(temp) is smaller/bigger than child
-        if(minmax==1){
+        if(minmax==1){  // max heap
             if(temp >= h->data[c]){
                 break;
             }
         }
-        else if(minmax==0){
+        else if(minmax==0){ // min heap
             if(temp <= h->data[c]){
                 break;
+            }
+        }
+        else if(minmax==2){ // abs min heap
+            if(abs(temp) < abs(h->data[c])){
+                break;
+            }
+            else if( abs(temp) == abs(h->data[c])){
+                // same abs value -> negative is smaller
+                if(temp < h->data[c]){
+                    break;
+                }
             }
         }
 
@@ -833,6 +876,7 @@ static inline int __mm_heap_del(struct mm_heap *h, int minmax){
 }
 #define max_heap_del(h) __mm_heap_del(h, 1)
 #define min_heap_del(h) __mm_heap_del(h, 0)
+#define absmin_heap_del(h) __mm_heap_del(h, 2)
 
 /*----------------------------------------------------------------------------*/
 
@@ -995,7 +1039,7 @@ static inline int int2_get_row_sum(struct int2 *s, int row){
 }
 
 /*----------------------------------------------------------------------------*/
-
+/*
 // number theory
 
 // euclidean algorithm
@@ -1069,23 +1113,53 @@ long long gcrt_2(int M, int N, int x, int y){
         return r?r:l;
     }
 }
+*/
 
 /*----------------------------------------------------------------------------*/
 
 int main(void){
+    char buf[32][5];
+    int len[32][32];
+    int t, n;
+    int i, j;
+    int a, b, c;
+    int res;
+
     readbuf_f();
-    int t, m, n, x, y;
     readd(&t);
-    int temp;
-
-    for(int i=0; i<t; i++){
-
-        readd(&m);
+    for(i=0;i<t;i++){
         readd(&n);
-        readd(&x);
-        readd(&y);
-
-        writed(gcrt_2(m, n, x, y));
+        // dove house
+        // 16 house, 33 dove -> at list 1 home with 3+ doves
+        if(n>=33){
+            readn_ignore(5*n);
+            res = 0;
+        }
+        // else: brute force
+        else{
+            res = 16;
+            for(j=0;j<n;j++){
+                reads(buf[j]);
+            }
+            for(a=0;a<n;a++){
+                for(b=a+1;b<n;b++){
+                    len[a][b]=0;
+                    for(c=0;c<4;c++){
+                        if(buf[a][c] != buf[b][c]){
+                            len[a][b]++;
+                        }
+                    }
+                }
+            }
+            for(a=0;a<n;a++){
+                for(b=a+1;b<n;b++){
+                    for(c=b+1;c<n;c++){
+                        res = min(res, len[a][b]+len[b][c]+len[a][c]);
+                    }
+                }
+            }
+        }
+        writed(res);
     }
     writebuf_f();
     return 0;
