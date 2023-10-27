@@ -1118,48 +1118,64 @@ long long gcrt_2(int M, int N, int x, int y){
 /*----------------------------------------------------------------------------*/
 
 int main(void){
-    char buf[32][5];
-    int len[32][32];
-    int t, n;
+    int t;
+    int n;
+    int f;
+    int l;
+    int rev;
+    char c;
     int i, j;
-    int a, b, c;
-    int res;
+    int temp;
+    int arr[100000];
 
     readbuf_f();
     readd(&t);
     for(i=0;i<t;i++){
+        f=0;
+        l=0;
+        rev=0;
+        while(!isalp(readbuf_first())){
+            readc();
+        }
+        while((c = readc())!='\n'){
+            if(c=='R'){
+                rev = !rev;
+            }
+            else if(c=='D'){
+                if(rev){
+                    l++;
+                }
+                else{
+                    f++;
+                }
+            }
+        }
         readd(&n);
-        // dove house
-        // 16 house, 33 dove -> at list 1 home with 3+ doves
-        if(n>=33){
-            readn_ignore(5*n);
-            res = 0;
+        if(n<(f+l)){
+            writes("error");
+            while((c=readc())!=']');
         }
-        // else: brute force
+        else if(n==(f+l)){
+            writes("[]");
+        }
         else{
-            res = 16;
             for(j=0;j<n;j++){
-                reads(buf[j]);
+                readd(&arr[j]);
             }
-            for(a=0;a<n;a++){
-                for(b=a+1;b<n;b++){
-                    len[a][b]=0;
-                    for(c=0;c<4;c++){
-                        if(buf[a][c] != buf[b][c]){
-                            len[a][b]++;
-                        }
-                    }
+            writec('[');
+            if(rev){
+                for(j=(n-l-1);j>=f;j--){
+                    writed(arr[j], ',');
                 }
             }
-            for(a=0;a<n;a++){
-                for(b=a+1;b<n;b++){
-                    for(c=b+1;c<n;c++){
-                        res = min(res, len[a][b]+len[b][c]+len[a][c]);
-                    }
+            else{
+                for(j=f;j<(n-l);j++){
+                    writed(arr[j], ',');
                 }
             }
+            wp--;
+            writes("]");
         }
-        writed(res);
     }
     writebuf_f();
     return 0;
