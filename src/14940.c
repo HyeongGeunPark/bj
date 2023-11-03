@@ -1,5 +1,5 @@
 // baekjoon gcc optimize options
-/*#pragma GCC optimize("O3")*/
+#pragma GCC optimize("O3")
 //#pragma GCC target("arch=haswell")
 
 #include <stdio.h> 
@@ -34,7 +34,7 @@
 /*----------------------------------------------------------------------------*/
 
 // buffered input output related things
-#define BUF_SIZE 100000  // size of input, output buffer for buffered IO functions
+#define BUF_SIZE 100000   // size of input, output buffer for buffered IO functions
 #define STDOUT_FD 1
 #define STDIN_FD 0
 
@@ -160,17 +160,6 @@ static inline char readc(void){
 // return the first character in input buffer
 static inline char readbuf_first(){
     return *p;
-}
-
-// ignore n characters
-static inline void readn_ignore(int n){
-    int valid_chars = pl - p;
-    while(n>valid_chars){
-        n -= valid_chars;
-        readbuf_f();
-        valid_chars = pl-p;
-    }
-    p += n;
 }
 
 // same function with isalpha(char) from string.h
@@ -745,13 +734,9 @@ struct list_head *i2list_create(int x, int y){
 
 /*----------------------------------------------------------------------------*/
 
-// heap related things
-// min heap, max heap, abs-min heap, min-max heap
+// min, max heap
 
-#define MM_HEAP_SIZE 1000001
-#define MIN_HEAP 0
-#define MAX_HEAP 1
-#define ABSMIN_HEAP 2
+#define MM_HEAP_SIZE 100001
 
 struct mm_heap{
     int *data;
@@ -764,188 +749,11 @@ struct mm_heap{
 #define max_heap_init(name) mm_heap_init(name)
 #define min_heap_init(name) mm_heap_init(name)
 #define absmin_heap_init(name) mm_heap_init(name)
-#define minmax_heap_init(name) mm_heap_init(name)
 
 #define mm_heap_free(name) free((name.data))
 #define max_heap_free(name) mm_heap_free(name)
 #define min_heap_free(name) mm_heap_free(name)
 #define absmin_heap_free(name) mm_heap_free(name)
-#define minmax_heap_free(name) mm_heap_free(name);
-
-// return value
-// 0: max level
-// 1: min level
-#define MINMAX_HEAP_MAX_LEVEL 0
-#define MINMAX_HEAP_MIN_LEVEL 1
-static inline int __minmax_heap_level(struct mm_heap *h){
-    int a = h->size;
-    int l = 0;
-    while(a){
-        a>>=1;
-        l++;
-    }
-    return l%2;
-}
-
-// minmax heap, add
-static inline void minmax_heap_add(struct mm_heap *h, int data){
-    int c = ++(h->size);
-    int p, gp;
-    int l = __minmax_heap_level(h);
-    while(1){
-        // min level-> make gp min, make p max
-        // max level-> make gp max, make p min
-        p = c>>1;
-        if(p>0 && ((data > h->data[p] && l==MINMAX_HEAP_MIN_LEVEL)
-        ||(data < h->data[p] && l==MINMAX_HEAP_MAX_LEVEL))){
-            h->data[c] = h->data[p];
-            c = p;
-            l = !l;
-            continue;
-        }
-        gp = p>>1;
-        if(gp>0 && ((data < h->data[gp] && l==MINMAX_HEAP_MIN_LEVEL)
-        ||(data > h->data[gp] && l==MINMAX_HEAP_MAX_LEVEL))){
-            h->data[c] = h->data[gp];
-            c = gp;
-            continue;
-        }
-        h->data[c] = data;
-        break;
-    }
-}
-
-// minmax heap, del min
-static int __minmax_heap_del(struct mm_heap *h, int minmax){
-    // check if the heap is empty
-    if(h->size == 0){
-        return 0;
-    }
-    int r, p, c, gc, temp, l, m;
-    int i;
-    int idx[6];
-    if(minmax == MIN_HEAP){
-        // find min, min value is root
-        r = h->data[1];
-        // last value becomes new root, push down it
-        temp = h->data[(h->size)--];
-        p = 1;
-        l = MINMAX_HEAP_MIN_LEVEL; // root is min level
-    }
-    else if(minmax == MAX_HEAP){
-        // find max, max value is one of 2 children of root
-        if(h->size == 1){
-            r = h->data[1];
-            h->size--;
-            return r;
-        }
-        else if(h->size == 2){
-            r = h->data[2];
-            h->size--;
-            return r;
-        }
-        else{
-            if( h->data[2] > h->data[3]){
-                r = h->data[2];
-                p = 2;
-            }
-            else{
-                r = h->data[3];
-                p = 3;
-            }
-            temp = h->data[(h->size)--];
-            l = MINMAX_HEAP_MAX_LEVEL;
-        }
-    }
-    m=p;
-    while(1){
-        if((c=p<<1) > h->size){
-            h->data[p] = temp;
-            break;
-        }
-        // select a min/max among its children and grandchildren
-        // l == MINMAX_MIN_LEVEL -> min
-        // l== MINMAX_MAX_LEVEL -> max
-        for(i=0;i<2;i++){
-            idx[i] = c+i;
-        }
-        gc = c<<1;
-        for(i=0;i<4;i++){
-            idx[i+2] = gc + i;
-        }
-        m = c;
-        i = 1;
-        while( i<6 && idx[i] <= h->size ){
-            if(l==MINMAX_HEAP_MAX_LEVEL){
-                if(h->data[m] < h->data[idx[i]]){
-                    m = idx[i];
-                }
-            }
-            else if(l==MINMAX_HEAP_MIN_LEVEL){
-                if(h->data[m] > h->data[idx[i]]){
-                    m = idx[i];
-                }
-            }
-            i++;
-        }
-
-        // parant is min/max: already a heap, break
-        if(l==MINMAX_HEAP_MAX_LEVEL){
-            if(h->data[m] <= temp){
-                h->data[p] = temp;
-                break;
-            }
-            else{
-                if(m < (c+2)){
-                    // child case
-                    h->data[p] = h->data[m];
-                    h->data[m] = temp;
-                    break;
-                }
-                else{
-                    // grandchild case
-                    h->data[p] = h->data[m];
-                    if(temp < h->data[m>>1]){
-                        int t2 = temp;
-                        temp = h->data[m>>1];
-                        h->data[m>>1] = t2;
-                    }
-                    p = m;
-                    continue;
-                }
-            }
-        }
-        else{
-            if(h->data[m] >= temp){
-                h->data[p] = temp;
-                break;
-            }
-            else{
-                if(m < (c+2)){
-                    // child case
-                    h->data[p] = h->data[m];
-                    h->data[m] = temp;
-                    break;
-                }
-                else{
-                    // grandchild case
-                    h->data[p] = h->data[m];
-                    if(temp > h->data[m>>1]){
-                        int t2 = temp;
-                        temp = h->data[m>>1];
-                        h->data[m>>1] = t2;
-                    }
-                    p = m;
-                    continue;
-                }
-            }
-        }
-    }
-    return r;
-}
-#define minmax_heap_del_min(h) __minmax_heap_del(h, MIN_HEAP)
-#define minmax_heap_del_max(h) __minmax_heap_del(h, MAX_HEAP)
-
 
 /*  max_heap_add: add a number in the max heap
     m_heap_add: add a number in the max heap
@@ -956,13 +764,16 @@ static inline void __mm_heap_add(struct mm_heap *h, int data, int minmax){
     int c = ++(h->size);
     int p = c/2;
     while(p>0){
-        if(minmax==MIN_HEAP){
+        // min heap
+        if(minmax==0){
             if(data >= h->data[p]) break;
         }
-        else if(minmax==MAX_HEAP){
+        // max heap
+        else if(minmax==1){
             if(data <= h->data[p]) break;
         }
-        else if(minmax == ABSMIN_HEAP){
+        // abs min heap
+        else if(minmax == 2){
             if(abs(data) > abs(h->data[p])) break;
             else if(abs(data) == abs(h->data[p])){
                 if(data > h->data[p]) break;
@@ -977,9 +788,9 @@ static inline void __mm_heap_add(struct mm_heap *h, int data, int minmax){
     }
     h->data[c] = data;
 }
-#define min_heap_add(h, data) __mm_heap_add(h, data, MIN_HEAP)
-#define max_heap_add(h, data) __mm_heap_add(h, data, MAX_HEAP)
-#define absmin_heap_add(h, data) __mm_heap_add(h, data, ABSMIN_HEAP)
+#define max_heap_add(h, data) __mm_heap_add(h, data, 1)
+#define min_heap_add(h, data) __mm_heap_add(h, data, 0)
+#define absmin_heap_add(h, data) __mm_heap_add(h, data, 2)
 
 /*  max_heap_del: delete a number in the max heap and return it
 *   min_heap_del: delete a number in the min heap and return it
@@ -1084,9 +895,6 @@ static inline int queue_is_full(struct queue *q){
     return n==1 || n==-q->size;
 }
 
-#define queue_len(name) ((name.f-name.r)>=0?\
-        (name.f-name.r):(name.f-name.r+name.size+1))
-
 static inline void queue_resize(struct queue *q){
     if(q->f>q->r){
         q->size += QUEUE_SIZE;
@@ -1160,7 +968,7 @@ static inline int mycmp(const void *a, const void *b){
 //#define down(a) ((a)==0?0:(a)-1)
 //#define up(a,n) ((a)==((n)-1)?(n)-1:(a)+1)
 /*----------------------------------------------------------------------------*/
-/*
+
 // 2 dimensional integer array
 
 struct int2{
@@ -1218,7 +1026,6 @@ static inline int int2_get_row_sum(struct int2 *s, int row){
     }
     return sum;
 }
-*/
 
 /*----------------------------------------------------------------------------*/
 /*
@@ -1298,54 +1105,70 @@ long long gcrt_2(int M, int N, int x, int y){
 */
 
 /*----------------------------------------------------------------------------*/
+#define WALL 0
+#define UNVISITED -1
 
 int main(void){
-
-    int t, k, n;
-    readbuf_f();
-    readd(&t);
+    int map[1000][1000];
+    int n, m;
     int i, j;
-    char c;
-    minmax_heap_init(h);
-    for(i=0;i<t;i++){
-        // initialize data
+    int x, y;
+    int xx, yy;
+    int dx[4] = {0, 1, 0, -1};
+    int dy[4] = {1, 0, -1, 0};
+    queue_init(q);
 
-        readd(&k);
-        for(j=0;j<k;j++){
-            //input and process
-            c = readc();
-            readd(&n);
-            if(c=='I'){
-                minmax_heap_add(&h, n);
+    readbuf_f();
+    readd(&n);
+    readd(&m);
+
+    for(i=0;i<n;i++){
+        for(j=0;j<m;j++){
+            int temp;
+            readd(&temp);
+            switch(temp){
+                case 0:
+                map[i][j] = WALL;
+                break;
+                case 1:
+                map[i][j] = UNVISITED;
+                break;
+                case 2:
+                queue_add_last(&q, i);
+                queue_add_last(&q, j);
+                map[i][j] = WALL;
+                break;
+                default:
             }
-            else if(c=='D'){
-                if(n==1){
-                    minmax_heap_del_max(&h);
-                }
-                else if(n==-1){
-                    minmax_heap_del_min(&h);
-                }
+        }
+    }
+    // bfs
+    while(!queue_is_empty(&q)){
+        x = queue_del(&q);
+        y = queue_del(&q);
+        for(i=0;i<4;i++){
+            xx = x + dx[i];
+            yy = y + dy[i];
+            // out of bound
+            if( xx<0 || xx>=n || yy<0 || yy>=m){
+                continue;
+            }
+            if(map[xx][yy] == UNVISITED){
+                map[xx][yy] = map[x][y] + 1;
+                queue_add_last(&q, xx);
+                queue_add_last(&q, yy);
             }
         }
-        // print
-        if(h.size == 0){
-            writes("EMPTY");
+    }
+    // print
+    for(i=0;i<n;i++){
+        for(j=0;j<m;j++){
+            writed(map[i][j], ' ');
         }
-        else if(h.size == 1){
-            n = minmax_heap_del_min(&h);
-            writed(n, ' ');
-            writed(n);
-        }
-        else{
-            writed(minmax_heap_del_max(&h), ' ');
-            writed(minmax_heap_del_min(&h));
-        }
-        h.size = 0;
+        writec('\n');
     }
     writebuf_f();
 
-
-    minmax_heap_free(h);
-
+    queue_free(q);
     return 0;
 }
