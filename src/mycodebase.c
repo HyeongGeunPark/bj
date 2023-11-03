@@ -1137,6 +1137,11 @@ static inline int queue_del(struct queue *q){
     return r;
 }
 
+static inline void queue_del_all(struct queue *q){
+    q->f = 0;
+    q->r = 0;
+}
+
 /*----------------------------------------------------------------------------*/
 /*
 // wrapper of strcmp for qsort
@@ -1298,54 +1303,104 @@ long long gcrt_2(int M, int N, int x, int y){
 */
 
 /*----------------------------------------------------------------------------*/
+#define VISITED_A 1
+#define VISITED_B 2
+#define NOT_VISITED 0
 
 int main(void){
 
-    int t, k, n;
+    int t, a, b;
+    int temp, current;
+    int i, j;
+    char v;
+    char *buf_p;
+    queue_init(q);
     readbuf_f();
     readd(&t);
-    int i, j;
-    char c;
-    minmax_heap_init(h);
+    int prev[10000];
+    char path[10000];
+    char visited[10000];
+    char buf[10000];
+    int neighbor[5];
+    buf[9999] = 0;
+    char movement_c[6] = "DDSLR";
     for(i=0;i<t;i++){
-        // initialize data
+        readd(&a);
+        readd(&b);
 
-        readd(&k);
-        for(j=0;j<k;j++){
-            //input and process
-            c = readc();
-            readd(&n);
-            if(c=='I'){
-                minmax_heap_add(&h, n);
+        // bfs
+        memset(visited, NOT_VISITED, 10000);
+        queue_add_last(&q, a);
+        visited[a] = VISITED_A;
+        queue_add_last(&q, b);
+        visited[b] = VISITED_B;
+
+        while(!queue_is_empty(&q)){
+            current = queue_del(&q);
+            v = visited[current];
+
+            if(v == VISITED_A){
+                neighbor[1] = current<5000?current<<1:(current-5000)<<1;
+                neighbor[2] = current==0?9999:current-1;
+                neighbor[3] = (current*10 + current/1000)%10000;
+                neighbor[4] = (current%10)*1000 + current/10;
             }
-            else if(c=='D'){
-                if(n==1){
-                    minmax_heap_del_max(&h);
+            else if(v == VISITED_B){
+                neighbor[0] = current>>1;
+                neighbor[1] = (current>>1) + 5000;
+                neighbor[2] = current==9999?0:current+1;
+                neighbor[3] = (current%10)*1000 + current/10;
+                neighbor[4] = (current*10 + current/1000)%10000;
+            }
+            for(j = (v==VISITED_A?1:0);j<5;j++){
+                if((current&1) && j<2 && v==VISITED_B){
+                    continue;   // search from b, odd number cannot be reached
+                                // by D operation
                 }
-                else if(n==-1){
-                    minmax_heap_del_min(&h);
+                temp = neighbor[j];
+                if(visited[temp] == v){
+                    // already visited, from same side(A or B)
+                    continue;
+                }
+                else if(visited[temp] == NOT_VISITED){
+                    // newly visited node
+                    prev[temp] = current;
+                    path[temp] = movement_c[j];
+                    visited[temp] = v;
+                    queue_add_last(&q, temp);
+                }
+                else{
+                    //search from each side coincides
+                    // current, temp are two endpoints of each search
+                    if(v == VISITED_B){
+                        int t1 = current;
+                        current = temp;
+                        temp = t1;
+                    }
+                    // now current = search end from A, temp = search end from B
+                    // print A to current
+                    buf_p = buf+9999;
+                    while(current!=a){
+                        *(--buf_p) = path[current];
+                        current = prev[current];
+                    }
+                    writes(buf_p); wp--;
+                    // current to temp
+                    writec(movement_c[j]);
+                    // print temp from B
+                    while(temp!=b){
+                        writec(path[temp]);
+                        temp = prev[temp];
+                    }
+                    writec('\n');
+                    queue_del_all(&q);
+                    break;
                 }
             }
         }
-        // print
-        if(h.size == 0){
-            writes("EMPTY");
-        }
-        else if(h.size == 1){
-            n = minmax_heap_del_min(&h);
-            writed(n, ' ');
-            writed(n);
-        }
-        else{
-            writed(minmax_heap_del_max(&h), ' ');
-            writed(minmax_heap_del_min(&h));
-        }
-        h.size = 0;
     }
     writebuf_f();
 
-
-    minmax_heap_free(h);
-
+    queue_free(q);
     return 0;
 }
