@@ -79,50 +79,35 @@ static inline void writec(char c){
 
 /******************************************************************/
 
-static inline int icomp(const void *a, const void *b){
-    const int *aa = (const int*)a;
-    const int *bb = (const int*)b;
-    return *aa-*bb;
-}
-
-static inline void permute(int depth, int n, int m, int *node, int *path){
-    int i;
-    if(depth == m){
-        //print
-        for(i=0;i<m;i++){
-            writed(node[path[i]], ' ');
-        }
-        writec('\n');
-    }
-    else{
-        for(i=(depth==0?0:path[depth-1]);i<n;i++){
-            path[depth] = i;
-            permute(depth+1, n, m, node, path);
-            while(i<n && node[i] == node[i+1]){
-                i++;
-            }
-        }
-    }
-}
+#define max(a,b) ((a)>(b)?(a):(b))
 
 int main(void){
-    int n, m;
-    int i;
-    int node[8];
-    int path[8];
-    int selected[8] = {0};
+    int n;
+    int i, j;
+    int res;
+    int arr[1000];
+    int memo[1000] = {0};
+
 
     read(STDIN_FILENO, RBUF, BUF_SIZE);
     readd(&n);
-    readd(&m);
     for(i=0;i<n;i++){
-        readd(node+i);
+        readd(&arr[i]);
     }
-    qsort(node, n, sizeof(int), icomp);
 
-    permute(0, n, m, node, path);
-
+    for(i=0;i<n;i++){
+        // forward propagation
+        for(j=i+1; j<n;j++){
+            if(arr[j] > arr[i])
+                memo[j] = max(memo[j], memo[i]+1);
+        }
+    }
+    // find max
+    res = 0;
+    for(i=0;i<n;i++){
+        res = max(res, memo[i]);
+    }
+    writed(res+1, '\n');
     write(STDOUT_FILENO, WBUF, wp-WBUF);
-
     return 0;
 }

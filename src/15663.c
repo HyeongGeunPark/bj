@@ -85,7 +85,7 @@ static inline int icomp(const void *a, const void *b){
     return *aa-*bb;
 }
 
-static inline void permute(int depth, int n, int m, int *node, int *path){
+static inline void permute(int depth, int n, int m, int *selected, int *node, int *path){
     int i;
     if(depth == m){
         //print
@@ -95,11 +95,15 @@ static inline void permute(int depth, int n, int m, int *node, int *path){
         writec('\n');
     }
     else{
-        for(i=(depth==0?0:path[depth-1]);i<n;i++){
-            path[depth] = i;
-            permute(depth+1, n, m, node, path);
-            while(i<n && node[i] == node[i+1]){
-                i++;
+        for(i=0;i<n;i++){
+            if(selected[i]==0){
+                selected[i] = 1;
+                path[depth] = i;
+                permute(depth+1, n, m, selected, node, path);
+                selected[i] = 0;
+                while(i<n && node[i] == node[i+1]){
+                    i++;
+                }
             }
         }
     }
@@ -120,7 +124,7 @@ int main(void){
     }
     qsort(node, n, sizeof(int), icomp);
 
-    permute(0, n, m, node, path);
+    permute(0, n, m, selected, node, path);
 
     write(STDOUT_FILENO, WBUF, wp-WBUF);
 

@@ -78,51 +78,45 @@ static inline void writec(char c){
 }
 
 /******************************************************************/
-
-static inline int icomp(const void *a, const void *b){
+int icomp(const void *a, const void *b){
     const int *aa = (const int*)a;
     const int *bb = (const int*)b;
     return *aa-*bb;
 }
 
-static inline void permute(int depth, int n, int m, int *node, int *path){
-    int i;
-    if(depth == m){
-        //print
+void permute(int *node, int *path, int start, int end, int depth, int m){
+    int i, j;
+    if(depth==m){
         for(i=0;i<m;i++){
             writed(node[path[i]], ' ');
         }
         writec('\n');
+        return;
     }
-    else{
-        for(i=(depth==0?0:path[depth-1]);i<n;i++){
-            path[depth] = i;
-            permute(depth+1, n, m, node, path);
-            while(i<n && node[i] == node[i+1]){
-                i++;
-            }
-        }
+    for(i=start; i<end; i++){
+        path[depth] = i;
+        permute(node, path, i, end, depth+1, m);
     }
 }
 
 int main(void){
     int n, m;
-    int i;
+    int i, j;
+    int d;
+    int path[8] = {0};
     int node[8];
-    int path[8];
-    int selected[8] = {0};
 
     read(STDIN_FILENO, RBUF, BUF_SIZE);
     readd(&n);
     readd(&m);
     for(i=0;i<n;i++){
-        readd(node+i);
+        readd(&node[i]);
     }
     qsort(node, n, sizeof(int), icomp);
 
-    permute(0, n, m, node, path);
+    permute(node, path, 0, n, 0, m);
+
 
     write(STDOUT_FILENO, WBUF, wp-WBUF);
-
     return 0;
 }

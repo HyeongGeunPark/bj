@@ -78,51 +78,65 @@ static inline void writec(char c){
 }
 
 /******************************************************************/
-
-static inline int icomp(const void *a, const void *b){
+int icomp(const void *a, const void *b){
     const int *aa = (const int*)a;
     const int *bb = (const int*)b;
     return *aa-*bb;
 }
 
-static inline void permute(int depth, int n, int m, int *node, int *path){
-    int i;
-    if(depth == m){
-        //print
-        for(i=0;i<m;i++){
-            writed(node[path[i]], ' ');
-        }
-        writec('\n');
-    }
-    else{
-        for(i=(depth==0?0:path[depth-1]);i<n;i++){
-            path[depth] = i;
-            permute(depth+1, n, m, node, path);
-            while(i<n && node[i] == node[i+1]){
-                i++;
-            }
-        }
-    }
-}
-
 int main(void){
     int n, m;
-    int i;
-    int node[8];
-    int path[8];
-    int selected[8] = {0};
+    int i, j;
+    int d;
+    int path[9] = {0};
+    int node[9];
+    int selected[9] = {0};
+    int tried[9][9] = {0};
 
     read(STDIN_FILENO, RBUF, BUF_SIZE);
     readd(&n);
     readd(&m);
-    for(i=0;i<n;i++){
-        readd(node+i);
+    for(i=1;i<=n;i++){
+        readd(&node[i]);
     }
-    qsort(node, n, sizeof(int), icomp);
+    qsort(node+1, n, sizeof(int), icomp);
 
-    permute(0, n, m, node, path);
+    d = 1;
+    path[0] = 0;
+
+    while(d){
+        // find untried valid node
+        for(i=1;i<=n;i++){
+            if(selected[i] == 0 && tried[d][i] == 0){
+                tried[d][i] = 1;
+                path[d] = i;
+                break;
+            }
+        }
+        // if there is no valid node untried
+        if(i == n+1){
+            // backtrack
+            for(j=1;j<=n;j++){
+                tried[d][j] = 0;
+            }
+            d--;
+            selected[path[d]] = 0;
+            continue;
+        }
+        // solution found, print
+        if(d==m){
+            for(j=1;j<=m;j++){
+                writed(node[path[j]], ' ');
+            }
+            writec('\n');
+        }
+        else{
+            // still solving
+            selected[path[d]] = 1;
+            d++;
+        }
+    }
 
     write(STDOUT_FILENO, WBUF, wp-WBUF);
-
     return 0;
 }
