@@ -1,4 +1,4 @@
-/*#pragma GCC optimize("O3")*/
+#pragma GCC optimize("O3")
 
 #include<stdio.h>
 #include<string.h>
@@ -17,6 +17,10 @@ char *wp = WBUF;
 
 static inline int is_num(char* c){
     return (*c>='0' && *c<='9');
+}
+
+static inline char readc(){
+    return *rp++;
 }
 
 static inline int readd(int *n){
@@ -90,40 +94,42 @@ static inline void writed(int n, char end){
 
 int main(void){
 
-    int n, l;
-    int i, j;
-    int cnt;
-    char body[1002];
-    int beauty[1000] = {0};
-    int max_beauty = 0;
-    body[0] = '0';
+    int n;
+    int half;
+    int i;
+    int alpha[26] = {0};
+    char temp;
+    int res;
 
     read(STDIN_FILENO, RBUF, BUF_SIZE);
     readd(&n);
-    readd(&l);
+    readc();
+    half = n/2;
 
-    for(i=0;i<n;i++){
-        reads(&body[1]);
-        // 줄무늬 찾기
-        cnt = 0;
-        for(j=0;j<l;j++){
-            if(body[j]=='0' && body[j+1]=='1'){
-                cnt++;
-            }
-        }
-        beauty[i] = cnt;
-        if(cnt>max_beauty){
-            max_beauty = cnt;
+    for(i=0;i<half;i++){
+        temp = readc();
+        alpha[temp-'a']++;
+    }
+    if(n%2){
+        readc();
+    }
+    for(i=0;i<half;i++){
+        temp = readc();
+        alpha[temp-'a']++;
+    }
+
+    res = 0;
+    for(i=0;i<26;i++){
+        if(alpha[i]%2){
+            res = 1;
         }
     }
-    cnt = 0;
-    for(i=0;i<n;i++){
-        if(beauty[i] == max_beauty){
-            cnt++;
-        }
+
+    if(res){
+        printf("No\n");
     }
-    writed(max_beauty, ' ');
-    writed(cnt, '\n');
-    write(STDOUT_FILENO, WBUF, wp-WBUF);
+    else{
+        printf("Yes\n");
+    }
     return 0;
 }

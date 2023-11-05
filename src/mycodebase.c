@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-
 /*----------------------------------------------------------------------------*/
 
 // variadic function support macros
@@ -34,9 +33,7 @@
 /*----------------------------------------------------------------------------*/
 
 // buffered input output related things
-#define BUF_SIZE 100000  // size of input, output buffer for buffered IO functions
-#define STDOUT_FD 1
-#define STDIN_FD 0
+#define BUF_SIZE (1<<20)  // size of input, output buffer for buffered IO functions
 
 //check: all bulk read functions(reads, readu) removes delimeter automatically
 //      all bulk write functions(writes, writeu) adds some end character(currently \n)
@@ -65,7 +62,7 @@ char *wp;
 
 // writebuf_f: dump all available WBUF to stdout manually
 static inline void writebuf_f(){
-    write(STDOUT_FD, WBUF, (wp-WBUF));
+    write(STDOUT_FILENO, WBUF, (wp-WBUF));
     wp = WBUF;
 }
 
@@ -134,7 +131,7 @@ static inline void __writed(long long d, char end){
 // this function should be called at the first
 static inline void readbuf_f(void){
     p = BUF;
-    int r_return = read(STDIN_FD, BUF, BUF_SIZE);
+    int r_return = read(STDIN_FILENO, BUF, BUF_SIZE);
     if(r_return<0){
 		r_return = 0;
     }

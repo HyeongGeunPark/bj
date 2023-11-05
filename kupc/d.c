@@ -1,4 +1,4 @@
-/*#pragma GCC optimize("O3")*/
+#pragma GCC optimize("O3")
 
 #include<stdio.h>
 #include<string.h>
@@ -90,40 +90,20 @@ static inline void writed(int n, char end){
 
 int main(void){
 
-    int n, l;
-    int i, j;
-    int cnt;
-    char body[1002];
-    int beauty[1000] = {0};
-    int max_beauty = 0;
-    body[0] = '0';
+    int n;
+    int i, temp;
+    int cnt[1001] = {0};
+    int res = 0;
 
     read(STDIN_FILENO, RBUF, BUF_SIZE);
     readd(&n);
-    readd(&l);
-
     for(i=0;i<n;i++){
-        reads(&body[1]);
-        // 줄무늬 찾기
-        cnt = 0;
-        for(j=0;j<l;j++){
-            if(body[j]=='0' && body[j+1]=='1'){
-                cnt++;
-            }
-        }
-        beauty[i] = cnt;
-        if(cnt>max_beauty){
-            max_beauty = cnt;
+        readd(&temp);
+        if(cnt[temp] < 2){
+            cnt[temp]++;
+            res++;
         }
     }
-    cnt = 0;
-    for(i=0;i<n;i++){
-        if(beauty[i] == max_beauty){
-            cnt++;
-        }
-    }
-    writed(max_beauty, ' ');
-    writed(cnt, '\n');
-    write(STDOUT_FILENO, WBUF, wp-WBUF);
+    printf("%d\n", res);
     return 0;
 }

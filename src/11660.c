@@ -1,9 +1,9 @@
-/*#pragma GCC optimize("O3")*/
+#pragma GCC optimize("O3")
 
 #include<stdio.h>
 #include<stdlib.h>
-#include<limits.h>
 #include<unistd.h>
+
 /*----------------------------------------------------------------------------*/
 
 // variadic function support macros
@@ -215,164 +215,35 @@ static inline void reads(char *dest){
     *dest=0;
 }
 
-/*----------------------------------------------------------------------------*/
-
-// generic min heap
-struct minheap{
-    void *data;
-    int size;
-};
-
-
-/*----------------------------------------------------------------------------*/
-
-// min heap for Dijkstra's Algorithm
-#define MINHEAP_SIZE 100000
-struct node{
-    int index;
-    int cost;
-};
-
-#define minheap_init(name) struct minheap name = {\
-                .data = malloc(sizeof(struct node)*(MINHEAP_SIZE+1)), .size=0}
-
-#define minheap_free(name) free(name.data);
-
-static inline void minheap_add(struct minheap *h, struct node *new){
-    struct node *data = (struct node *)(h->data);
-
-    int p, c;
-    c = ++h->size;
-    p = c>>1;
-
-    while(p){
-        if(data[p].cost > new->cost){
-            data[c] = data[p];
-            c = p;
-            p = c>>1;
-        }
-        else{
-            break;
-        }
-    }
-    data[c] = *new;
-}
-
-static inline struct node minheap_del(struct minheap *h){
-    struct node *data = (struct node *)(h->data);
-    int p, c;
-    struct node r = {0,0};
-    if(h->size==0){
-        return r;
-    }
-    r = data[1];
-    
-    struct node temp = data[h->size--];
-
-    p = 1;
-    c = 2;
-
-    while(c<=h->size){
-        if(c<h->size && data[c].cost > data[c+1].cost){
-            c++;
-        }
-        if(data[c].cost < temp.cost){
-            data[p] = data[c];
-            p = c;
-            c = p<<1;
-            continue;
-        }
-        break;
-    }
-    data[p] = temp;
-    return r;
-}
-
-
-
-
-/*----------------------------------------------------------------------------*/
-
 int main(void){
+    int arr[1025][1025] = {0};
     int n, m;
     int i, j;
-    int dep, dest, cost;
-    int **map;
-    int *mcost;
-    int *visited;
-    struct node temp, current;
-    minheap_init(h);
-
+    int x1, x2, y1, y2;
+    int coord[4];
     readbuf_f();
+
     readd(&n);
     readd(&m);
     n++;
-    map = malloc(sizeof(int*)*n);
-    for(i=0;i<n;i++){
-        map[i] = malloc(n*sizeof(int));
-    }
-    for(i=0;i<n;i++){
-        for(j=0;j<n;j++){
-            map[i][j] = INT_MAX;
+
+    for(i=1;i<n;i++){
+        for(j=1;j<n;j++){
+            readd(&arr[i][j]);
+            arr[i][j] = arr[i-1][j] + arr[i][j-1] - arr[i-1][j-1] + arr[i][j];
         }
     }
-    mcost  = malloc(n*sizeof(int));
-    for(i=0;i<n;i++){
-        mcost[i] = INT_MAX;
-    }
-    visited = calloc(n, sizeof(int));
 
     for(i=0;i<m;i++){
-        readd(&dep);
-        readd(&dest);
-        readd(&cost);
-        if(map[dep][dest] > cost){
-            map[dep][dest] = cost;
-        }
+        readd(&x1);
+        readd(&y1);
+        readd(&x2);
+        readd(&y2);
+        writed(arr[x2][y2] + arr[x1-1][y1-1] - arr[x1-1][y2] - arr[x2][y1-1]);
     }
 
-    readd(&dep);
-    readd(&dest);
-    if(dep == dest){
-        printf("0\n");
-        goto free;
-    }
-    // Dijkstra's Algorithm, using min heap
-    temp.index = dep;
-    temp.cost = 0;
-    mcost[dep] = 0;
-    minheap_add(&h, &temp);
-    while(h.size!=0){
-        current = minheap_del(&h);
-        if(current.index == dest){
-            break;
-        }
-        if(visited[current.index]){
-            continue;
-        }
-        visited[current.index] = 1;
-        for(i=1;i<n;i++){
-            if(map[current.index][i]==INT_MAX){
-                continue;
-            }
-            if(mcost[i] > (mcost[current.index]+map[current.index][i])){
-                mcost[i] = mcost[current.index]+map[current.index][i];
-                temp.index=i;
-                temp.cost = mcost[i];
-                minheap_add(&h, &temp);
-            }
-        }
-    }
+    writebuf_f();
 
-    printf("%d\n", mcost[dest]);
-
-    free:
-
-    for(i=0;i<n;i++){
-        free(map[i]);
-    }
-    free(map);
-    free(mcost);
-    free(visited);
     return 0;
+    
 }
