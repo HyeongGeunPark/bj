@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+// 12~222 fastio
+
 /*----------------------------------------------------------------------------*/
 
 // variadic function support macros

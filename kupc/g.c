@@ -4,14 +4,14 @@
 #include<string.h>
 #include<unistd.h>
 #include<stdlib.h>
+#include<limits.h>
 
 /******************************************************************/
 
 // simple buffered read / write
-// line 8~87
 
-#define RBUF_SIZE 2000000
-#define WBUF_SIZE 2000000
+#define RBUF_SIZE 4000000
+#define WBUF_SIZE 10
 char RBUF[RBUF_SIZE];
 char WBUF[WBUF_SIZE];
 char *rp = RBUF;
@@ -19,6 +19,10 @@ char *wp = WBUF;
 
 static inline int is_num(char* c){
     return (*c>='0' && *c<='9');
+}
+
+static inline char readc(){
+    return *rp++;
 }
 
 static inline int readd(int *n){
@@ -30,6 +34,31 @@ static inline int readd(int *n){
         }
         else if(*rp=='-'){
             sign = 0;
+            rp++;
+            break;
+        }
+        rp++;
+    }
+    while(1){
+        r *= 10;
+        r += ((*rp++) - '0');
+        if(!is_num(rp)){
+            break;
+        }
+    }
+    *n = sign?r:-r;
+}
+
+static inline int readlld(long long *n){
+    long long r = 0;
+    int sign = 1;
+    while(1){
+        if(is_num(rp)){
+            break;
+        }
+        else if(*rp=='-'){
+            sign = 0;
+            rp++;
             break;
         }
         rp++;
@@ -86,46 +115,29 @@ static inline void writed(int n, char end){
 
 /******************************************************************/
 
-// some macros
-
 #define max(a, b) ((a)>(b)?(a):(b))
 
 int main(void){
 
-    int n, l;
-    int i, j;
-    int cnt;
-    char body[1002];
-    int beauty[1000] = {0};
-    int max_beauty = 0;
-    body[0] = '0';
-
-    read(STDIN_FILENO, RBUF, BUF_SIZE);
+    int n;
+    int i;
+    long long a[200004] = {0};
+    long long m[200004] = {0, LLONG_MIN, LLONG_MIN, 0,};
+    long long res = LLONG_MIN;
+    read(STDIN_FILENO, RBUF, RBUF_SIZE);
     readd(&n);
-    readd(&l);
-
     for(i=0;i<n;i++){
-        reads(&body[1]);
-        // 줄무늬 찾기
-        cnt = 0;
-        for(j=0;j<l;j++){
-            if(body[j]=='0' && body[j+1]=='1'){
-                cnt++;
-            }
-        }
-        beauty[i] = cnt;
-        if(cnt>max_beauty){
-            max_beauty = cnt;
+        readlld(&a[i]);
+    }
+    for(i=1;i<n+1;i++){
+        m[i] = max(m[i], m[i-1]+a[i-1]);
+        m[i+2] = m[i-1] + 2*(a[i-1]+a[i]+a[i+1]);
+    }
+    for(i = n; i<n+3;i++){
+        if(res < m[i]){
+            res = m[i];
         }
     }
-    cnt = 0;
-    for(i=0;i<n;i++){
-        if(beauty[i] == max_beauty){
-            cnt++;
-        }
-    }
-    writed(max_beauty, ' ');
-    writed(cnt, '\n');
-    write(STDOUT_FILENO, WBUF, wp-WBUF);
+    printf("%lld\n", res);
     return 0;
 }

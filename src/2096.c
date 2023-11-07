@@ -1,17 +1,16 @@
-/*#pragma GCC optimize("O3")*/
+#pragma GCC optimize("O3")
 
 #include<stdio.h>
-#include<string.h>
-#include<unistd.h>
+#include<limits.h>
 #include<stdlib.h>
+#include<unistd.h>
 
 /******************************************************************/
 
 // simple buffered read / write
-// line 8~87
 
-#define RBUF_SIZE 2000000
-#define WBUF_SIZE 2000000
+#define RBUF_SIZE 650000
+#define WBUF_SIZE 10
 char RBUF[RBUF_SIZE];
 char WBUF[WBUF_SIZE];
 char *rp = RBUF;
@@ -83,49 +82,52 @@ static inline void writed(int n, char end){
     *wp++ = end;
 }
 
-
-/******************************************************************/
-
-// some macros
-
-#define max(a, b) ((a)>(b)?(a):(b))
+#define max(a,b) ((a)>(b)?(a):(b))
+#define min(a,b) ((a)<(b)?(a):(b))
 
 int main(void){
 
-    int n, l;
+    int n;
     int i, j;
-    int cnt;
-    char body[1002];
-    int beauty[1000] = {0};
-    int max_beauty = 0;
-    body[0] = '0';
-
-    read(STDIN_FILENO, RBUF, BUF_SIZE);
+    int res1 = 0;
+    int res2 = INT_MAX;
+    int arr[100000][3] = {0};
+    int mem[100000][3];
+    read(STDIN_FILENO, RBUF, RBUF_SIZE);
     readd(&n);
-    readd(&l);
 
     for(i=0;i<n;i++){
-        reads(&body[1]);
-        // 줄무늬 찾기
-        cnt = 0;
-        for(j=0;j<l;j++){
-            if(body[j]=='0' && body[j+1]=='1'){
-                cnt++;
-            }
-        }
-        beauty[i] = cnt;
-        if(cnt>max_beauty){
-            max_beauty = cnt;
+        for(j=0;j<3;j++){
+            readd(&arr[i][j]);
         }
     }
-    cnt = 0;
-    for(i=0;i<n;i++){
-        if(beauty[i] == max_beauty){
-            cnt++;
+
+    for(i=0;i<3;i++){
+        mem[0][i] = arr[0][i];
+    }
+    for(i=1;i<n;i++){
+        mem[i][0] = arr[i][0] + max(mem[i-1][0], mem[i-1][1]);
+        mem[i][1] = arr[i][1] + max(max(mem[i-1][0], mem[i-1][1]), mem[i-1][2]);
+        mem[i][2] = arr[i][2] + max(mem[i-1][1], mem[i-1][2]);
+    }
+    for(i=0;i<3;i++){
+        if(res1<mem[n-1][i]){
+            res1 = mem[n-1][i];
         }
     }
-    writed(max_beauty, ' ');
-    writed(cnt, '\n');
+
+    for(i=1;i<n;i++){
+        mem[i][0] = arr[i][0] + min(mem[i-1][0], mem[i-1][1]);
+        mem[i][1] = arr[i][1] + min(min(mem[i-1][0], mem[i-1][1]), mem[i-1][2]);
+        mem[i][2] = arr[i][2] + min(mem[i-1][1], mem[i-1][2]);
+    }
+    for(i=0;i<3;i++){
+        if(res2>mem[n-1][i]){
+            res2 = mem[n-1][i];
+        }
+    }
+    writed(res1, ' ');
+    writed(res2, '\n');
     write(STDOUT_FILENO, WBUF, wp-WBUF);
     return 0;
 }

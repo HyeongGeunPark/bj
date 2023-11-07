@@ -10,58 +10,33 @@
 
 // simple buffered read / write
 
-/*
-#define RBUF_SIZE 4000000
-#define WBUF_SIZE 10
-char RBUF[RBUF_SIZE];
-char WBUF[WBUF_SIZE];
-char *rp = RBUF;
-char *wp = WBUF;
-*/
-char *RBUF = NULL;
-char *rp = NULL;
-char *WBUF = NULL;
-char *wp = NULL;
+#include<sys/stat.h>
+#include<sys/mman.h>
 
-#define rbuf_init(len) RBUF=malloc(sizeof(char)*len);rp=RBUF
-#define wbuf_init(len) WBUF=malloc(sizeof(char)*len);wp=WBUF
-#define rbuf_free() free(RBUF)
-#define wbuf_free() free(WBUF)
+char *RBUF;
+char *rp;
+#define WBUF_SIZE 1<<24
+char WBUF[WBUF_SIZE];
+char *wp = WBUF;
+
+static inline size_t mymmap(){
+    struct stat stat;
+    fstat(STDIN_FILENO, &stat);
+    RBUF = mmap(NULL, stat.st_size, PROT_READ, MAP_PRIVATE, STDIN_FILENO, 0);
+    rp = RBUF;
+    return stat.st_size;
+}
 
 static inline int is_num(char* c){
     return (*c>='0' && *c<='9');
 }
 
-static inline char readc(){
-    return *rp++;
+static inline void write_f(void){
+    write(STDOUT_FILENO, WBUF, wp-WBUF);
 }
 
 static inline int readd(int *n){
     int r = 0;
-    int sign = 1;
-    while(1){
-        if(is_num(rp)){
-            break;
-        }
-        else if(*rp=='-'){
-            sign = 0;
-            rp++;
-            break;
-        }
-        rp++;
-    }
-    while(1){
-        r *= 10;
-        r += ((*rp++) - '0');
-        if(!is_num(rp)){
-            break;
-        }
-    }
-    *n = sign?r:-r;
-}
-
-static inline int readlld(long long *n){
-    long long r = 0;
     int sign = 1;
     while(1){
         if(is_num(rp)){
@@ -123,33 +98,14 @@ static inline void writed(int n, char end){
     *wp++ = end;
 }
 
-static inline void writelld(long long n, char end){
-    char buf[60];
-    int sign = 1;
-    int i = 0;
-    if(n<0){
-        sign = 0;
-        n = -n;
-    }
-    while(1){
-        buf[i++] = n%10 + '0';
-        n /= 10;
-        if(n==0){
-            break;
-        }
-    }
-    if(sign==0){
-        buf[i++] = '-';
-    }
-    while(i>0){
-        *(wp++) = buf[--i];
+static inline void writes(char *c, char end){
+    while(*c){
+        *wp++ = *c++;
     }
     *wp++ = end;
 }
 
 /******************************************************************/
-#define RBUF_SIZE 5000000
-#define WBUF_SIZE 5000000
 
 #define max(a, b) ((a)>(b)?(a):(b))
 
@@ -158,48 +114,37 @@ int main(void){
     int n, m, q;
     int i, j;
     int x, y;
-    long long temp;
-    long long **pond;
-    RBUF = malloc(sizeof(char)*RBUF_SIZE);
-    rp = RBUF;
-    WBUF = malloc(sizeof(char)*WBUF_SIZE);
-    wp = WBUF;
-
-    read(STDIN_FILENO, RBUF, RBUF_SIZE);
+    int temp;
+    int **pond;
+    mymmap();
 
 
     readd(&n);
     readd(&m);
     readd(&q);
 
-    pond = malloc(sizeof(long long*)*n);
-    for(i=0;i<n;i++){
-        pond[i] = malloc(sizeof(long long)*m);
+    pond = malloc(sizeof(int*)*(n+2));
+    for(i=0;i<=n+1;i++){
+        pond[i] = calloc(m+1, sizeof(int));
     }
 
 
-    for(j=0;j<m;j++){
-        readlld(&pond[0][j]);
-    }
-    for(i=1;i<n;i++){
-        readlld(&temp);
-        pond[i][0] = pond[i-1][0] + temp;
-        for(j=1;j<m;j++){
-            readlld(&temp);
-            pond[i][j] = pond[i-1][j-1] + pond[i-1][j] + temp;
+    for(i=2;i<=n+1;i++){
+        for(j=1;j<=m;j++){
+            readd(&temp);
+            pond[i][j] = pond[i-1][j] + pond[i-1][j-1] - pond[i-2][j-1]+ temp;
         }
     }
 
     for(i=0;i<q;i++){
         readd(&x);
         readd(&y);
-        writelld(pond[x-1][y-1], '\n');
+        writed(pond[x+1][y], '\n');
     }
-    write(STDOUT_FILENO, WBUF, wp-WBUF);
 
-    rbuf_free();
-    wbuf_free();
-    for(i=0;i<n;i++){
+    write_f();
+
+    for(i=0;i<n+1;i++){
         free(pond[i]);
     }
     free(pond);
