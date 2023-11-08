@@ -9,7 +9,7 @@
 
 char *RBUF;
 char *rp;
-#define WBUF_SIZE 1<<20
+#define WBUF_SIZE 1<<1
 char WBUF[WBUF_SIZE];
 char *wp = WBUF;
 
@@ -52,49 +52,48 @@ static inline int readd(int *n){
     *n = sign?r:-r;
 }
 
-static inline void reads(char *c){
-    while(1){
-        if(*rp>32){
-            break;
-        }
-        rp++;
-    }
-    while(1){
-        *(c++) = *(rp++);
-        if(*rp == '\n' || *rp == 0){
-            break;
-        }
-    }
-}
+#define max(a,b) ((a)>(b)?(a):(b))
 
-static inline void writed(int n, char end){
-    char buf[20];
-    int sign = 1;
-    int i = 0;
-    if(n<0){
-        sign = 0;
-        n = -n;
+int main(void){
+
+    int n;
+    int i, j;
+    int result;
+    int temp;
+    int arr[1000];
+    int fwd[1000] = {0};
+    int bwd[1000] = {0};
+    mymmap();
+
+    readd(&n);
+    for(i=0;i<n;i++){
+        readd(&arr[i]);
     }
-    while(1){
-        buf[i++] = n%10 + '0';
-        n /= 10;
-        if(n==0){
-            break;
+
+    // fwd dp
+    for(i=0;i<n;i++){
+        for(j=0;j<i;j++){
+            if(arr[j]<arr[i] && fwd[i]<=fwd[j]){
+                fwd[i] = fwd[j]+1;
+            }
         }
     }
-    if(sign==0){
-        buf[i++] = '-';
-    }
-    while(i>0){
-        *(wp++) = buf[--i];
-    }
-    *wp++ = end;
-}
 
-static inline void writes(char *c, char end){
-    while(*c){
-        *wp++ = *c++;
+    // bwd dp
+    result = 0;
+    for(i=n-1;i>=0;i--){
+        for(j=n-1;j>i;j--){
+            if(arr[j]<arr[i] && bwd[i]<=bwd[j]){
+                bwd[i] = bwd[j]+1;
+            }
+        }
+        temp = bwd[i] + fwd[i];
+        if(result < temp){
+            result = temp;
+        }
     }
-    *wp++ = end;
-}
 
+    printf("%d\n" ,result+1);
+    return 0;
+
+}

@@ -1,15 +1,21 @@
 #pragma GCC optimize("O3")
 
 #include<stdio.h>
-#include<unistd.h>
 #include<string.h>
+#include<unistd.h>
+#include<stdlib.h>
+#include<limits.h>
+
+/******************************************************************/
+
+// simple buffered read / write
 
 #include<sys/stat.h>
 #include<sys/mman.h>
 
 char *RBUF;
 char *rp;
-#define WBUF_SIZE 1<<20
+#define WBUF_SIZE 1<<2
 char WBUF[WBUF_SIZE];
 char *wp = WBUF;
 
@@ -38,6 +44,7 @@ static inline int readd(int *n){
         }
         else if(*rp=='-'){
             sign = 0;
+            rp++;
             break;
         }
         rp++;
@@ -50,6 +57,17 @@ static inline int readd(int *n){
         }
     }
     *n = sign?r:-r;
+}
+
+#define IGNORE_SPACE 1
+
+static inline char readc(int mode){
+    if(mode == IGNORE_SPACE){
+        while(*rp<33){
+            rp++;
+        }
+    }
+    return *rp++;
 }
 
 static inline void reads(char *c){
@@ -98,3 +116,49 @@ static inline void writes(char *c, char end){
     *wp++ = end;
 }
 
+/******************************************************************/
+#define max(a, b) ((a)>(b)?(a):(b))
+int r, c;
+char map[20][20];
+int visited[20][20] = {0};
+int max_len;
+int mov_x[4] = {1, 0, -1, 0};
+int mov_y[4] = {0, -1, 0, 1};
+
+void dfs(int x, int y, int depth, int used){
+    int xx, yy;
+    if(visited[x][y] == used){
+        return;
+    }
+    if(max_len < depth){
+        max_len = depth;
+    }
+    visited[x][y] = used;
+    for(int i=0;i<4;i++){
+        xx = x+mov_x[i];
+        yy = y+mov_y[i];
+        if(xx<0 || yy<0 || xx>=r || yy>= c || used&(1<<(map[xx][yy]-'A'))){
+            continue;
+        }
+        dfs(xx, yy, depth+1, used|(1<<(map[xx][yy]-'A')));
+    }
+
+}
+
+int main(void){
+
+    mymmap();
+    readd(&r);
+    readd(&c);
+
+    for(int i=0;i<r;i++){
+        reads(map[i]);
+    }
+
+    dfs(0, 0, 1, 1<<(map[0][0] - 'A'));
+    printf("%d\n", max_len);
+
+
+
+    return 0;
+}
