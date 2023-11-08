@@ -21,6 +21,14 @@ static inline int is_num(char* c){
     return (*c>='0' && *c<='9');
 }
 
+static inline void read_f(void){
+    rpe = rp + read(STDIN_FILENO, RBUF, RBUF_SIZE);
+}
+
+static inline void write_f(void){
+    write(STDOUT_FILENO, WBUF, wp-WBUF);
+}
+
 static inline int readd(int *n){
     int r = 0;
     int sign = 1;
@@ -79,6 +87,13 @@ static inline void writed(int n, char end){
     }
     while(i>0){
         *(wp++) = buf[--i];
+    }
+    *wp++ = end;
+}
+
+static inline void writes(char *c, char end){
+    while(*c){
+        *wp++ = *c++;
     }
     *wp++ = end;
 }
