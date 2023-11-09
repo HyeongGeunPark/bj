@@ -120,8 +120,8 @@ if has("gui_running")
 end
 
 " 한줄 주석 처리
-map // :s/^/\/\/<cr>:noh<cr>
-map /; :s/^\/\//<cr>:noh<cr>
+map // :s/^/\/\/<cr>:noh<cr><cr>
+map /; :s/^\/\//<cr>:noh<cr><cr>
 " 한줄 주석 처리 /**/
 "map // V:s/^/\/*/<cr>gv:s/$/*\//<cr>:noh<cr>
 "map /; V:s/^\/\*//<cr>gv:s/\*\/$/<cr>:noh<cr>
