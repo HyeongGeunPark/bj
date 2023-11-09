@@ -1,4 +1,4 @@
-/*#pragma GCC optimize("O3")*/
+#pragma GCC optimize("O3")
 
 #include<stdio.h>
 #include<unistd.h>
@@ -104,7 +104,6 @@ struct xgcd_r xgcd(int a, int b){
 }
 
 unsigned long long mod_inv(int x, int mod){
-    // 확장 유클리드 호제법
     struct xgcd_r r = xgcd(x, mod);
     unsigned long long res;
     if(r.s<0){
@@ -116,25 +115,6 @@ unsigned long long mod_inv(int x, int mod){
     return res;
 }
 
-unsigned long long mod_power(int x, int pow, int mod){
-    unsigned long long result = 1;
-    unsigned long long temp = x;
-    while(pow){
-        if(pow&1){
-            result = (result * temp)%mod;
-        }
-        temp = (temp*temp)%mod;
-        pow>>=1;
-    }
-    return result;
-}
-
-unsigned long long mod_inv_fermi(int x, int mod){
-    // 페르마 소정리
-    // mod = prime number, x and mod are pairwise prime
-    return mod_power(x, mod-2, mod);
-}
-
 int main(void){
 
 
@@ -143,6 +123,7 @@ int main(void){
     unsigned long long result = 0;
     int n, s;
     int g, si;
+    unsigned long long p=0, q=0;
     mymmap();
 
     readd(&m);
@@ -150,13 +131,19 @@ int main(void){
     for(i=0;i<m;i++){
         readd(&n);
         readd(&s);
-        g = gcd(n,s);
-        n/=g;
-        s/=g;
-        result = (result + (s*mod_inv_fermi(n,MOD)))%MOD;
+        if(q==0){
+            p = s;
+            q = n;
+        }
+        else{
+            p = p*n + s*q;
+            q *= n;
+            p%=MOD;
+            q%=MOD;
+        }
     }
 
-    printf("%llu\n", result);
+    printf("%llu\n", (p*mod_inv(q, MOD))%MOD);
 
 
 
