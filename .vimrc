@@ -119,9 +119,12 @@ if has("gui_running")
   set guioptions+=m
 end
 
+" 한줄 주석 처리
+map // :s/^/\/\/<cr>:noh<cr>
+map /; :s/^\/\//<cr>:noh<cr>
 " 한줄 주석 처리 /**/
-map // V:s/^/\/*/<cr>gv:s/$/*\//<cr>:noh<cr>
-map /; V:s/^\/\*//<cr>gv:s/\*\/$/<cr>:noh<cr>
+"map // V:s/^/\/*/<cr>gv:s/$/*\//<cr>:noh<cr>
+"map /; V:s/^\/\*//<cr>gv:s/\*\/$/<cr>:noh<cr>
 " 여러줄 주석 처리 /**/
-vmap // :s/^/\/*/<cr>gv:s/$/*\//<cr>:noh<cr>
-vmap /; :s/^\/\*//<cr>gv:s/\*\/$/<cr>:noh<cr>
+"vmap // :s/^/\/*/<cr>gv:s/$/*\//<cr>:noh<cr>
+"vmap /; :s/^\/\*//<cr>gv:s/\*\/$/<cr>:noh<cr>
