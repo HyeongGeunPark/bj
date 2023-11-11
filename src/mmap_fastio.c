@@ -38,6 +38,7 @@ static inline int readd(int *n){
         }
         else if(*rp=='-'){
             sign = 0;
+            rp++;
             break;
         }
         rp++;
