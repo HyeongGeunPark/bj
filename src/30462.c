@@ -1,6 +1,5 @@
-#pragma GCC optimize("O3")
+/*#pragma GCC optimize("O3")*/
 
-// 5~101
 #include<stdio.h>
 #include<unistd.h>
 #include<string.h>
@@ -10,7 +9,7 @@
 
 char *RBUF;
 char *rp;
-#define WBUF_SIZE 1<<20
+#define WBUF_SIZE 1<<2
 char WBUF[WBUF_SIZE];
 char *wp = WBUF;
 
@@ -54,49 +53,67 @@ static inline int readd(int *n){
     *n = sign?r:-r;
 }
 
-static inline void reads(char *c){
-    while(1){
-        if(*rp>32){
-            break;
-        }
-        rp++;
-    }
-    while(1){
-        *(c++) = *(rp++);
-        if(*rp == '\n' || *rp == 0){
-            break;
-        }
-    }
-}
 
-static inline void writed(int n, char end){
-    char buf[20];
-    int sign = 1;
-    int i = 0;
-    if(n<0){
-        sign = 0;
-        n = -n;
-    }
-    while(1){
-        buf[i++] = n%10 + '0';
-        n /= 10;
-        if(n==0){
-            break;
+
+int main(void){
+
+    int n;
+    int i, j;
+    int a[200001];
+    int b[200001];
+    char used[200001] = {0};
+    int current;
+    mymmap();
+
+    readd(&n);
+
+    b[0] = 1;
+    for(i=1;i<=n;i++){
+        readd(b+i);
+        if(b[i]-1 > i){
+            goto no;
+        }
+        if(b[i]>(n+1)){
+            goto no;
+        }
+        if(b[i]>b[i-1]){
+            used[b[i-1]]=1;
+            a[i] = b[i-1];
+        }
+        else if(b[i]<b[i-1]){
+            goto no;
         }
     }
-    if(sign==0){
-        buf[i++] = '-';
+    if(b[n]!=n+1){
+        goto no;
     }
-    while(i>0){
-        *(wp++) = buf[--i];
-    }
-    *wp++ = end;
-}
 
-static inline void writes(char *c, char end){
-    while(*c){
-        *wp++ = *c++;
-    }
-    *wp++ = end;
-}
+    current = 1;
+    for(i=1;i<=n;i++){
+        while(used[current]){
+            current++;
+        }
+        if(a[i]==0){
+            a[i] = current++;
+        }
+        else{
+            if(current<b[i]){
+                goto no;
+            }
+        }
 
+    }
+
+
+    printf("Yes\n");
+    for(i=1;i<=n;i++){
+        printf("%d ", a[i]);
+    }
+    printf("\n");
+    return 0;
+
+
+    no:
+    printf("No\n");
+    return 0;
+}

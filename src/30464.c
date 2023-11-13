@@ -1,6 +1,5 @@
-#pragma GCC optimize("O3")
+/*#pragma GCC optimize("O3")*/
 
-// 5~101
 #include<stdio.h>
 #include<unistd.h>
 #include<string.h>
@@ -10,7 +9,7 @@
 
 char *RBUF;
 char *rp;
-#define WBUF_SIZE 1<<20
+#define WBUF_SIZE 1<<2
 char WBUF[WBUF_SIZE];
 char *wp = WBUF;
 
@@ -53,50 +52,44 @@ static inline int readd(int *n){
     }
     *n = sign?r:-r;
 }
+#define max(a,b) ((a)>(b)?(a):(b))
 
-static inline void reads(char *c){
-    while(1){
-        if(*rp>32){
-            break;
-        }
-        rp++;
-    }
-    while(1){
-        *(c++) = *(rp++);
-        if(*rp == '\n' || *rp == 0){
-            break;
-        }
-    }
-}
+int main(void){
 
-static inline void writed(int n, char end){
-    char buf[20];
-    int sign = 1;
-    int i = 0;
-    if(n<0){
-        sign = 0;
-        n = -n;
+
+    int n;
+    int i;
+
+    int r[200001];
+    int memo[200001] = {0};
+    mymmap();
+
+    readd(&n);
+    for(i=1;i<=n;i++){
+        readd(r+i);
     }
-    while(1){
-        buf[i++] = n%10 + '0';
-        n /= 10;
-        if(n==0){
-            break;
+
+
+    memo[1] = 1;
+    for(i=1;i<n;i++){
+        if(memo[i]!=0 && (i+r[i])<=n){
+            memo[i+r[i]] = max(memo[i+r[i]], memo[i]+1);
         }
     }
-    if(sign==0){
-        buf[i++] = '-';
-    }
-    while(i>0){
-        *(wp++) = buf[--i];
-    }
-    *wp++ = end;
-}
 
-static inline void writes(char *c, char end){
-    while(*c){
-        *wp++ = *c++;
+    for(i=n-1;i>1;i--){
+        if(memo[i]!=0 && (i-r[i]>0)){
+            memo[i-r[i]] = max(memo[i-r[i]], memo[i]+1);
+        }
     }
-    *wp++ = end;
-}
 
+    for(i=1;i<n;i++){
+        if(memo[i]!=0 && (i+r[i])<=n){
+            memo[i+r[i]] = max(memo[i+r[i]], memo[i]+1);
+        }
+    }
+
+    printf("%d\n", memo[n]-1);
+
+    return 0;
+}
