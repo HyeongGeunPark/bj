@@ -18,7 +18,7 @@ struct minheap{
 
 static inline void minheap_add(struct minheap *h, int value, int key){
     // c is key, i is value
-    int c = ++h->size;
+    int c = ++h->len;
     int p = c>>1;
     while(p){
         if(h->data[p].key > key){
@@ -36,11 +36,11 @@ static inline void minheap_add(struct minheap *h, int value, int key){
 
 static inline struct node minheap_del(struct minheap *h){
     struct node r = h->data[1];
-    struct node temp = h->data[h->size--];
+    struct node temp = h->data[h->len--];
     int p = 1;
     int c = 2;
-    while(c<=h->size){
-        if(c<h->size && h->data[c].key > h->data[c+1].key){
+    while(c<=h->len){
+        if(c<h->len && h->data[c].key > h->data[c+1].key){
             c++;
         }
         if(h->data[c].key < temp.key){
