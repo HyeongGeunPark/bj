@@ -13,18 +13,16 @@ char *rp;
 #define WBUF_SIZE 1<<20
 char WBUF[WBUF_SIZE];
 char *wp = WBUF;
-size_t filesize;
+struct stat stat;
 
 static inline size_t mymmap(){
-    struct stat stat;
-    filesize = fstat(STDIN_FILENO, &stat);
+    fstat(STDIN_FILENO, &stat);
     RBUF = mmap(NULL, stat.st_size, PROT_READ, MAP_PRIVATE, STDIN_FILENO, 0);
     rp = RBUF;
-    return stat.st_size;
 }
 
 static inline void mymunmap(){
-    mymunmap(RBUF, filesize);
+    munmap(RBUF, stat.st_size);
 }
 
 static inline int is_num(char* c){
