@@ -1,4 +1,6 @@
 .*
+/intermediates/**
+/bin/**
 !.gitignore
 !.vimrc
 *~
