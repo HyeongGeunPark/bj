@@ -1,6 +1,5 @@
-#pragma GCC optimize("O3")
+/*#pragma GCC optimize("O3")*/
 
-// 5~101
 #include<stdio.h>
 #include<unistd.h>
 #include<string.h>
@@ -10,19 +9,16 @@
 
 char *RBUF;
 char *rp;
-#define WBUF_SIZE 1<<20
+#define WBUF_SIZE 1<<2
 char WBUF[WBUF_SIZE];
 char *wp = WBUF;
-struct stat stat;
 
 static inline size_t mymmap(){
+    struct stat stat;
     fstat(STDIN_FILENO, &stat);
     RBUF = mmap(NULL, stat.st_size, PROT_READ, MAP_PRIVATE, STDIN_FILENO, 0);
     rp = RBUF;
-}
-
-static inline void mymunmap(){
-    munmap(RBUF, stat.st_size);
+    return stat.st_size;
 }
 
 static inline int is_num(char* c){
@@ -57,49 +53,55 @@ static inline int readd(int *n){
     *n = sign?r:-r;
 }
 
-static inline void reads(char *c){
-    while(1){
-        if(*rp>32){
-            break;
-        }
-        rp++;
-    }
-    while(1){
-        *(c++) = *(rp++);
-        if(*rp == '\n' || *rp == 0){
-            break;
-        }
-    }
-}
 
-static inline void writed(int n, char end){
-    char buf[20];
-    int sign = 1;
-    int i = 0;
-    if(n<0){
-        sign = 0;
-        n = -n;
+
+int main(void){
+
+    int n, s;
+    int i, j;
+    int max_wish;
+    int wish;
+    int speed[100000];
+
+    mymmap();
+
+    readd(&n);
+    readd(&s);
+
+    for(i=0;i<n;i++){
+        readd(speed+i);
     }
-    while(1){
-        buf[i++] = n%10 + '0';
-        n /= 10;
-        if(n==0){
-            break;
+
+    wish = 0;
+    for(i=0;i<s;i++){
+        for(j=i+1;j<s;j++){
+            if(speed[i]<speed[j]){
+                wish++;
+            }
         }
     }
-    if(sign==0){
-        buf[i++] = '-';
-    }
-    while(i>0){
-        *(wp++) = buf[--i];
-    }
-    *wp++ = end;
-}
 
-static inline void writes(char *c, char end){
-    while(*c){
-        *wp++ = *c++;
-    }
-    *wp++ = end;
-}
+    max_wish = wish;
 
+    // windowing
+    n -= s;
+    for(i=0;i<n;i++){
+        // remove first & add last
+        for(j=i+1;j<i+s;j++){
+            if(speed[i]<speed[j]){
+                wish--;
+            }
+            if(speed[j]<speed[i+1]){
+                wish++;
+            }
+        }
+
+        // update max value
+        if(max_wish<wish){
+            max_wish = wish;
+        }
+    }
+
+    printf("%d\n", max_wish);
+    return 0;
+}

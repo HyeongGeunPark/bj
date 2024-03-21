@@ -1,32 +1,28 @@
-#pragma GCC optimize("O3")
+/*#pragma GCC optimize("O3")*/
 
-// 5~101
 #include<stdio.h>
-#include<unistd.h>
 #include<string.h>
+#include<unistd.h>
+#include<stdlib.h>
 
-#include<sys/stat.h>
-#include<sys/mman.h>
+/******************************************************************/
 
-char *RBUF;
-char *rp;
-#define WBUF_SIZE 1<<20
+// simple buffered read / write
+// line 8~87
+
+#define RBUF_SIZE 2000000
+#define WBUF_SIZE 2000000
+char RBUF[RBUF_SIZE];
 char WBUF[WBUF_SIZE];
+char *rp = RBUF;
 char *wp = WBUF;
-struct stat stat;
-
-static inline size_t mymmap(){
-    fstat(STDIN_FILENO, &stat);
-    RBUF = mmap(NULL, stat.st_size, PROT_READ, MAP_PRIVATE, STDIN_FILENO, 0);
-    rp = RBUF;
-}
-
-static inline void mymunmap(){
-    munmap(RBUF, stat.st_size);
-}
 
 static inline int is_num(char* c){
     return (*c>='0' && *c<='9');
+}
+
+static inline void read_f(void){
+    rpe = rp + read(STDIN_FILENO, RBUF, RBUF_SIZE);
 }
 
 static inline void write_f(void){
@@ -42,7 +38,6 @@ static inline int readd(int *n){
         }
         else if(*rp=='-'){
             sign = 0;
-            rp++;
             break;
         }
         rp++;
@@ -103,3 +98,49 @@ static inline void writes(char *c, char end){
     *wp++ = end;
 }
 
+
+/******************************************************************/
+
+// some macros
+
+#define max(a, b) ((a)>(b)?(a):(b))
+
+int main(void){
+
+    int n, l;
+    int i, j;
+    int cnt;
+    char body[1002];
+    int beauty[1000] = {0};
+    int max_beauty = 0;
+    body[0] = '0';
+
+    read(STDIN_FILENO, RBUF, BUF_SIZE);
+    readd(&n);
+    readd(&l);
+
+    for(i=0;i<n;i++){
+        reads(&body[1]);
+        // 줄무늬 찾기
+        cnt = 0;
+        for(j=0;j<l;j++){
+            if(body[j]=='0' && body[j+1]=='1'){
+                cnt++;
+            }
+        }
+        beauty[i] = cnt;
+        if(cnt>max_beauty){
+            max_beauty = cnt;
+        }
+    }
+    cnt = 0;
+    for(i=0;i<n;i++){
+        if(beauty[i] == max_beauty){
+            cnt++;
+        }
+    }
+    writed(max_beauty, ' ');
+    writed(cnt, '\n');
+    write(STDOUT_FILENO, WBUF, wp-WBUF);
+    return 0;
+}
