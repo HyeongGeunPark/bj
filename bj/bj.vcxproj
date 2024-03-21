@@ -21,9 +21,6 @@
   <ItemGroup>
     <Text Include="src\다시 풀 문제.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="obsolete\1197-2.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{01CC1F21-1DA4-4106-8775-D067222309E7}</ProjectGuid>

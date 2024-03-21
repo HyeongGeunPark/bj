@@ -17,9 +17,4 @@
   <ItemGroup>
     <Text Include="src\다시 풀 문제.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="obsolete\1197-2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
 </Project>
