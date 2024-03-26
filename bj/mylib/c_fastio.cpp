@@ -1,32 +1,62 @@
 // linux only
-#include<sys/mman.h>
-#include<sys/stat.h>
+#include<bits/stdc++.h>
+#include<unistd.h>
+#include<sys/syscall.h>
 
-char* input_pointer;
+#include<concepts>
 
-template<typename T> // requires std::signed_integral<T> /*C++20~*/
-inline T readd(void) {
-	T ret = 0; char c = *input_pointer++; flag = 0;
-	if (c == '-') c = *input_pointer++, flag = 1;
-	while (c & 16) { // only usable when inputs are numbers or space
-		// c&16 is true when c is
-		// 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, :, ;, <, =, >, ?
-		// p, q, ..., z, {, |, }, ~
-		ret = 10 * ret + (c & 15);
-		c = *input_pointer++;
+
+namespace fio {
+	const int BSIZE = 1 << 22;
+	char buffer[BSIZE];
+	auto p = buffer + BSIZE;
+
+	inline char readc() {
+		if (p == buffer + BSIZE) {
+			syscall(0x00, 0, buffer, BSIZE);
+			p = buffer;
+		}
+		return *p++;
 	}
-	return flag ? -ret : ret; 
-}
-inline char* mymmap() {
-	struct stat st; fstat(0, &st);
-	return (char*)mmap(0, st.st_size, PROT_READ, MAP_SHARED, 0, 0);
-}
+
+	template<typename T> requires std::integral<T>
+	T readd() {
+		char c = readc();
+		while (c < '-') {
+			c = readc();
+		}
+		T r = 0;
+		while (c >= '-') {
+			r = r * 10 + c - '0';
+			c = readc();
+		}
+		return r; 
+	}
+
+	unsigned char outbuf[BSIZE];
+	unsigned char* outp = outbuf;
+
+	void flush() {
+		syscall(0x01, 1, outbuf, outp - outbuf);
+		outp = outbuf;
+	}
+	
+	inline void writec(char c) {
+		if (outp == outbuf + BSIZE) {
+			flush();
+		}
+		*outp++ = c;
+	}
+
+} // namespace fio
+
 
 /*
 int main(){
 	input_pointer = mymmap();
 	...
-	int a = readd();
+	int a;
+	readd(&a);
 } 
 */
 
