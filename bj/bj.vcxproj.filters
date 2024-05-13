@@ -17,4 +17,9 @@
   <ItemGroup>
     <Text Include="src\다시 풀 문제.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\knapsack_multi_bound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
