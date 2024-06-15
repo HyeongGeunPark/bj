@@ -1,6 +1,6 @@
 /*
 
-bj31628 °¡Áö ÇÑ µÎ¸§ ÁÖ¼¼¿ä 
+bj31628 ê°€ì§€ í•œ ë‘ë¦„ ì£¼ì„¸ìš” 
  
 */
 #include<iostream>

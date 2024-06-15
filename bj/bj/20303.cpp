@@ -1,12 +1,12 @@
 /*
 
-bj20303 ÇÒ·ÎÀ©ÀÇ ¾ç¾ÆÄ¡
+bj20303 í• ë¡œìœˆì˜ ì–‘ì•„ì¹˜
 
-Á¢±Ù¹ý
-1. Ä£±¸ °ü°è¸¦ ÀÌ¿ëÇÏ¿© disjoint setÀ» ±¸ÇÏ°í,
-	µ¿½Ã¿¡ °¢ ¼­·Î¼Ò ÁýÇÕÀÇ ¾ÆÀÌ ¼ö¿Í »çÅÁ ¾çÀ» ±¸ÇÑ´Ù.
+ì ‘ê·¼ë²•
+1. ì¹œêµ¬ ê´€ê³„ë¥¼ ì´ìš©í•˜ì—¬ disjoint setì„ êµ¬í•˜ê³ ,
+	ë™ì‹œì— ê° ì„œë¡œì†Œ ì§‘í•©ì˜ ì•„ì´ ìˆ˜ì™€ ì‚¬íƒ• ì–‘ì„ êµ¬í•œë‹¤.
 
-2. ¾ÆÀÌ ¼ö K ¹Ì¸¸, ÃÖ´ë »çÅÁ Á¶ÇÕÀ» ±¸ÇÑ´Ù.(°¡¹æ ¹®Á¦)
+2. ì•„ì´ ìˆ˜ K ë¯¸ë§Œ, ìµœëŒ€ ì‚¬íƒ• ì¡°í•©ì„ êµ¬í•œë‹¤.(ê°€ë°© ë¬¸ì œ)
 
 */
 #include<iostream>
@@ -61,7 +61,7 @@ int main(void) {
 		merge(v1, v2); 
 	} 
 
-	// °¡¹æ ¹®Á¦
+	// ê°€ë°© ë¬¸ì œ
 	auto prev = mem[0];
 	auto current = mem[1];
 	std::memset(prev, 0, sizeof(int) * k);

@@ -1,13 +1,13 @@
 /*
 
-bj20040 »çÀÌÅ¬ °ÔÀÓ
+bj20040 ì‚¬ì´í´ ê²Œìž„
 
-Ç®ÀÌ Á¢±Ù¹ý
-1. disjoint set¿¡¼­ °ÔÀÓ »óÈ²À» °ü¸®ÇÑ´Ù.
-2. ÇÃ·¹ÀÌ¾î°¡ ¼±ºÐ ÇÏ³ª¸¦ ÁÙ ¶§¸¶´Ù µÎ Á¡À» ÀÌÀ¸·Á°í ½ÃµµÇÑ´Ù.
-	2-1. µÎ Á¡ÀÌ ÇÑ °³ÀÇ root¸¦ °øÀ¯ÇÏ¸é »çÀÌÅ¬ ¿Ï¼ºÀ» °¨ÁöÇÒ ¼ö ÀÖ´Ù.
-	2-2. ±×·¸Áö ¾ÊÀº °æ¿ì, µÎ Á¡ÀÌ Æ÷ÇÔµÈ µÎ °³ÀÇ setÀ» mergeÇÑ´Ù.
-		±× ÈÄ °ÔÀÓÀ» °è¼ÓÇÑ´Ù.
+í’€ì´ ì ‘ê·¼ë²•
+1. disjoint setì—ì„œ ê²Œìž„ ìƒí™©ì„ ê´€ë¦¬í•œë‹¤.
+2. í”Œë ˆì´ì–´ê°€ ì„ ë¶„ í•˜ë‚˜ë¥¼ ì¤„ ë•Œë§ˆë‹¤ ë‘ ì ì„ ì´ìœ¼ë ¤ê³  ì‹œë„í•œë‹¤.
+	2-1. ë‘ ì ì´ í•œ ê°œì˜ rootë¥¼ ê³µìœ í•˜ë©´ ì‚¬ì´í´ ì™„ì„±ì„ ê°ì§€í•  ìˆ˜ ìžˆë‹¤.
+	2-2. ê·¸ë ‡ì§€ ì•Šì€ ê²½ìš°, ë‘ ì ì´ í¬í•¨ëœ ë‘ ê°œì˜ setì„ mergeí•œë‹¤.
+		ê·¸ í›„ ê²Œìž„ì„ ê³„ì†í•œë‹¤.
 
 */
 
@@ -16,7 +16,7 @@ bj20040 »çÀÌÅ¬ °ÔÀÓ
 
 class DisjointSet {
 public:
-	DisjointSet(int n);	// nÀº Á¡ÀÇ °¹¼ö
+	DisjointSet(int n);	// nì€ ì ì˜ ê°¯ìˆ˜
 	~DisjointSet(void);
 
 	int find_root(int v);

@@ -9,8 +9,8 @@ std::nth_element(RandomIt first, RandomIt nth, Randomit last)
 template<class RandomIt, class Compare>
 std::nth_element(RandomIt first, RandomIt nth, Randomit last, Compare comp)
 
-nth°¡ °¡¸®Å°´Â ¿ø¼Ò°¡ range [first, last)¸¦ ¿ÏÀüÈ÷ Á¤·Ä ÇÑ ÈÄ ±× À§Ä¡¿¡ ÀÖÀ» ¿ø¼Ò°¡ µÈ´Ù. O(n).
-partial Á¤·ÄµÈ´Ù.
+nthê°€ ê°€ë¦¬í‚¤ëŠ” ì›ì†Œê°€ range [first, last)ë¥¼ ì™„ì „íˆ ì •ë ¬ í•œ í›„ ê·¸ ìœ„ì¹˜ì— ìˆì„ ì›ì†Œê°€ ëœë‹¤. O(n).
+partial ì •ë ¬ëœë‹¤.
 
 */
 #include<iostream>

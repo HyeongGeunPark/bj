@@ -1,11 +1,11 @@
 /*
 
-bj4386 º°ÀÚ¸® ¸¸µé±â
+bj4386 ë³„ìžë¦¬ ë§Œë“¤ê¸°
 
-Á¢±Ù¹ý(ÃÖ¼Ò ½ºÆÐ´× Æ®¸®)
+ì ‘ê·¼ë²•(ìµœì†Œ ìŠ¤íŒ¨ë‹ íŠ¸ë¦¬)
 
-º°°ú º° »çÀÌÀÇ °Å¸®¸¦ ±¸ÇÏ¿© ÀÎÁ¢ Çà·ÄÀ» ¸¸µç µÚ
-Prim, Kruskal Áß ÇÏ³ª¸¦ ÀÌ¿ëÇØ ÃÖ¼Ò ½ºÆÐ´× Æ®¸®¸¦ ¸¸µé¸é µÈ´Ù.
+ë³„ê³¼ ë³„ ì‚¬ì´ì˜ ê±°ë¦¬ë¥¼ êµ¬í•˜ì—¬ ì¸ì ‘ í–‰ë ¬ì„ ë§Œë“  ë’¤
+Prim, Kruskal ì¤‘ í•˜ë‚˜ë¥¼ ì´ìš©í•´ ìµœì†Œ ìŠ¤íŒ¨ë‹ íŠ¸ë¦¬ë¥¼ ë§Œë“¤ë©´ ëœë‹¤.
 
 */
 
@@ -51,14 +51,14 @@ int main(void) {
 		std::cin >> stars[i].x >> stars[i].y;
 	}
 
-	// °Å¸® ±¸ÇÏ±â
+	// ê±°ë¦¬ êµ¬í•˜ê¸°
 	for (int i = 0; i < n; ++i) {
 		for (int j = i + 1; j < n; ++j) {
 			adj[i][j] = adj[j][i] = distance(stars[i], stars[j]);
 		}
 	}
 
-	// °£¼± ¹Ðµµ°¡ ³ôÀ¸¹Ç·Î Prim's algorithm »ç¿ë
+	// ê°„ì„  ë°€ë„ê°€ ë†’ìœ¼ë¯€ë¡œ Prim's algorithm ì‚¬ìš©
 	std::vector<bool> included(n, false);
 	std::priority_queue<Edge, std::vector<Edge>, edge_comp> edges;
 	included[0] = true;

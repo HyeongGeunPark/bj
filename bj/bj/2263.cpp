@@ -1,12 +1,12 @@
 /*
 
-bj2263 Æ®¸®ÀÇ ¼øÈ¸
+bj2263 íŠ¸ë¦¬ì˜ ìˆœíšŒ
 
-ÀÌÁø Æ®¸®ÀÇ ÀÎ¿À´õ¿Í Æ÷½ºÆ®¿À´õ°¡ ÁÖ¾îÁ³À» ¶§ ÇÁ¸®¿À´õ¸¦ ±¸ÇÏ´Â ÇÁ·Î±×·¥À» ÀÛ¼ºÇÏ¶ó.
+ì´ì§„ íŠ¸ë¦¬ì˜ ì¸ì˜¤ë”ì™€ í¬ìŠ¤íŠ¸ì˜¤ë”ê°€ ì£¼ì–´ì¡Œì„ ë•Œ í”„ë¦¬ì˜¤ë”ë¥¼ êµ¬í•˜ëŠ” í”„ë¡œê·¸ë¨ì„ ì‘ì„±í•˜ë¼.
 
-ÀÎ¿À´õ: left subtree - root - right subtree
-Æ÷½ºÆ®¿À´õ: left subtree - right subtree - root
-ÇÁ¸®¿À´õ: root - left subtree - right subtree
+ì¸ì˜¤ë”: left subtree - root - right subtree
+í¬ìŠ¤íŠ¸ì˜¤ë”: left subtree - right subtree - root
+í”„ë¦¬ì˜¤ë”: root - left subtree - right subtree
 
 */
 

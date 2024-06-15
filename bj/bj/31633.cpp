@@ -1,8 +1,8 @@
 /*
 
-bj31633 Ã·´Ü °¡Áö ³óÀå
+bj31633 ì²¨ë‹¨ ê°€ì§€ ë†ì¥
  
- À§»óÁ¤·Ä
+ ìœ„ìƒì •ë ¬
 */
 
 #include<iostream>
@@ -54,7 +54,7 @@ int main(void) {
 		}
 	}
 
-	// ÀÎÁ¢±×·¡ÇÁ
+	// ì¸ì ‘ê·¸ë˜í”„
 	std::vector<std::vector<int>> mat2g(n, std::vector<int>(m, 0));
 
 	nodenum = -1;
@@ -90,7 +90,7 @@ int main(void) {
 	//test_print(mat2g);
 
 	
-	// ÁøÀÔÂ÷¼ö, ÀÎÁ¢±×·¡ÇÁ
+	// ì§„ì…ì°¨ìˆ˜, ì¸ì ‘ê·¸ë˜í”„
 	for (int i = 0; i < n; ++i) {
 		for (int j = 0; j < m; ++j) {
 			if (i > 0)
@@ -104,13 +104,13 @@ int main(void) {
 		}
 	} 
 
-	// root Ã£±â
+	// root ì°¾ê¸°
 	std::queue<int> q;
 	for (int i = 0; i < nodenum; ++i) {
 		if (d[i] == 0) q.push(i);
 	}
 
-	// À§»óÁ¤·Ä
+	// ìœ„ìƒì •ë ¬
 	int depth_n = 0;
 	std::vector<int> depth(nodenum);
 

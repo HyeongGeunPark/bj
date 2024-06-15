@@ -1,19 +1,19 @@
 /*
-ºí·ë ÇÊÅÍ
+ë¸”ë£¸ í•„í„°
 
-³»ºÎ ÀÚ·á±¸Á¶
-1. ´Ù¼öÀÇ ÇØ½Ã ÇÔ¼ö(ÃÖ¼Ò 3°³)
-2. ÃæºÐÈ÷ Å« bool ¹è¿­
+ë‚´ë¶€ ìžë£Œêµ¬ì¡°
+1. ë‹¤ìˆ˜ì˜ í•´ì‹œ í•¨ìˆ˜(ìµœì†Œ 3ê°œ)
+2. ì¶©ë¶„ížˆ í° bool ë°°ì—´
 
-ÀÔ·Â
-1. ÀÔ·Â¿¡ ´ëÇØ ¸ðµç ÇØ½Ã ÇÔ¼ö¸¦ ÀÌ¿ëÇÏ¿© ÇØ½Ã°ªÀ» ±¸ÇÑ´Ù.
-2. ÇØ´çÇÏ´Â ÇØ½Ã°ªÀÇ ÀÎµ¦½ºÀÇ bool °ªÀ» true·Î ÇÑ´Ù.
+ìž…ë ¥
+1. ìž…ë ¥ì— ëŒ€í•´ ëª¨ë“  í•´ì‹œ í•¨ìˆ˜ë¥¼ ì´ìš©í•˜ì—¬ í•´ì‹œê°’ì„ êµ¬í•œë‹¤.
+2. í•´ë‹¹í•˜ëŠ” í•´ì‹œê°’ì˜ ì¸ë±ìŠ¤ì˜ bool ê°’ì„ trueë¡œ í•œë‹¤.
 
-·è¾÷
-1. ÀÔ·Â¿¡ ´ëÇØ ¸ðµç ÇØ½Ã°ªÀ» ±¸ÇÑ´Ù.
-2. ÇØ´ç ÇØ½Ã°ªÀÇ ÀÎµ¦½ºÀÇ bool °ªÀÌ ¸ðµÎ trueÀÏ °æ¿ì¿¡¸¸ true¸¦ ¸®ÅÏÇÑ´Ù.
+ë£©ì—…
+1. ìž…ë ¥ì— ëŒ€í•´ ëª¨ë“  í•´ì‹œê°’ì„ êµ¬í•œë‹¤.
+2. í•´ë‹¹ í•´ì‹œê°’ì˜ ì¸ë±ìŠ¤ì˜ bool ê°’ì´ ëª¨ë‘ trueì¼ ê²½ìš°ì—ë§Œ trueë¥¼ ë¦¬í„´í•œë‹¤.
 
-* µû¶ó¼­ false positive(¾ø´Âµ¥ ÀÖ´Ù°í ÇÏ´Â °Í)ÀÇ °¡´É¼ºÀÌ ÀÖ´Ù.
+* ë”°ë¼ì„œ false positive(ì—†ëŠ”ë° ìžˆë‹¤ê³  í•˜ëŠ” ê²ƒ)ì˜ ê°€ëŠ¥ì„±ì´ ìžˆë‹¤.
 
 */
 
@@ -50,10 +50,10 @@ public:
 		}
 
 		if (result) {
-			std::cout << key << ": ÀÖÀ» ¼ö ÀÖÀ½\n";
+			std::cout << key << ": ìžˆì„ ìˆ˜ ìžˆìŒ\n";
 		}
 		else {
-			std::cout << key << ": Àý´ë ¾øÀ½\n";
+			std::cout << key << ": ì ˆëŒ€ ì—†ìŒ\n";
 		}
 		return result;
 	}
@@ -63,7 +63,7 @@ public:
 		for (int i = 0; i < 3; ++i) {
 			data[hash(i, key)] = true;
 		}
-		std::cout << key << "¸¦ »ðÀÔ\n";
+		std::cout << key << "ë¥¼ ì‚½ìž…\n";
 
 		test_print(); 
 	}

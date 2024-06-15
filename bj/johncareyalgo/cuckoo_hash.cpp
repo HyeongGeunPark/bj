@@ -3,19 +3,19 @@
 
 /*
 cuckoo hashing
-ÇØ½Ã Å×ÀÌºí 2°³¿Í ÇØ½Ì ÇÔ¼ö 2°³¸¦ ÀÌ¿ëÇÑ´Ù.
-1. »ðÀÔ
-ÇØ½ÃÅ×ÀÌºí 1¿¡ ÇØ½ÃÇÔ¼ö 1À» ÀÌ¿ëÇØ ³Ö´Â´Ù.
-±× ÀÚ¸®°¡ Â÷ÀÖÀ¸¸é ±× ÀÚ¸®¿¡ ÀÖ´Â °ÍÀ» ÇØ½ÃÅ×ÀÌºí 2¿¡ ÇØ½ÃÇÔ¼ö 2¸¦ ÀÌ¿ëÇØ ³Ö´Â´Ù.
-¸¸ÀÏ ±× ÀÚ¸®µµ Â÷ ÀÖÀ¸¸é ±× ÀÚ¸®¿¡ ÀÖ´ø °ÍÀ» ´Ù½Ã ÇØ½ÃÅ×ÀÌºí 1¿¡ ³Ö´Â´Ù.
-ºó ÀÚ¸®°¡ ³ª¿Ã¶§±îÁö Àç±ÍÀûÀ¸·Î ¹Ýº¹.
+í•´ì‹œ í…Œì´ë¸” 2ê°œì™€ í•´ì‹± í•¨ìˆ˜ 2ê°œë¥¼ ì´ìš©í•œë‹¤.
+1. ì‚½ìž…
+í•´ì‹œí…Œì´ë¸” 1ì— í•´ì‹œí•¨ìˆ˜ 1ì„ ì´ìš©í•´ ë„£ëŠ”ë‹¤.
+ê·¸ ìžë¦¬ê°€ ì°¨ìžˆìœ¼ë©´ ê·¸ ìžë¦¬ì— ìžˆëŠ” ê²ƒì„ í•´ì‹œí…Œì´ë¸” 2ì— í•´ì‹œí•¨ìˆ˜ 2ë¥¼ ì´ìš©í•´ ë„£ëŠ”ë‹¤.
+ë§Œì¼ ê·¸ ìžë¦¬ë„ ì°¨ ìžˆìœ¼ë©´ ê·¸ ìžë¦¬ì— ìžˆë˜ ê²ƒì„ ë‹¤ì‹œ í•´ì‹œí…Œì´ë¸” 1ì— ë„£ëŠ”ë‹¤.
+ë¹ˆ ìžë¦¬ê°€ ë‚˜ì˜¬ë•Œê¹Œì§€ ìž¬ê·€ì ìœ¼ë¡œ ë°˜ë³µ.
 
-2. ·è¾÷/»èÁ¦
-ÇØ½ÃÅ×ÀÌºí 1 È¤Àº 2¿¡ Á¸ÀçÇÑ´Ù. µÎ ÀÚ¸®¸¸ Ã£¾Æº¸¸é µÈ´Ù.
+2. ë£©ì—…/ì‚­ì œ
+í•´ì‹œí…Œì´ë¸” 1 í˜¹ì€ 2ì— ì¡´ìž¬í•œë‹¤. ë‘ ìžë¦¬ë§Œ ì°¾ì•„ë³´ë©´ ëœë‹¤.
 
-ÁÖÀÇ
-1. ºÎÇÏÀ²ÀÌ 0.5 ÀÌÇÏ·Î À¯ÁöµÇµµ·Ï ÇÏ¿©¾ß ¼º´ÉÀ» º¸ÀåÇÒ ¼ö ÀÖ´Ù.
-2. ¼øÈ¯ÀÌ ¹ß»ýÇÏ¸é ÀçÇØ½ÌÀ» ÇØ¾ß ÇÑ´Ù.
+ì£¼ì˜
+1. ë¶€í•˜ìœ¨ì´ 0.5 ì´í•˜ë¡œ ìœ ì§€ë˜ë„ë¡ í•˜ì—¬ì•¼ ì„±ëŠ¥ì„ ë³´ìž¥í•  ìˆ˜ ìžˆë‹¤.
+2. ìˆœí™˜ì´ ë°œìƒí•˜ë©´ ìž¬í•´ì‹±ì„ í•´ì•¼ í•œë‹¤.
 */
 
 class hash_map
@@ -46,18 +46,18 @@ public:
 		auto hash_value1 = hash1(key);
 		if (data1[hash_value1] == key)
 		{
-			std::cout << "1¹ø Å×ÀÌºí¿¡¼­ " << key << " ¹ß°ß" << '\n';
+			std::cout << "1ë²ˆ í…Œì´ë¸”ì—ì„œ " << key << " ë°œê²¬" << '\n';
 			return data1.begin() + hash_value1;
 		}
 
 		auto hash_value2 = hash2(key);
 		if (data2[hash_value2] == key)
 		{
-			std::cout << "2¹ø Å×ÀÌºí¿¡¼­ " << key << " ¹ß°ß" << '\n';
+			std::cout << "2ë²ˆ í…Œì´ë¸”ì—ì„œ " << key << " ë°œê²¬" << '\n';
 			return data2.begin() + hash_value2;
 		}
 
-		return data2.end();  // ¸øÃ£À½
+		return data2.end();  // ëª»ì°¾ìŒ
 	}
 
 	void erase(int key)
@@ -66,11 +66,11 @@ public:
 		if (position != data2.end())
 		{
 			*position = -1;
-			std::cout << key << "¿¡ ÇØ´çÇÏ´Â ¿ø¼Ò »èÁ¦ÇÔ" << '\n';
+			std::cout << key << "ì— í•´ë‹¹í•˜ëŠ” ì›ì†Œ ì‚­ì œí•¨" << '\n';
 		}
 		else
 		{
-			std::cout << key << "Å°¸¦ Ã£Áö ¸øÇÔ" << '\n';
+			std::cout << key << "í‚¤ë¥¼ ì°¾ì§€ ëª»í•¨" << '\n';
 		}
 	}
 
@@ -83,7 +83,7 @@ public:
 	{
 		if (cnt >= size)
 		{
-			std::cout << key << " »ðÀÔ ½Ã ¼øÈ¯ ¹ß»ý! ÀçÇØ½Ì ÇÊ¿ä." << '\n';
+			std::cout << key << " ì‚½ìž… ì‹œ ìˆœí™˜ ë°œìƒ! ìž¬í•´ì‹± í•„ìš”." << '\n';
 			return;
 		}
 
@@ -101,15 +101,15 @@ public:
 		
 		if (data[hash] == -1)
 		{
-			std::cout << table << "¹ø Å×ÀÌºí¿¡ " << key << " »ðÀÔ" << '\n';
+			std::cout << table << "ë²ˆ í…Œì´ë¸”ì— " << key << " ì‚½ìž…" << '\n';
 			data[hash] = key;
 		}
 		else
 		{
 			int old = data[hash];
 			data[hash] = key;
-			std::cout << table << "¹ø Å×ÀÌºí¿¡ " << key << " »ðÀÔ: ±âÁ¸ÀÇ " << old
-				<< " ÀÌµ¿ ->";
+			std::cout << table << "ë²ˆ í…Œì´ë¸”ì— " << key << " ì‚½ìž…: ê¸°ì¡´ì˜ " << old
+				<< " ì´ë™ ->";
 			insert_impl(old, cnt + 1, other_table);
 		}
 	}
@@ -158,6 +158,6 @@ int main(void) {
 	map.print();
 	std::cout << std::endl;
 
-	map.insert(2); //¼øÈ¯ ¹ß»ý!
+	map.insert(2); //ìˆœí™˜ ë°œìƒ!
 
 }

@@ -2,12 +2,12 @@
 
 bj1005 ACM Craft
 
-Á¢±Ù¹ý: dp
+ì ‘ê·¼ë²•: dp
 
-F(n)À» n¹ø °Ç¹°À» Áþ´Âµ¥ ÇÊ¿äÇÑ ÃÖ¼Ò ½Ã°£ÀÌ¶ó°í ÇÏÀÚ.
-n¹ø °Ç¹°ÀÇ prerequisite p1, p2, ..., pk¿¡ ´ëÇØ¼­,
-F(n) = max(F(p1), F(p2), ..., F(pk)) + cost(n)ÀÌ´Ù.
-¸Þ¸ðÀÌÁ¦ÀÌ¼ÇÀ» »ç¿ëÇÏ¸é¼­ Àç±ÍÀûÀ¸·Î Ç®¸é µÉ µí ÇÏ´Ù.  
+F(n)ì„ në²ˆ ê±´ë¬¼ì„ ì§“ëŠ”ë° í•„ìš”í•œ ìµœì†Œ ì‹œê°„ì´ë¼ê³  í•˜ìž.
+në²ˆ ê±´ë¬¼ì˜ prerequisite p1, p2, ..., pkì— ëŒ€í•´ì„œ,
+F(n) = max(F(p1), F(p2), ..., F(pk)) + cost(n)ì´ë‹¤.
+ë©”ëª¨ì´ì œì´ì…˜ì„ ì‚¬ìš©í•˜ë©´ì„œ ìž¬ê·€ì ìœ¼ë¡œ í’€ë©´ ë  ë“¯ í•˜ë‹¤.  
 
 */
 

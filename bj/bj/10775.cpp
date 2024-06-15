@@ -1,15 +1,15 @@
 /*
 
-bj10775 °øÇ×
+bj10775 ê³µí•­
 
-Á¢±Ù¹ý: ±×¸®µð
+ì ‘ê·¼ë²•: ê·¸ë¦¬ë””
 
-i¹øÂ° ºñÇà±â´Â 1~gi¹ø °ÔÀÌÆ®¿¡ µµÅ·ÇÒ ¼ö ÀÖ´Ù.
-ÃÖ´ëÇÑ Å« ¹øÈ£ÀÇ °ÔÀÌÆ®¿¡ µµÅ·ÇÑ´Ù.  
+ië²ˆì§¸ ë¹„í–‰ê¸°ëŠ” 1~gië²ˆ ê²Œì´íŠ¸ì— ë„í‚¹í•  ìˆ˜ ìžˆë‹¤.
+ìµœëŒ€í•œ í° ë²ˆí˜¸ì˜ ê²Œì´íŠ¸ì— ë„í‚¹í•œë‹¤.  
 
-¼Óµµ Çâ»óÀ» À§ÇØ °æ·Î ¾ÐÃàÀÌ ÇÊ¿äÇÏ´Ù.
+ì†ë„ í–¥ìƒì„ ìœ„í•´ ê²½ë¡œ ì••ì¶•ì´ í•„ìš”í•˜ë‹¤.
 
-À¯´Ï¿Â ÆÄÀÎµå¸¦ »ç¿ëÇÒ ¼öµµ ÀÖ´Ù. (ÄÚµå ºÐÇÒÀÌ ´Ù¸¦ »ÓÀÌ´Ù.)
+ìœ ë‹ˆì˜¨ íŒŒì¸ë“œë¥¼ ì‚¬ìš©í•  ìˆ˜ë„ ìžˆë‹¤. (ì½”ë“œ ë¶„í• ì´ ë‹¤ë¥¼ ë¿ì´ë‹¤.)
 
 */
 
@@ -21,7 +21,7 @@ inline int find_next(int i) {
 		--next_available[i];
 		return i;
 	}
-	// °æ·Î ¾ÐÃà
+	// ê²½ë¡œ ì••ì¶•
 	next_available[i] = find_next(next_available[i]);
 	return next_available[i]; 
 }

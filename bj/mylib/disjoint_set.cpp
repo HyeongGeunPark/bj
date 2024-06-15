@@ -4,14 +4,14 @@
 #include<algorithm>
 
 /*
-disjoint setÀ» ºü¸£°Ô ÇÏ´Â ¹æ¹ý
-1. °æ·Î ¾ÐÃà:
-	find_root ÀÛ¾÷¸¶´Ù Áö³ª´Â ¸ðµç °æ·ÎÀÇ Á¡ÀÇ root¸¦ Àç¼³Á¤
-2. À¯´Ï¿Â ¹ÙÀÌ ·©Å©:
-	·©Å©°¡ Å« root¿¡ ·©Å©°¡ ÀÛÀº root¸¦ ºÙÀÎ´Ù.
-	·©Å©´Â ´ÙÀ½°ú °°ÀÌ Á¤ÀÇ °¡´ÉÇÏ´Ù.
-	1. size: Æ®¸®¿¡ ¼ÓÇÑ Á¡ÀÇ °¹¼ö
-	2. height: Æ®¸®ÀÇ ³ôÀÌ 
+disjoint setì„ ë¹ ë¥´ê²Œ í•˜ëŠ” ë°©ë²•
+1. ê²½ë¡œ ì••ì¶•:
+	find_root ìž‘ì—…ë§ˆë‹¤ ì§€ë‚˜ëŠ” ëª¨ë“  ê²½ë¡œì˜ ì ì˜ rootë¥¼ ìž¬ì„¤ì •
+2. ìœ ë‹ˆì˜¨ ë°”ì´ ëž­í¬:
+	ëž­í¬ê°€ í° rootì— ëž­í¬ê°€ ìž‘ì€ rootë¥¼ ë¶™ì¸ë‹¤.
+	ëž­í¬ëŠ” ë‹¤ìŒê³¼ ê°™ì´ ì •ì˜ ê°€ëŠ¥í•˜ë‹¤.
+	1. size: íŠ¸ë¦¬ì— ì†í•œ ì ì˜ ê°¯ìˆ˜
+	2. height: íŠ¸ë¦¬ì˜ ë†’ì´ 
 */
 
 class disjoint_set {

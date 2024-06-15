@@ -16,8 +16,688 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\다시 풀 문제.txt" />
+    <Text Include="src\memo.txt" />
+    <Text Include="src\test.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\1160.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc349\a.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc349\b.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc349\c.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc349\d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc349\e.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc349\f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc349\g.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc352\a.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc352\b.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc352\c.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc352\d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc352\e.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc353\a.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc353\b.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc353\c.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc353\d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc353\e.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc354\a.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc354\b.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc354\c.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc354\d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc354\e.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc355\a.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc355\b.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc355\c.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc355\d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc355\e.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc355\f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc356\a.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc356\b.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc356\c.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc356\d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atcoder\abc356\e.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\kupc\a.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\kupc\b.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\kupc\c.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\kupc\d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\kupc\e.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\kupc\f.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\kupc\g.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\kupc\h.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\spc\a.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\spc\b.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\spc\c.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\spc\d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\spc\e.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1003.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1005.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1012.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1043.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1074.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1107.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1149.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1167.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1197.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1197-2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1202.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1208.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1238.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1260.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1389.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1504.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1504fast.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1509.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1562.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1629.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1644.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1647.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1697.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1753.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1764.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1766.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1799.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1806.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1865.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1916.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1918.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1931.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1932.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1967.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1987.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\1991.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2096.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2098.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2143.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2166.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2178.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2206.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2239.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2252.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2263.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2342.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2448.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2467.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2473.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2579.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2606.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2623.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2630.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2638.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2667.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\2805.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\4386.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\5430.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\5525.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\5639.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\6064.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\7569.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\7576.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\7579.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\7662.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9019.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9095.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9251.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9252.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9375.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9461.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9465.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9466.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9466-2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9527.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9663.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\9935.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\10026.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\10775.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\10830.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\10942.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11047.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11049.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11053.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11054.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11279.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11286.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11399.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11403.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11404.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11444.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11659.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11660.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11724.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11725.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11726.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\11779.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\12015.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\12100.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\12851.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\13172.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\13172_fast.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\13549.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\14500.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\14502.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\14940.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\15650.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\15652.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\15654.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\15657.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\15663.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\15666.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\15686.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\16236.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\16724.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\16928.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\16946.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\16953.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\17070.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\17144.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\17219.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\17387.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\17404.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\17626.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\18870.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\20040.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\20303.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\20529.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\21736.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\27172.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\30462.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\30463.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\30464.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\30467_solving.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\31628.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\31631.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\31632.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\31633.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\arraylist_map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\arraystack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\circularqueue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\hashtable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\ibacktrack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\mmap_fastio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\mycodebase.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\numbertheory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\prime.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\rbacktrack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\simple_readwrite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bj\test.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="johncareyalgo\bloomfilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="johncareyalgo\bsearch_template.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="johncareyalgo\cuckoo_hash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="johncareyalgo\dp_example.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="johncareyalgo\dp_example2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="johncareyalgo\linearselect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="johncareyalgo\map_reduce.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="johncareyalgo\mergesort.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="johncareyalgo\quicksort.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\arraylist_map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\arraystack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\circularqueue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\even_simpler_queue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\hashtable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\ibacktrack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\minheap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\mmap_fastio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\mycodebase.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\numbertheory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\prime.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\rbacktrack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\simple_readwrite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\clib\test.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\c_fastio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\cpp_fastio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\disjoint_set.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mylib\mypriorityqueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\9328.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\knapsack_multi_bound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

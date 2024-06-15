@@ -61,10 +61,10 @@ int main(void) {
 
 		auto iter = binary_search(Student{ query, false }, data);
 		if (iter == data.end() || iter->vaccinated == false) {
-			std::cout << "Á¢Á¾ ´ë»óÀÔ´Ï´Ù\n";
+			std::cout << "ì ‘ì¢… ëŒ€ìƒì…ë‹ˆë‹¤\n";
 		}
 		else {
-			std::cout << "Á¢Á¾ ´ë»óÀÌ ¾Æ´Õ´Ï´Ù\n";
+			std::cout << "ì ‘ì¢… ëŒ€ìƒì´ ì•„ë‹™ë‹ˆë‹¤\n";
 		}
 	}
 

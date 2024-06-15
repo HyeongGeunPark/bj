@@ -1,6 +1,6 @@
 /*
 
-0-1 ¹è³¶ ¹®Á¦
+0-1 ë°°ë‚­ ë¬¸ì œ
 
 */
 
@@ -33,7 +33,7 @@ int knapsack_01(int items, int capacity, std::vector<int> values, std::vector<in
 }
 
 int knapsack_inf0(int items, int capacity, std::vector<int> values, std::vector<int> weight) {
-	// ÀÛµ¿ÇÏÁö¸¸ È¿À²ÀûÀÎ ¹æ¹ýÀº ¾Æ´Ï´Ù.
+	// ìž‘ë™í•˜ì§€ë§Œ íš¨ìœ¨ì ì¸ ë°©ë²•ì€ ì•„ë‹ˆë‹¤.
 	std::vector<std::vector<int>> dp(items + 1, std::vector<int>(capacity + 1, 0));
 
 	for (int i = 1; i <= items; ++i) {
@@ -58,15 +58,15 @@ int knapsack_inf0(int items, int capacity, std::vector<int> values, std::vector<
 }
 
 int knapsack_inf1(int items, int capacity, std::vector<int> values, std::vector<int> weight) {
-	// »óÅÂ¸¦ ½Ã¹Ä·¹ÀÌ¼ÇÇÏ±â À§ÇØ ÇÊ¿äÇÑ Â÷¿ø°ú »óÅÂ¸¦ Ç¥ÇöÇÏ´Âµ¥ ÇÊ¿äÇÑ Â÷¿øÀÌ
-	// ¹Ýµå½Ã °°¾Æ¾ß ÇÏ´Â °ÍÀº ¾Æ´Ï´Ù.
+	// ìƒíƒœë¥¼ ì‹œë®¬ë ˆì´ì…˜í•˜ê¸° ìœ„í•´ í•„ìš”í•œ ì°¨ì›ê³¼ ìƒíƒœë¥¼ í‘œí˜„í•˜ëŠ”ë° í•„ìš”í•œ ì°¨ì›ì´
+	// ë°˜ë“œì‹œ ê°™ì•„ì•¼ í•˜ëŠ” ê²ƒì€ ì•„ë‹ˆë‹¤.
 
 	/*
-	0-1 ¹è³¶ ¹®Á¦¿¡¼­´Â i¹øÂ° ¹°°ÇÀ» °í·ÁÇÒ ¶§ ¹°°ÇÀ» ÇÏ³ª¹Û¿¡ ¾µ ¼ö ¾ø±â ¶§¹®¿¡
-	1~i-1¹øÂ° ¹°°Ç¸¸À» »ç¿ëÇÑ °æ¿ìÀÇ °á°ú¸¸ »ç¿ëÇØ¾ß ÇÑ´Ù.
-	ÇÏÁö¸¸ ¹«ÇÑ ¹è³¶ ¹®Á¦¿¡¼­´Â ¹°°ÇÀ» ¿©·¯ ¹ø ¾µ ¼ö ÀÖ±â ¶§¹®¿¡
-	¸ðµç °æ¿ìÀÇ °á°ú¸¦ °¡Á®´Ù ¾²¸é µÈ´Ù.
-	µû¶ó¼­ Ä³½Ã¸¦ ÀúÀåÇÒ ¶§ ¹°°Ç ÀÎµ¦½º¿¡ °üÇÑ »óÅÂ Á¤º¸´Â ÇÊ¿äÇÏÁö ¾Ê´Ù.  
+	0-1 ë°°ë‚­ ë¬¸ì œì—ì„œëŠ” ië²ˆì§¸ ë¬¼ê±´ì„ ê³ ë ¤í•  ë•Œ ë¬¼ê±´ì„ í•˜ë‚˜ë°–ì— ì“¸ ìˆ˜ ì—†ê¸° ë•Œë¬¸ì—
+	1~i-1ë²ˆì§¸ ë¬¼ê±´ë§Œì„ ì‚¬ìš©í•œ ê²½ìš°ì˜ ê²°ê³¼ë§Œ ì‚¬ìš©í•´ì•¼ í•œë‹¤.
+	í•˜ì§€ë§Œ ë¬´í•œ ë°°ë‚­ ë¬¸ì œì—ì„œëŠ” ë¬¼ê±´ì„ ì—¬ëŸ¬ ë²ˆ ì“¸ ìˆ˜ ìžˆê¸° ë•Œë¬¸ì—
+	ëª¨ë“  ê²½ìš°ì˜ ê²°ê³¼ë¥¼ ê°€ì ¸ë‹¤ ì“°ë©´ ëœë‹¤.
+	ë”°ë¼ì„œ ìºì‹œë¥¼ ì €ìž¥í•  ë•Œ ë¬¼ê±´ ì¸ë±ìŠ¤ì— ê´€í•œ ìƒíƒœ ì •ë³´ëŠ” í•„ìš”í•˜ì§€ ì•Šë‹¤.  
 	*/
 	std::vector<int> DP(capacity + 1, 0);
 	for (int w = 0; w <= capacity; ++w) {

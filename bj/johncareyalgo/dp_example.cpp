@@ -5,21 +5,21 @@
 #include<chrono>
 #include<iomanip>
 
-// dp ¹®Á¦¸¦ Çª´Â ¿¹½Ã
-// ºÎºĞÁıÇÕÀÇ ÇÕ ¹®Á¦: ÁıÇÕÀÇ ºÎºĞÁıÇÕ Áß ÇÕÀÌ Æ¯Á¤ °ªÀÎ ºÎºĞÁıÇÕÀÌ Á¸ÀçÇÏ´ÂÁö Ã£´Â ¹®Á¦.
+// dp ë¬¸ì œë¥¼ í‘¸ëŠ” ì˜ˆì‹œ
+// ë¶€ë¶„ì§‘í•©ì˜ í•© ë¬¸ì œ: ì§‘í•©ì˜ ë¶€ë¶„ì§‘í•© ì¤‘ í•©ì´ íŠ¹ì • ê°’ì¸ ë¶€ë¶„ì§‘í•©ì´ ì¡´ì¬í•˜ëŠ”ì§€ ì°¾ëŠ” ë¬¸ì œ.
 
-// 1´Ü°è: bruteforce, ¸ğµç ºÎºĞÁıÇÕÀ» ±¸ÇÏ°í, ±× ÇÕÀ» ±¸ÇÑ´Ù.
+// 1ë‹¨ê³„: bruteforce, ëª¨ë“  ë¶€ë¶„ì§‘í•©ì„ êµ¬í•˜ê³ , ê·¸ í•©ì„ êµ¬í•œë‹¤.
 void getallsubsets(std::vector<int>& set, std::vector<int> subset, int index,
 	std::vector<std::vector<std::vector<int>>>& allsubsets) {
-	// ±âÀú Á¶°Ç: ÁıÇÕÀÇ ¸ğµç ¿ø¼Ò¸¦ °í·ÁÇÔ.
+	// ê¸°ì € ì¡°ê±´: ì§‘í•©ì˜ ëª¨ë“  ì›ì†Œë¥¼ ê³ ë ¤í•¨.
 	if (index == set.size()) {
 		allsubsets[subset.size()].push_back(subset);
 		return;
 	}
 
-	// ºĞ±â 1: ÇöÀç ÀÎµ¦½ºÀÇ ¿ø¼Ò¸¦ Æ÷ÇÔÇÏÁö ¾Ê´Â ºÎºĞÁıÇÕ ±¸¼º
+	// ë¶„ê¸° 1: í˜„ì¬ ì¸ë±ìŠ¤ì˜ ì›ì†Œë¥¼ í¬í•¨í•˜ì§€ ì•ŠëŠ” ë¶€ë¶„ì§‘í•© êµ¬ì„±
 	getallsubsets(set, subset, index + 1, allsubsets);
-	// ºĞ±â 2: ÇöÀç ÀÎµ¦½ºÀÇ ¿ø¼Ò¸¦ Æ÷ÇÔÇÏ´Â ºÎºĞÁıÇÕ ±¸¼º
+	// ë¶„ê¸° 2: í˜„ì¬ ì¸ë±ìŠ¤ì˜ ì›ì†Œë¥¼ í¬í•¨í•˜ëŠ” ë¶€ë¶„ì§‘í•© êµ¬ì„±
 	subset.push_back(set[index]);
 	getallsubsets(set, subset, index + 1, allsubsets); 
 }
@@ -28,7 +28,7 @@ bool subsetsum_bruteforce(std::vector<int> set, int target) {
 	std::vector<std::vector<std::vector<int>>> allsubsets(set.size() + 1);
 	getallsubsets(set, {}, 0, allsubsets);
 
-	// ¸ğµç ºÎºĞÁıÇÕ¿¡ ´ëÇØ ±× ¿ø¼Ò ÇÕÀ» ±¸ÇÏ°í ÀÌ¸¦ target°ú ºñ±³ÇÑ´Ù.
+	// ëª¨ë“  ë¶€ë¶„ì§‘í•©ì— ëŒ€í•´ ê·¸ ì›ì†Œ í•©ì„ êµ¬í•˜ê³  ì´ë¥¼ targetê³¼ ë¹„êµí•œë‹¤.
 	for (int size = 0; size <= set.size(); ++size) {
 		for (auto subset : allsubsets[size]) {
 			int sum = 0;
@@ -43,36 +43,36 @@ bool subsetsum_bruteforce(std::vector<int> set, int target) {
 }
 
 
-// 2´Ü°è: ¹éÆ®·¡Å·, ±âÀú Á¶°ÇÀ» ºıºıÇÏ°Ô ¼³Á¤ÇÏ¿© ÃÑ ºĞ±â È¸¼ö¸¦ ÁÙÀÎ´Ù.
+// 2ë‹¨ê³„: ë°±íŠ¸ë˜í‚¹, ê¸°ì € ì¡°ê±´ì„ ë¹¡ë¹¡í•˜ê²Œ ì„¤ì •í•˜ì—¬ ì´ ë¶„ê¸° íšŒìˆ˜ë¥¼ ì¤„ì¸ë‹¤.
 bool subsetsum_backtrack(std::vector<int>& set, int sum, int i) {
-	// ±âÀú Á¶°Çµé
-	if (sum == 0) return true; // ±âÀúÁ¶°Ç 1. target°ú °°Àº ÇÕÀ» °¡Áö´Â ºÎºĞÁıÇÕÀ» Ã£À½ 
+	// ê¸°ì € ì¡°ê±´ë“¤
+	if (sum == 0) return true; // ê¸°ì €ì¡°ê±´ 1. targetê³¼ ê°™ì€ í•©ì„ ê°€ì§€ëŠ” ë¶€ë¶„ì§‘í•©ì„ ì°¾ìŒ 
 	if (i == set.size() || set[i] > sum) return false;
-	// ±âÀúÁ¶°Ç 2. target°ú °°Àº ÇÕÀ» °¡Áö´Â ºÎºĞÁıÇÕÀ» Ã£Áö ¸øÇÔ
-	// 2-1. ÀÌ¹Ì ¸ğµç ¿ø¼Ò¸¦ °í·ÁÇÔ
-	// 2-2. ÇöÀç ºÎºĞÁıÇÕÀÇ ÇÕÀÌ ÀÌ¹Ì targetÀ» ÃÊ°úÇÔ
+	// ê¸°ì €ì¡°ê±´ 2. targetê³¼ ê°™ì€ í•©ì„ ê°€ì§€ëŠ” ë¶€ë¶„ì§‘í•©ì„ ì°¾ì§€ ëª»í•¨
+	// 2-1. ì´ë¯¸ ëª¨ë“  ì›ì†Œë¥¼ ê³ ë ¤í•¨
+	// 2-2. í˜„ì¬ ë¶€ë¶„ì§‘í•©ì˜ í•©ì´ ì´ë¯¸ targetì„ ì´ˆê³¼í•¨
 
-	// ´õ ¼¼¼¼ÇÑ ±âÀú Á¶°Ç¿¡ ÀÇÇØ °¡¸ÁÀÌ ¾ø´Â Å½»öÀ» ÇÏÁö ¾Ê´Â´Ù.
+	// ë” ì„¸ì„¸í•œ ê¸°ì € ì¡°ê±´ì— ì˜í•´ ê°€ë§ì´ ì—†ëŠ” íƒìƒ‰ì„ í•˜ì§€ ì•ŠëŠ”ë‹¤.
 
 
-	// Àç±Í È£ÃâÀÌ ÇÊ¿äÇÑ °æ¿ì
-	// ÇöÀç ÀÎµ¦½ºÀÇ ¿ø¼Ò¸¦ Æ÷ÇÔÇÑ °æ¿ì, Æ÷ÇÔÇÏÁö ¾ÊÀº °æ¿ìÀÇ ´ÙÀ½ ºÎºĞÁıÇÕÀ» »ı¼º
+	// ì¬ê·€ í˜¸ì¶œì´ í•„ìš”í•œ ê²½ìš°
+	// í˜„ì¬ ì¸ë±ìŠ¤ì˜ ì›ì†Œë¥¼ í¬í•¨í•œ ê²½ìš°, í¬í•¨í•˜ì§€ ì•Šì€ ê²½ìš°ì˜ ë‹¤ìŒ ë¶€ë¶„ì§‘í•©ì„ ìƒì„±
 	return subsetsum_backtrack(set, sum - set[i], i + 1)
 		|| subsetsum_backtrack(set, sum, i + 1); 
 }
 
-// 3´Ü°è: ¸Ş¸ğÀÌÁ¦ÀÌ¼Ç.
+// 3ë‹¨ê³„: ë©”ëª¨ì´ì œì´ì…˜.
 constexpr int UNKNOWN = 1e9;
 bool subsetsum_memoization(std::vector<int>& set, int sum, int i, std::vector<std::vector<int>>& memo)
 {
-	// ±âÀú Á¶°Ç, ¹éÆ®·¡Å· È°¿ë °¡´ÉÇÏ´Ù.
+	// ê¸°ì € ì¡°ê±´, ë°±íŠ¸ë˜í‚¹ í™œìš© ê°€ëŠ¥í•˜ë‹¤.
 	if (sum == 0) return true;
 	if (i == set.size() || set[i] > sum) return false;
 
-	// Ä³½Ã Å½»ö
-	// »óÅÂ´Â µÎ Á¤¼ö·Î Á¤ÀÇµÈ´Ù.
-	// i : i¹øÂ° ¿ø¼Ò±îÁö °í·ÁÇÏ¿´À½
-	// j : ºÎºĞÁıÇÕÀÇ ¿ø¼Ò ÇÕ
+	// ìºì‹œ íƒìƒ‰
+	// ìƒíƒœëŠ” ë‘ ì •ìˆ˜ë¡œ ì •ì˜ëœë‹¤.
+	// i : ië²ˆì§¸ ì›ì†Œê¹Œì§€ ê³ ë ¤í•˜ì˜€ìŒ
+	// j : ë¶€ë¶„ì§‘í•©ì˜ ì›ì†Œ í•©
 	if (memo[i][sum] == UNKNOWN)
 	{
 		bool append = subsetsum_memoization(set, sum - set[i], i + 1, memo);
@@ -80,18 +80,18 @@ bool subsetsum_memoization(std::vector<int>& set, int sum, int i, std::vector<st
 		memo[i][sum] = append || ignore; 
 	}
 
-	// Ä³½Ã¿¡ ÀúÀåµÈ °ªÀÌ ÀÖ´Â °æ¿ì
+	// ìºì‹œì— ì €ì¥ëœ ê°’ì´ ìˆëŠ” ê²½ìš°
 	return memo[i][sum];
 }
 
-// 4´Ü°è: Å¸ºæ·¹ÀÌ¼Ç. Àç±Í ±¸Á¶¸¦ »ç¿ëÇÏÁö ¾Ê°í, »óÇâ½Ä ±¸Á¶¸¦ »ç¿ëÇÑ´Ù.
+// 4ë‹¨ê³„: íƒ€ë·¸ë ˆì´ì…˜. ì¬ê·€ êµ¬ì¡°ë¥¼ ì‚¬ìš©í•˜ì§€ ì•Šê³ , ìƒí–¥ì‹ êµ¬ì¡°ë¥¼ ì‚¬ìš©í•œë‹¤.
 std::vector<std::vector<bool>> subsetsum_tabulation(std::vector<int>& set) {
 	int maxSum = 0;
 	for (int i : set) maxSum += i;
 
 	std::vector<std::vector<bool>> DP(set.size() + 1, std::vector<bool>(maxSum + 1, false));
 
-	// ±âÀú Á¶°Ç 1: °øÁıÇÕÀÇ ÇÕÀº 0ÀÌ´Ù.
+	// ê¸°ì € ì¡°ê±´ 1: ê³µì§‘í•©ì˜ í•©ì€ 0ì´ë‹¤.
 	for (int i = 0; i < set.size(); ++i) {
 		DP[i][0] = true;
 	}
@@ -112,16 +112,16 @@ std::vector<std::vector<bool>> subsetsum_tabulation(std::vector<int>& set) {
 
 
 
-// ½Ã°£ ÃøÁ¤
+// ì‹œê°„ ì¸¡ì •
 void test_time(std::function<bool()> f, std::string s) {
 	auto t0 = std::chrono::steady_clock::now();
 	bool result = f();
 	auto t1 = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = (t1 - t0);
 
-	std::cout << "Å×½ºÆ®: " << s << '\n';
-	std::cout << "½ÇÇà °á°ú: " << (result ? "true" : "false") << '\n';
-	std::cout << "½ÇÇà ½Ã°£: " << std::fixed << std::setprecision(9)
+	std::cout << "í…ŒìŠ¤íŠ¸: " << s << '\n';
+	std::cout << "ì‹¤í–‰ ê²°ê³¼: " << (result ? "true" : "false") << '\n';
+	std::cout << "ì‹¤í–‰ ì‹œê°„: " << std::fixed << std::setprecision(9)
 		<<  diff << "\n";
 
 
@@ -137,7 +137,7 @@ int main(void) {
 	test_time([&]()->bool {return subsetsum_backtrack(set, target, 0); }, "backtrack, find " + std::to_string(target));
 	test_time([&]()->bool {return subsetsum_bruteforce(set, target); }, "bruteforce, find " + std::to_string(target));
 
-	// »óÅÂ Á¤ÀÇ: i¹øÂ° ¿ø¼Ò±îÁö °í·ÁÇßÀ» ¶§, ¿ø¼ÒÇÕÀÌ jÀÎ ºÎºĞÁıÇÕÀÌ Á¸ÀçÇÏ´ÂÁö == memo[i][j]
+	// ìƒíƒœ ì •ì˜: ië²ˆì§¸ ì›ì†Œê¹Œì§€ ê³ ë ¤í–ˆì„ ë•Œ, ì›ì†Œí•©ì´ jì¸ ë¶€ë¶„ì§‘í•©ì´ ì¡´ì¬í•˜ëŠ”ì§€ == memo[i][j]
 	std::vector<std::vector<int>> memo(set.size(), std::vector<int>(7000, UNKNOWN));
 	test_time([&]()->bool {return subsetsum_memoization(set, target, 0, memo); }, "memoization, find " + std::to_string(target));
 	test_time([&]()->bool { auto result = subsetsum_tabulation(set);

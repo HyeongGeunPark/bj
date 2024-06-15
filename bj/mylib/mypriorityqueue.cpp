@@ -23,7 +23,7 @@ namespace my {
 			add_key(new_weight, v);
 		}
 		std::pair<int,int> top() {
-			// setÀº ÀÚµ¿À¸·Î ¿ø¼Ò¸¦ Á¤·ÄÇØ ÀúÀåÇÑ´Ù. Ã¹ ¹øÂ° ¿ø¼Ò´Â °¡Àå ÀÛÀº pairÀÌ´Ù.
+			// setì€ ìë™ìœ¼ë¡œ ì›ì†Œë¥¼ ì •ë ¬í•´ ì €ì¥í•œë‹¤. ì²« ë²ˆì§¸ ì›ì†ŒëŠ” ê°€ì¥ ì‘ì€ pairì´ë‹¤.
 			return *data.begin();
 		}
 		void pop_first(void) {
@@ -57,8 +57,8 @@ int main(void) {
 	priority_queue pq;
 	int s = 3;
 	constexpr int inf = 10000000;
-	int min_d[5] = { inf, inf, inf, inf, inf }; // °á°ú ÀúÀå¿ë
-	int pred[5] = { -1, -1, -1, -1, -1 }; // °æ·Î ÀúÀå¿ë
+	int min_d[5] = { inf, inf, inf, inf, inf }; // ê²°ê³¼ ì €ì¥ìš©
+	int pred[5] = { -1, -1, -1, -1, -1 }; // ê²½ë¡œ ì €ì¥ìš©
 	min_d[s] = 0;
 	pred[s] = s;
 	pq.add_key(s, 0);
