@@ -21,6 +21,7 @@
   <ItemGroup>
     <Text Include="src\memo.txt" />
     <Text Include="src\test.txt" />
+    <Text Include="src\testcase.txt" />
     <Text Include="src\다시 풀 문제.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -28,7 +29,7 @@
     <ClInclude Include="mylib\stringlib.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\14725.cpp" />
+    <ClCompile Include="mylib\mergeSortTree.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
