@@ -29,7 +29,7 @@
     <ClInclude Include="mylib\stringlib.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mylib\mergeSortTree.cpp" />
+    <ClCompile Include="src\acientcivil.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

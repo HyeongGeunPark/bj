@@ -29,7 +29,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mylib\mergeSortTree.cpp">
+    <ClCompile Include="src\acientcivil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
