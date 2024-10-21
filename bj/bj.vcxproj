@@ -28,9 +28,6 @@
     <ClInclude Include="mylib\skiplist.hpp" />
     <ClInclude Include="mylib\stringlib.hpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\acientcivil.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{01CC1F21-1DA4-4106-8775-D067222309E7}</ProjectGuid>
