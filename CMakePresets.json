@@ -7,16 +7,23 @@
     },
     "configurePresets": [
         {
+            "name": "c/c++ standard",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_STANDARD": "23",
+                "CMAKE_CXX_STANDARD_REQUIRED": true
+            }
+        },
+        {
             "name": "windows-base",
+            "inherits": "c/c++ standard",
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "cl.exe",
-                "CMAKE_CXX_COMPILER": "cl.exe",
-                "CMAKE_CXX_STANDARD": "20",
-                "CMAKE_CXX_STANDARD_REQUIRED": true
+                "CMAKE_CXX_COMPILER": "cl.exe"
             },
             "condition":{
                 "type": "equals",
@@ -47,14 +54,13 @@
         {
             "name": "vs-build-base",
             "hidden": true,
+            "inherits": "c/c++ standard",
             "generator": "Visual Studio 17 2022",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "cl.exe",
-                "CMAKE_CXX_COMPILER": "cl.exe",
-                "CMAKE_CXX_STANDARD": "20",
-                "CMAKE_CXX_STANDARD_REQUIRED": true
+                "CMAKE_CXX_COMPILER": "cl.exe"
             },
             "condition":{
                 "type": "equals",
@@ -72,6 +78,47 @@
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "linux-base",
+            "hidden": true,
+            "inherits": "c/c++ standard",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            },
+            "condition":{
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "linux-x64-debug",
+            "displayName": "Linux x64 Debug",
+            "inherits": "linux-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "linux-x64-release",
+            "displayName": "Linux x64 Release",
+            "inherits": "linux-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
             }
         }
     ]
