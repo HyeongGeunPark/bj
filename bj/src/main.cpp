@@ -114,11 +114,12 @@ namespace FastIO {
 		munmap(readBuf, st.st_size);
 	}
 
-	bool is_blank(char c) { return c == ' ' || c == '\n' }
-	bool is_end(char c) { return c == '\0' }
+	bool is_blank(char c) { return c == ' ' || c == '\n'; }
+	bool is_end(char c) { return c == '\0'; }
 	bool is_digit(char c) { return c >= '0' && c <= '9'; }
 	char read_char() {
-		while (is_blank(*readCursor)) ++readCursor;
+		while (is_blank(*readCursor))
+			++readCursor;
 		return *readCursor++;
 	}
 	template<typename T>
@@ -127,12 +128,12 @@ namespace FastIO {
 		T result = 0;
 		char current = read_char();
 		bool flag = false;
-		if (cur == '-') {
+		if (current == '-') {
 			flag = true;
 			current = read_char();
 		}
-		result += curent - '0';
-		while (!is_digit(*readCursor)) {
+		result += current - '0';
+		while (is_digit(*readCursor)) {
 			result = result * 10 + (read_char() - '0');
 		}
 		return flag ? -result : result;
@@ -146,13 +147,13 @@ namespace FastIO {
 	// requires std::is_integral_v<T>
 	void write_int(T n) {
 		char buf[30];
-		char* bufCursor
+		char* bufCursor = buf;
 		if (n < 0) {
 			*writeCursor++ = '-';
 			n = -n;
 		}
 		do {
-			*bufCursor++ = (n % 10) - '0';
+			*bufCursor++ = (n % 10) + '0';
 			n /= 10;
 		}
 		while (n);
@@ -175,13 +176,18 @@ int main()
 {
 	//std::cin.tie(0);
 	//std::ios_base::sync_with_stdio(0);
+	FastIO::init();
 
 	// tree input and store in adjacent list
 	//std::cin >> n;
+	n = FastIO::read_int<int>();
 	adj.resize(n + 1);
 	for (int i = 0;i < n-1;++i) {
 		int s, d, l;
-		std::cin >> s >> d >> l;
+		//std::cin >> s >> d >> l;
+		s = FastIO::read_int<int>();
+		d = FastIO::read_int<int>();
+		l = FastIO::read_int<int>();
 		adj[s].push_back(edge{ d,l });
 		adj[d].push_back(edge{ s,l });
 	}
@@ -195,15 +201,28 @@ int main()
 
 	// query input
 	int m;
-	std::cin >> m;
+	//std::cin >> m;
+	m = FastIO::read_int<int>();
 
 	for (int i = 0;i < m;++i) {
 		int a, b;
-		std::cin >> a >> b;
+		//std::cin >> a >> b;
+		a = FastIO::read_int<int>();
+		b = FastIO::read_int<int>();
+
 		int common_ancestor = find_common_ancestor(a, b);
+		/*
 		std::cout <<
 			distance_from_root[a] + distance_from_root[b]
 			- 2 * distance_from_root[common_ancestor] << '\n';
+		*/
+		FastIO::write_int(
+			distance_from_root[a] + distance_from_root[b]
+			- 2 * distance_from_root[common_ancestor]
+		);
+		FastIO::write_char('\n');
 	}
+	FastIO::flush();
+	FastIO::deinit();
 	return 0;
 }
