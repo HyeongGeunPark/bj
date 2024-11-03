@@ -87,7 +87,10 @@ int main(){
 
 		for (auto [next, len] : adj[cur]) {
 			// len is not used in this loop
-
+			--in_degree[next];
+			if(in_degree[next] == 0){
+				q.push(next);
+			}
 		}
 	}
 

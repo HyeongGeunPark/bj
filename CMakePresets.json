@@ -120,6 +120,56 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE":"Release"
             }
+        },
+        {
+            "name": "android-base",
+            "hidden": true,
+            "inherits": "c/c++ standard",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            },
+            "condition":{
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Android"
+            }
+        },
+        {
+            "name": "android-x64-debug",
+            "displayName": "Android x64 Debug",
+            "inherits": "android-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "android-x64-release",
+            "displayName": "Android x64 Release",
+            "inherits": "android-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
+            }
+        }
+    ],
+    "buildPresets":[
+        {
+            "name" : "sh-build",
+            "displayName": "Andriod x64 debug build",
+            "configurePreset": "android-x64-debug",
+            "jobs": 4
         }
     ]
+
 }
