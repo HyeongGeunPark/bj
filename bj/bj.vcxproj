@@ -28,7 +28,7 @@
     <ClInclude Include="mylib\stringlib.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\14725.cpp" />
+    <ClCompile Include="src\aa.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
