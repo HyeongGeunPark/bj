@@ -1,0 +1,175 @@
+{
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "c/c++ standard",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_CXX_STANDARD_REQUIRED": true
+            }
+        },
+        {
+            "name": "windows-base",
+            "inherits": "c/c++ standard",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            },
+            "condition":{
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "x64-debug",
+            "displayName": "x64 Debug",
+            "inherits": "windows-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "x64-release",
+            "displayName": "x64 Release",
+            "inherits": "x64-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
+            }
+        },
+        {
+            "name": "vs-build-base",
+            "hidden": true,
+            "inherits": "c/c++ standard",
+            "generator": "Visual Studio 17 2022",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            },
+            "condition":{
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "vs-x64-debug",
+            "displayName": "VS x64 Debug",
+            "inherits": "vs-build-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "linux-base",
+            "hidden": true,
+            "inherits": "c/c++ standard",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            },
+            "condition":{
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "linux-x64-debug",
+            "displayName": "Linux x64 Debug",
+            "inherits": "linux-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "linux-x64-release",
+            "displayName": "Linux x64 Release",
+            "inherits": "linux-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
+            }
+        },
+        {
+            "name": "android-base",
+            "hidden": true,
+            "inherits": "c/c++ standard",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            },
+            "condition":{
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Android"
+            }
+        },
+        {
+            "name": "android-x64-debug",
+            "displayName": "Android x64 Debug",
+            "inherits": "android-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Debug"
+            }
+        },
+        {
+            "name": "android-x64-release",
+            "displayName": "Android x64 Release",
+            "inherits": "android-base",
+            "architecture":{
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE":"Release"
+            }
+        }
+    ],
+    "buildPresets":[
+        {
+            "name" : "sh-build",
+            "displayName": "Andriod x64 debug build",
+            "configurePreset": "android-x64-debug",
+            "jobs": 4
+        }
+    ]
+
+}

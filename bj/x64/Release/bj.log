@@ -1,4 +1,0 @@
-﻿  2239.cpp
-H:\git\bj\bj\src\2239.cpp(114,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
-LINK : warning LNK4075: '/INCREMENTAL'이(가) '/OPT:ICF' 사양으로 인해 무시됩니다.
-  bj.vcxproj -> H:\git\bj\x64\Release\bj.exe
