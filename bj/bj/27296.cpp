@@ -19,9 +19,9 @@ P = 1이면 마지막에 선분을 그리지 못하게 되는 사람이 이긴�
 1. 볼록다각형의 서로 겹치지 않는 대각선의 개수는 N-3개이다. (항상 그렇다.)
 2. 따라서 이 경우 N개의 점에 대해 그릴 수 있는 선분의 수는 2N-3이다. (N >= 3 )
 3. N이 0, 1, 2인 경우는 예외로 처리한다.
-	0 -> 0개
-	1 -> 0개
-	2 -> 1개 -> 사실 N=2인 경우는 2N-3과 같다. -> 여기부터는 항상 홀수이다.
+  0 -> 0개
+  1 -> 0개
+  2 -> 1개 -> 사실 N=2인 경우는 2N-3과 같다. -> 여기부터는 항상 홀수이다.
 4. P=0인 경우, 선공이 이기려면 그릴 수 있는 선분의 개수가 홀수여야 한다.
 5. P=1인 경우, 선공이 이기려면 그릴 수 있는 선분의 개수가 짝수여야 한다.
 */
@@ -29,21 +29,20 @@ P = 1이면 마지막에 선분을 그리지 못하게 되는 사람이 이긴�
 #include <iostream>
 
 int main(void) {
-	std::cin.tie(nullptr);
-	std::ios::sync_with_stdio(false);
+  std::cin.tie(nullptr);
+  std::ios::sync_with_stdio(false);
 
-	int t;
-	std::cin >> t;
+  int t;
+  std::cin >> t;
 
-	while (t--) {
-		long long n;
-		std::cin >> n;
-		if (n == 0 || n == 1) {
-			std::cout << "1 0\n"; // P=0, P=1
-		}
-		else {
-			std::cout << "0 1\n"; // P=0, P=1
-		}
-	}
-	return 0;
+  while (t--) {
+    long long n;
+    std::cin >> n;
+    if (n == 0 || n == 1) {
+      std::cout << "1 0\n";  // P=0, P=1
+    } else {
+      std::cout << "0 1\n";  // P=0, P=1
+    }
+  }
+  return 0;
 }

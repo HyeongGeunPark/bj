@@ -27,78 +27,77 @@ Q: 쿼리의 수 (1<= Q <= 200'000)
 
 */
 
-#include<iostream>
-#include<vector>
-#include<sstream>
+#include <iostream>
+#include <sstream>
+#include <vector>
 
 int main(void) {
-	// c++ fast io
-	std::cin.tie(0);
-	std::ios_base::sync_with_stdio(false);
+  // c++ fast io
+  std::cin.tie(0);
+  std::ios_base::sync_with_stdio(false);
 
-	int n;
-	int q;
-	std::cin >> n >> q;
+  int n;
+  int q;
+  std::cin >> n >> q;
 
-	std::vector<long long> array_sum;
-	array_sum.push_back(0);
-	long long sum = 0;
-	for (int i = 0; i < n; ++i) {
-		int temp;
-		std::cin >> temp;
-		sum += temp;
-		array_sum.push_back(sum); 
-	}
+  std::vector<long long> array_sum;
+  array_sum.push_back(0);
+  long long sum = 0;
+  for (int i = 0; i < n; ++i) {
+    int temp;
+    std::cin >> temp;
+    sum += temp;
+    array_sum.push_back(sum);
+  }
 
-	int rotation = 0;
+  int rotation = 0;
 
-	std::stringstream obufss;
+  std::stringstream obufss;
 
-	// queries
-	for (int i = 0; i < q; ++i) {
-		int query;
-		int k, a, b;
-		std::cin >> query;
-		switch (query) {
-		case 1:
-			std::cin >> k;
-			rotation += k;
-			rotation %= n;
-			break;
-		case 2:
-			std::cin >> k;
-			rotation -= k;
-			rotation %= n;
-			break;
-		case 3:
-			std::cin >> a >> b;
-			--a; --b; // 1-based to 0-based
+  // queries
+  for (int i = 0; i < q; ++i) {
+    int query;
+    int k, a, b;
+    std::cin >> query;
+    switch (query) {
+      case 1:
+        std::cin >> k;
+        rotation += k;
+        rotation %= n;
+        break;
+      case 2:
+        std::cin >> k;
+        rotation -= k;
+        rotation %= n;
+        break;
+      case 3:
+        std::cin >> a >> b;
+        --a;
+        --b;  // 1-based to 0-based
 
-			// rotate
-			a -= rotation;
-			b -= rotation;
-			while (a < 0)
-				a += n;
-			a %= n;
-			while (b < 0)
-				b += n;
-			b %= n;
+        // rotate
+        a -= rotation;
+        b -= rotation;
+        while (a < 0) a += n;
+        a %= n;
+        while (b < 0) b += n;
+        b %= n;
 
-			if (a <= b)
-				// case 1. a <= b
-				obufss << array_sum[b + 1] - array_sum[a] << '\n';
-			else {
-				// case 2. a > b
-				// get sum [a, n] + [1, b]
-				sum = 0;
+        if (a <= b)
+          // case 1. a <= b
+          obufss << array_sum[b + 1] - array_sum[a] << '\n';
+        else {
+          // case 2. a > b
+          // get sum [a, n] + [1, b]
+          sum = 0;
 
-				obufss << array_sum[b + 1] + array_sum[n] - array_sum[a] << '\n'; 
-			} 
-			break;
-		} 
-	}
+          obufss << array_sum[b + 1] + array_sum[n] - array_sum[a] << '\n';
+        }
+        break;
+    }
+  }
 
-	std::cout << obufss.str();
+  std::cout << obufss.str();
 
-	return 0;
+  return 0;
 }

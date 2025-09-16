@@ -25,49 +25,46 @@ T_0 = M
 T_1 = M_1
 ...
 T_N = min(
-	M_N,
-	T_(N-1) + T_0 + T_1,
-	T_(N-2) + T_0 + T_2,
-	...
-	T_(N-(N/2)) + T_0 + T_(N/2) <- integer division
-) 
+  M_N,
+  T_(N-1) + T_0 + T_1,
+  T_(N-2) + T_0 + T_2,
+  ...
+  T_(N-(N/2)) + T_0 + T_(N/2) <- integer division
+)
 
 -> O(N^2)
 */
 
 #include <iostream>
-//#include <memory>
+// #include <memory>
 
 int main(void) {
-	// c++ fast io
-	std::cin.tie(0);
-	std::ios_base::sync_with_stdio(false);
+  // c++ fast io
+  std::cin.tie(0);
+  std::ios_base::sync_with_stdio(false);
 
-	int n;
-	std::cin >> n;
+  int n;
+  std::cin >> n;
 
-	//std::unique_ptr<int[]> m_arr(new int[n+1]);
-	int* m_arr = new int[n + 1];
+  // std::unique_ptr<int[]> m_arr(new int[n+1]);
+  int* m_arr = new int[n + 1];
 
-	std::cin >> m_arr[0];
+  std::cin >> m_arr[0];
 
-	for (int i = 0; i < n; ++i) {
-		int temp;
-		std::cin >> temp;
-		m_arr[i + 1] = m_arr[i] + temp;
-	}
+  for (int i = 0; i < n; ++i) {
+    int temp;
+    std::cin >> temp;
+    m_arr[i + 1] = m_arr[i] + temp;
+  }
 
-	for (int i = 2; i <= n; ++i) {
-		for (int j = 1; j <= i / 2; ++j) {
-			m_arr[i] = std::min(
-				m_arr[i],
-				m_arr[i-j] + m_arr[0] + m_arr[j]
-				);
-		}
-	}
+  for (int i = 2; i <= n; ++i) {
+    for (int j = 1; j <= i / 2; ++j) {
+      m_arr[i] = std::min(m_arr[i], m_arr[i - j] + m_arr[0] + m_arr[j]);
+    }
+  }
 
-	std::cout << m_arr[n];
+  std::cout << m_arr[n];
 
-	delete[] m_arr;
-	return 0; 
+  delete[] m_arr;
+  return 0;
 }

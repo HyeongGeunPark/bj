@@ -22,90 +22,85 @@ phi(p) = p-1.
 phi(p^k) = p^(k-1) * (p-1)
 
 4. 따라서, n을 소인수분해 한 다음 위의 성질을 이용해
-	답을 계산 가능하다.
+  답을 계산 가능하다.
 
 5. n <= 10^12이므로 O(n) = n^(1/2)의 복잡도를 가지는
-	에라토스테네스의 체 알고리즘을 사용하면 된다.
+  에라토스테네스의 체 알고리즘을 사용하면 된다.
 
 주의.
 1. 1에 대한 답은 1이다.
 */
 
-
-#include<iostream>
-#include<vector>
-#include<unordered_map>
-#include<cmath>
+#include <cmath>
+#include <iostream>
+#include <unordered_map>
+#include <vector>
 
 long long mypow(long long base, int power) {
-	long long result = 1;
-	long long temp = base;
-	while (power) {
-		if (power & 1) {
-			result *= temp;
-		}
-		power >>= 1;
-		temp *= temp;
-	}
-	return result;
+  long long result = 1;
+  long long temp = base;
+  while (power) {
+    if (power & 1) {
+      result *= temp;
+    }
+    power >>= 1;
+    temp *= temp;
+  }
+  return result;
 }
 
-long long solve(long long n)
-{
-	if (n == 1) return 1ll;
-	// prime factorization
-	std::unordered_map<long long, int> primes;
+long long solve(long long n) {
+  if (n == 1) return 1ll;
+  // prime factorization
+  std::unordered_map<long long, int> primes;
 
-	while (n % 2 == 0) {
-		++primes[2];
-		n /= 2;
-	}
-	while (n % 3 == 0) {
-		++primes[3];
-		n /= 3;
-	}
+  while (n % 2 == 0) {
+    ++primes[2];
+    n /= 2;
+  }
+  while (n % 3 == 0) {
+    ++primes[3];
+    n /= 3;
+  }
 
-	if(n!=1){
-		long long d = 5;
-		while (d*d <= n)
-		{
-			if (n % d != 0) {
-				d += 2;
-			}
-			else {
-				++primes[d];
-				n /= d;
-			}
-		}
-		++primes[n];
-	}
+  if (n != 1) {
+    long long d = 5;
+    while (d * d <= n) {
+      if (n % d != 0) {
+        d += 2;
+      } else {
+        ++primes[d];
+        n /= d;
+      }
+    }
+    ++primes[n];
+  }
 
-	// calculate final result from factored primes
-	long long result = 1;
-	for (auto [prime, count] : primes) {
-		//phi(p^k) = p^(k-1) * (p-1)
-		result *= mypow(prime, count-1) * (prime - 1);
-	}
+  // calculate final result from factored primes
+  long long result = 1;
+  for (auto [prime, count] : primes) {
+    // phi(p^k) = p^(k-1) * (p-1)
+    result *= mypow(prime, count - 1) * (prime - 1);
+  }
 
-	return result;
+  return result;
 }
 
 int main() {
+  /*
+  // test
+  std::vector<long long> test_input{ 1,5,10,45,99 };
+  for (auto n : test_input) {
+    std::cout << solve(n) << '\n';
+  }
+  */
 
-	/*
-	// test
-	std::vector<long long> test_input{ 1,5,10,45,99 };
-	for (auto n : test_input) {
-		std::cout << solve(n) << '\n';
-	}
-	*/
+  // submit
+  long long n;
 
-	// submit
-	long long n;
+  std::cin >> n;
 
-	std::cin >> n;
+  std::cout << solve(n) << '\n';
 
-	std::cout << solve(n) << '\n';
-
-	return 0;
+  return 0;
 }

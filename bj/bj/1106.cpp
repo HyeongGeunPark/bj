@@ -9,7 +9,7 @@ buf[i][1]: 도시 i의 1회 홍보로 얻을 수 있는 고객 수
 
 1 <= c <= 1000
 1 <= n <= 20
-1 <= buf[i][0], buf[i][1] <= 100 
+1 <= buf[i][0], buf[i][1] <= 100
 
 입력이 상당히 작으므로, 어떤 방법으로 풀어도 풀리기는 할 것이다.
 
@@ -28,56 +28,47 @@ dp[i] = min(dp[i], dp[i - buf[j][1]] + buf[j][0]) (j = 0, 1, ..., n-1)
 
 */
 
+#include <functional>
 #include <iostream>
-#include <vector>
 #include <limits>
 #include <numeric>
-#include <functional>
+#include <vector>
 
 int main(void) {
-	// c++ fast io
-	std::cin.tie(0);
-	std::ios_base::sync_with_stdio(0);
+  // c++ fast io
+  std::cin.tie(0);
+  std::ios_base::sync_with_stdio(0);
 
-	// input
-	int c, n;
+  // input
+  int c, n;
 
-	std::cin >> c >> n;
+  std::cin >> c >> n;
 
-	auto buf = new int[n][2];
+  auto buf = new int[n][2];
 
-	for(int i=0;i<n;++i) {
-		std::cin >> buf[i][0] >> buf[i][1];
-	}
+  for (int i = 0; i < n; ++i) {
+    std::cin >> buf[i][0] >> buf[i][1];
+  }
 
-	// process
-	std::vector<int> dp(c + 101, 100*1000+1);
+  // process
+  std::vector<int> dp(c + 101, 100 * 1000 + 1);
 
-	dp[0] = 0; // 0명의 고객을 얻기 위한 비용은 0
-	for(int i=1;i<=c+100;++i) {
-		for(int j=0;j<n;++j) {
-			if (i - buf[j][1] < 0) // index 범위를 벗어나는 경우
-				continue;
-			dp[i] = std::min(dp[i], dp[i - buf[j][1]] + buf[j][0]);
-		}
-	} 
+  dp[0] = 0;  // 0명의 고객을 얻기 위한 비용은 0
+  for (int i = 1; i <= c + 100; ++i) {
+    for (int j = 0; j < n; ++j) {
+      if (i - buf[j][1] < 0)  // index 범위를 벗어나는 경우
+        continue;
+      dp[i] = std::min(dp[i], dp[i - buf[j][1]] + buf[j][0]);
+    }
+  }
 
+  int result =
+      std::reduce(dp.begin() + c, dp.end(), std::numeric_limits<int>::max(),
+                  [](int a, int b) { return std::min(a, b); });
 
-	int result =
-		std::reduce(
-			dp.begin() + c,
-			dp.end(),
-			std::numeric_limits<int>::max(),
-			[](int a, int b) {
-				return std::min(a, b);
-			}
-		);
+  // output
+  std::cout << result << '\n';
 
-	// output
-	std::cout << result << '\n';
-
-
-	// Delete allocated memory
-	delete[] buf;
-
+  // Delete allocated memory
+  delete[] buf;
 }

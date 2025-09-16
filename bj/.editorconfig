@@ -1,0 +1,39 @@
+# .editorconfig - Google C++ Style Guide 기반
+root = true
+
+# 모든 파일에 적용
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# 기본 들여쓰기 (Google: 2칸, 탭 대신 스페이스)
+indent_style = space
+indent_size = 2
+
+# C/C++ 소스/헤더
+[*.{c,cc,cpp,cxx,h,hpp,hxx}]
+indent_style = space
+indent_size = 2
+tab_width = 2
+max_line_length = 80
+
+# CMake 스크립트
+[{CMakeLists.txt,*.cmake}]
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+# Python (Google Python Style: 4칸)
+[*.py]
+indent_style = space
+indent_size = 4
+tab_width = 4
+max_line_length = 80
+
+# JSON, YAML, Markdown 등 (보통 2칸)
+[*.{json,yml,yaml,md}]
+indent_style = space
+indent_size = 2
+tab_width = 2

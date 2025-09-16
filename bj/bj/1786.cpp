@@ -25,95 +25,92 @@ O(n) 시간복잡도의 문자열 검색 기능을 구현해 보아라.
 */
 
 #include <iostream>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace MyLib {
 
-	void kmp(
-		const std::string& doc,
-		const std::string& key,
-		std::vector<int>& result)
-	{
-		// prerequisite
-		if (doc.size() < key.size()) {
-			return;
-		}
-		if (key.size() == 0) {
-			return;
-		}
+void kmp(const std::string& doc, const std::string& key,
+         std::vector<int>& result) {
+  // prerequisite
+  if (doc.size() < key.size()) {
+    return;
+  }
+  if (key.size() == 0) {
+    return;
+  }
 
-		// preprocess
-		std::vector<int> preprocess(key.size() + 1, 0);
-		// example
-		// key
-		//		a	b	c	d	a	b	d
-		// preprocess
-		// 	-1	0	0	0	0	1	2	0	-> size = key.size()+1
-		{
-			int i = -1;
-			int j = 0;
-			preprocess[0] = -1;
-			while (j != key.size()) {
-				if (i == -1 || key[i] == key[j]) {
-					++i; ++j;
-					preprocess[j] = i;
-				}
-				else {
-					i = preprocess[i];
-				}
-			}
-		}
+  // preprocess
+  std::vector<int> preprocess(key.size() + 1, 0);
+  // example
+  // key
+  //		a	b	c	d	a	b	d
+  // preprocess
+  // 	-1	0	0	0	0	1	2	0	-> size
+  // = key.size()+1
+  {
+    int i = -1;
+    int j = 0;
+    preprocess[0] = -1;
+    while (j != key.size()) {
+      if (i == -1 || key[i] == key[j]) {
+        ++i;
+        ++j;
+        preprocess[j] = i;
+      } else {
+        i = preprocess[i];
+      }
+    }
+  }
 
-		// find
-		{
-			int i = 0;	// cursor for document
-			int j = 0;	// cursor for key
-			while (i != doc.size()) {
-				if (j == -1 || doc[i] == key[j]) {
-					// searching
-					++i; ++j;
-				}
-				else {
-					// match fail
-					j = preprocess[j];
-				}
+  // find
+  {
+    int i = 0;  // cursor for document
+    int j = 0;  // cursor for key
+    while (i != doc.size()) {
+      if (j == -1 || doc[i] == key[j]) {
+        // searching
+        ++i;
+        ++j;
+      } else {
+        // match fail
+        j = preprocess[j];
+      }
 
-				if (j == key.size()) {
-					// matched
-					result.push_back(i - key.size());
-					j = preprocess[j];
-				}
-			}
-		}
-	}
-
+      if (j == key.size()) {
+        // matched
+        result.push_back(i - key.size());
+        j = preprocess[j];
+      }
+    }
+  }
 }
 
+}  // namespace MyLib
+
 int main() {
-	std::cin.tie(0);
-	std::cout.tie(0);
-	std::ios_base::sync_with_stdio(0);
+  std::cin.tie(0);
+  std::cout.tie(0);
+  std::ios_base::sync_with_stdio(0);
 
-	std::string key;
-	std::string doc;
-	std::vector<int> out;
+  std::string key;
+  std::string doc;
+  std::vector<int> out;
 
-	std::getline(std::cin, doc);
-	std::getline(std::cin, key);
+  std::getline(std::cin, doc);
+  std::getline(std::cin, key);
 
-	MyLib::kmp(doc, key, out);
+  MyLib::kmp(doc, key, out);
 
-	// output
-	std::cout << out.size() << '\n';
-	if (out.size() == 0)
-		return 0;
+  // output
+  std::cout << out.size() << '\n';
+  if (out.size() == 0) return 0;
 
-	for (auto i : out) {
-		// 0-based index to 1-based index
-		std::cout << i + 1 << ' ';
-	}
-	std::cout << '\n';
+  for (auto i : out) {
+    // 0-based index to 1-based index
+    std::cout << i + 1 << ' ';
+  }
+  std::cout << '\n';
 
-	return 0;
+  return 0;
 }

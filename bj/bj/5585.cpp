@@ -11,22 +11,22 @@ bj5585 거스름돈
 금액을 채우면 된다.
 */
 
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
 
 int main() {
-	int n;
-	std::cin >> n;
+  int n;
+  std::cin >> n;
 
-	n = 1000 - n;
+  n = 1000 - n;
 
-	std::vector<int> coin_values = { 500, 100, 50, 10, 5, 1 };
-	int count = 0;
-	for (unsigned int i = 0;i < coin_values.size();++i) {
-		while (n >= coin_values[i]) {
-			++count;
-			n -= coin_values[i];
-		}
-	}
-	std::cout << count << std::endl;
+  std::vector<int> coin_values = {500, 100, 50, 10, 5, 1};
+  int count = 0;
+  for (unsigned int i = 0; i < coin_values.size(); ++i) {
+    while (n >= coin_values[i]) {
+      ++count;
+      n -= coin_values[i];
+    }
+  }
+  std::cout << count << std::endl;
 }

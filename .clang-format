@@ -1,0 +1,8 @@
+# .clang-format
+BasedOnStyle: Google
+Language: Cpp
+Standard: c++20
+
+# Overrided Options
+SortIncludes: true
+IncludeBlocks: Regroup

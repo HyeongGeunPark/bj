@@ -19,76 +19,79 @@ len(A,C) = len(A,B) + len(B,C)이기 때문에,
 이후 크루스칼 알고리즘을 적용하면 된다.
 */
 
-#include<iostream>
-#include<vector>
-#include<algorithm> 
+#include <algorithm>
+#include <iostream>
+#include <vector>
 
 struct edge {
-	int l, s, d;
-	auto operator<(const edge& other) const {
-		return l < other.l;
-	}
+  int l, s, d;
+  auto operator<(const edge& other) const { return l < other.l; }
 };
 
 class disjoint_set {
-public:
-	disjoint_set(int n) : root(n, -1) {}
-	int find_root(int v) {
-		if (root[v] < 0) return v;
-		else return root[v] = find_root(root[v]); 
-	}
-	bool merge(int v1, int v2) {
-		v1 = find_root(v1);
-		v2 = find_root(v2);
-		if (v1 == v2) return false;
-		root[v2] = v1;
-		return true;
-	}
-private:
-	std::vector<int> root;
+ public:
+  disjoint_set(int n) : root(n, -1) {}
+  int find_root(int v) {
+    if (root[v] < 0)
+      return v;
+    else
+      return root[v] = find_root(root[v]);
+  }
+  bool merge(int v1, int v2) {
+    v1 = find_root(v1);
+    v2 = find_root(v2);
+    if (v1 == v2) return false;
+    root[v2] = v1;
+    return true;
+  }
+
+ private:
+  std::vector<int> root;
 };
 
 int main(void) {
+  std::cin.tie(0);
+  std::ios_base::sync_with_stdio(false);
+  int n;
+  std::cin >> n;
+  std::vector<std::pair<int, int>> x, y, z;
+  for (int i = 0; i < n; ++i) {
+    int xx, yy, zz;
+    std::cin >> xx >> yy >> zz;
+    x.push_back({xx, i});
+    y.push_back({yy, i});
+    z.push_back({zz, i});
+  }
+  std::ranges::sort(x);
+  std::ranges::sort(y);
+  std::ranges::sort(z);
 
-	std::cin.tie(0);
-	std::ios_base::sync_with_stdio(false);
-	int n;
-	std::cin >> n;
-	std::vector<std::pair<int, int>> x, y, z;
-	for (int i = 0; i < n; ++i) {
-		int xx, yy, zz;
-		std::cin >> xx >> yy >> zz;
-		x.push_back({ xx, i });
-		y.push_back({ yy, i });
-		z.push_back({ zz, i });
-	}
-	std::ranges::sort(x);
-	std::ranges::sort(y);
-	std::ranges::sort(z);
+  std::vector<edge> edges;
+  for (int i = 0; i < n - 1; ++i) {
+    edges.push_back(
+        {x[i + 1].first - x[i].first, x[i].second, x[i + 1].second});
+    edges.push_back(
+        {y[i + 1].first - y[i].first, y[i].second, y[i + 1].second});
+    edges.push_back(
+        {z[i + 1].first - z[i].first, z[i].second, z[i + 1].second});
+  }
 
+  std::sort(edges.begin(), edges.end(),
+            [](const edge& a, const edge& b) { return a.l < b.l; });
 
-	std::vector<edge> edges; 
-	for (int i = 0; i < n - 1; ++i) {
-		edges.push_back({ x[i + 1].first - x[i].first, x[i].second, x[i + 1].second });
-		edges.push_back({ y[i + 1].first - y[i].first, y[i].second, y[i + 1].second });
-		edges.push_back({ z[i + 1].first - z[i].first, z[i].second, z[i + 1].second });
-	}
+  disjoint_set djs(n);
 
-	std::sort(edges.begin(), edges.end(), [](const edge& a, const edge& b) {return a.l < b.l; });
+  // kruskal's algorithm
+  int v = 0;
+  int i = 0;
+  long long weight = 0;
+  while (v != (n - 1)) {
+    edge& e = edges[i++];
+    if (djs.merge(e.s, e.d)) {
+      weight += e.l;
+      ++v;
+    }
+  }
 
-	disjoint_set djs(n);
-
-	// kruskal's algorithm
-	int v = 0;
-	int i = 0;
-	long long weight = 0;
-	while (v != (n - 1)) {
-		edge& e = edges[i++];
-		if (djs.merge(e.s, e.d)) {
-			weight += e.l;
-			++v;
-		}
-	}
-
-	std::cout << weight; 
+  std::cout << weight;
 }

@@ -14,70 +14,66 @@ bj2623 음악프로그램
 
 */
 
-#include<iostream>
-#include<string>
-#include<sstream>
-#include<vector>
-#include<queue>
-
+#include <iostream>
+#include <queue>
+#include <sstream>
+#include <string>
+#include <vector>
 
 int main(void) {
-	int n, m;
+  int n, m;
 
-	std::cin >> n >> m;
-	std::cin >> std::ws;
+  std::cin >> n >> m;
+  std::cin >> std::ws;
 
-	std::vector<std::vector<int>> adj;
-	std::vector<int> degree;
-	adj.resize(static_cast<size_t>(n) + 1);
-	degree.resize(static_cast<size_t>(n) + 1, 0);
+  std::vector<std::vector<int>> adj;
+  std::vector<int> degree;
+  adj.resize(static_cast<size_t>(n) + 1);
+  degree.resize(static_cast<size_t>(n) + 1, 0);
 
+  // input
+  for (int i = 0; i < m; ++i) {
+    int nn;
+    std::cin >> nn;
+    if (!nn) continue;
 
-	// input
-	for (int i = 0; i < m; ++i) {
-		int nn;
-		std::cin >> nn;
-		if (!nn) continue; 
+    int prev, next;
+    std::cin >> prev;
 
-		int prev, next;
-		std::cin >> prev; 
+    for (int j = 1; j < nn; ++j) {
+      std::cin >> next;
+      adj[prev].push_back(next);
+      ++degree[next];
+      prev = next;
+    }
+  }
 
-		for (int j = 1; j < nn; ++j) {
-			std::cin >> next;
-			adj[prev].push_back(next);
-			++degree[next];
-			prev = next;
-		}
-	}
+  // Kahn's algorithm
+  std::vector<int> obuf;
+  std::queue<int> q;
 
-	// Kahn's algorithm
-	std::vector<int> obuf;
-	std::queue<int> q;
+  for (int i = 1; i <= n; ++i) {
+    if (degree[i] == 0) q.push(i);
+  }
 
-	for (int i = 1; i <= n; ++i) {
-		if (degree[i] == 0) q.push(i);
-	}
+  while (!q.empty()) {
+    int prev = q.front();
+    obuf.push_back(prev);
+    q.pop();
 
-	while (!q.empty()) {
-		int prev = q.front();
-		obuf.push_back(prev);
-		q.pop();
+    for (int next : adj[prev]) {
+      --degree[next];
+      if (degree[next] == 0) {
+        q.push(next);
+      }
+    }
+  }
 
-		for (int next : adj[prev]) {
-			--degree[next];
-			if (degree[next] == 0) {
-				q.push(next);
-			}
-		}
-	}
-
-	if (obuf.size() != n) {
-		std::cout << '0';
-	}
-	else {
-		for (int i : obuf) {
-			std::cout << i << '\n';
-		}
-	}
-
+  if (obuf.size() != n) {
+    std::cout << '0';
+  } else {
+    for (int i : obuf) {
+      std::cout << i << '\n';
+    }
+  }
 }

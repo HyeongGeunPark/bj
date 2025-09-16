@@ -6,3 +6,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 project("bj")
 
 add_subdirectory("bj")
+

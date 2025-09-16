@@ -35,59 +35,54 @@ C(n, n) = 1
 이를 기반으로 2차원 DP를 먼저 한 다음 1번을 계산하면 된다.
 
 3. 미리 계산
-입력의 경우의 수가 적으므로 0부터 52까지의 입력에 대해 모두 미리 계산할 수도 있다.
-그 값은 다음과 같다.
-constexpr std::array<int, 53> results = {
-	0, 0, 0, 0, 13, 624, 4657, 4694, 7698, 952, 4330, 6075, 4566, 7393, 9798, 2532,
-	1668, 5707, 6494, 1451, 5610, 360, 9054, 7264, 6421, 735, 7912, 8538, 1577,
-	5488, 3779, 3700, 8588, 6127, 7780, 5472, 789, 1634, 6898, 9133, 2342, 5811,
-	7955, 1850, 1743, 977, 4282, 7147, 536, 2086, 1326, 52, 1
+입력의 경우의 수가 적으므로 0부터 52까지의 입력에 대해 모두 미리 계산할 수도
+있다. 그 값은 다음과 같다. constexpr std::array<int, 53> results = { 0, 0, 0, 0,
+13, 624, 4657, 4694, 7698, 952, 4330, 6075, 4566, 7393, 9798, 2532, 1668, 5707,
+6494, 1451, 5610, 360, 9054, 7264, 6421, 735, 7912, 8538, 1577, 5488, 3779,
+3700, 8588, 6127, 7780, 5472, 789, 1634, 6898, 9133, 2342, 5811, 7955, 1850,
+1743, 977, 4282, 7147, 536, 2086, 1326, 52, 1
 };
 
 */
 
-#include <iostream>
 #include <array>
+#include <iostream>
 
 constexpr int MOD = 10'007;
 
 int main(void) {
-	std::array<std::array<int, 53>, 53> DP{};
+  std::array<std::array<int, 53>, 53> DP{};
 
-	// DP[r][n] == C(n, r)
-	// base case
-	for (int n = 0;n <= 52;++n) {
-		DP[0][n] = 1;
-	}
-	for (int r = 1; r <= 52; ++r) {
-		for (int n = r; n <= 52; ++n) {
-			DP[r][n] = DP[r][n - 1] + DP[r - 1][n - 1];
-			DP[r][n] %= MOD;
-		}
-	}
+  // DP[r][n] == C(n, r)
+  // base case
+  for (int n = 0; n <= 52; ++n) {
+    DP[0][n] = 1;
+  }
+  for (int r = 1; r <= 52; ++r) {
+    for (int n = r; n <= 52; ++n) {
+      DP[r][n] = DP[r][n - 1] + DP[r - 1][n - 1];
+      DP[r][n] %= MOD;
+    }
+  }
 
-	// solve
-	int n;
-	std::cin >> n;
+  // solve
+  int n;
+  std::cin >> n;
 
-	int total_cards = 52;
-	int result = 0;
-	int sign = 1;
-	int num_of_4cards = 1;
-	while ((n - 4*num_of_4cards) >= 0) {
-		result +=
-			sign *
-			DP[num_of_4cards][13] *
-			DP[n - 4 * num_of_4cards][total_cards - 4 * num_of_4cards];
-		result %= MOD;
-		sign *= -1;
-		num_of_4cards += 1;
-	}
-	if (result < 0) result += MOD;
+  int total_cards = 52;
+  int result = 0;
+  int sign = 1;
+  int num_of_4cards = 1;
+  while ((n - 4 * num_of_4cards) >= 0) {
+    result += sign * DP[num_of_4cards][13] *
+              DP[n - 4 * num_of_4cards][total_cards - 4 * num_of_4cards];
+    result %= MOD;
+    sign *= -1;
+    num_of_4cards += 1;
+  }
+  if (result < 0) result += MOD;
 
+  std::cout << result << '\n';
 
-	std::cout << result << '\n';
-
-	return 0;
-
+  return 0;
 }

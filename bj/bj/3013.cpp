@@ -5,7 +5,8 @@ bj3013 부분 수열의 중앙값
 등장한다.
 
 A의 부분 수열은 A의 앞과 뒤에서 숫자를 제거해서 만들 수 있다.
-길이가 홀수이면서 중앙값이 B인 A의 부분 수열의 개수를 구하는 프로그램을 작성하시오.
+길이가 홀수이면서 중앙값이 B인 A의 부분 수열의 개수를 구하는 프로그램을
+작성하시오.
 
 입력
 N B
@@ -29,68 +30,63 @@ B보다 큰 수와 작은 수의 갯수가 같아야 한다.
 4. j=index_of_b+1, ..., n에 대해서 [index_of_b+1, j) 구간에서
 B보다 큰 수와 작은 수의 갯수 차이를 구한다.
 그 값에 -1을 곱한 값을 키로 3에서 구한 hash를 검색하여, 그 값을
-결과에 더한다.  
+결과에 더한다.
 
 O(n)
 
 */
 
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-
 #include <cassert>
+#include <iostream>
+#include <unordered_map>
+#include <vector>
 
 int main(void) {
-	// c++ fast IO
-	std::cin.tie(0);
-	std::ios_base::sync_with_stdio(false);
+  // c++ fast IO
+  std::cin.tie(0);
+  std::ios_base::sync_with_stdio(false);
 
-	int n, b;
-	std::cin >> n >> b;
+  int n, b;
+  std::cin >> n >> b;
 
+  std::vector<int> count(n + 1, 0);
 
-	std::vector<int> count(n + 1, 0);
+  int index_of_b = -1;
+  int sum = 0;
+  for (int i = 0; i < n; ++i) {
+    int temp;
+    std::cin >> temp;
+    if (temp > b) {
+      ++sum;
+    } else if (temp < b) {
+      --sum;
+    } else {
+      index_of_b = i;
+    }
+    count[i + 1] = sum;
+  }
 
-	int index_of_b = -1;
-	int sum = 0;
-	for (int i = 0; i < n; ++i) {
-		int temp;
-		std::cin >> temp;
-		if (temp > b) {
-			++sum;
-		}
-		else if (temp < b) {
-			--sum;
-		}
-		else {
-			index_of_b = i;
-		}
-		count[i + 1] = sum; 
-	}
+  assert(index_of_b != -1);
 
-	assert(index_of_b != -1);
+  std::unordered_map<int, int> hash;
+  for (int i = 0; i <= index_of_b; ++i) {
+    int key = count[index_of_b] - count[i];
+    if (hash.contains(key)) {
+      ++hash[key];
+    } else {
+      hash.emplace(key, 1);
+    }
+  }
 
-	std::unordered_map<int, int> hash;
-	for (int i = 0; i <= index_of_b; ++i) {
-		int key = count[index_of_b] - count[i];
-		if (hash.contains(key)) {
-			++hash[key];
-		}
-		else {
-			hash.emplace(key, 1);
-		}
-	}
+  int result = 0;
 
-	int result = 0;
+  for (int j = index_of_b + 1; j <= n; ++j) {
+    int key = count[j] - count[index_of_b + 1];
+    if (hash.contains(-key)) {
+      result += hash[-key];
+    }
+  }
 
-	for (int j = index_of_b + 1; j <= n; ++j) {
-		int key = count[j] - count[index_of_b + 1];
-		if (hash.contains(-key)) {
-			result += hash[-key];
-		} 
-	}
-
-	std::cout << result << '\n';
-	return 0; 
+  std::cout << result << '\n';
+  return 0;
 }

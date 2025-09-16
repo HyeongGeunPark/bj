@@ -10,58 +10,55 @@ B 전주 위치는 단조 증가해야 한다.
 전깃줄의 갯수가 100'000개이므로, nlog(n)의 알고리즘을 사용해야 함.
 */
 
-#include<iostream>
-#include<vector>
-#include<algorithm>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 
 struct line {
-	int a, b;
-	auto operator<(const line& other) const {
-		return a < other.a;
-	}
+  int a, b;
+  auto operator<(const line& other) const { return a < other.a; }
 };
 
-#define cpp_fast_io() std::cin.tie(0);std::ios_base::sync_with_stdio(false)
+#define cpp_fast_io() \
+  std::cin.tie(0);    \
+  std::ios_base::sync_with_stdio(false)
 
 int main(void) {
-	cpp_fast_io();
-	int n;
-	std::cin >> n;
-	std::vector<line> lines(n);
-	for (int i = 0; i < n; ++i) {
-		std::cin >> lines[i].a >> lines[i].b;
-	}
-	std::sort(lines.begin(), lines.end());
-	std::vector<int> mem, idx;
-	mem.push_back(lines[0].b);
-	idx.push_back(0);
-	for (int i = 1; i < n; ++i) {
-		if (mem.back() < lines[i].b) {
-			idx.push_back(mem.size());
-			mem.push_back(lines[i].b);
-		}
-		else {
-			auto iter = std::lower_bound(mem.begin(), mem.end(), lines[i].b);
-			int len = std::distance(mem.begin(), iter);
-			*iter = lines[i].b; 
-			idx.push_back(len);
-		}
-	}
+  cpp_fast_io();
+  int n;
+  std::cin >> n;
+  std::vector<line> lines(n);
+  for (int i = 0; i < n; ++i) {
+    std::cin >> lines[i].a >> lines[i].b;
+  }
+  std::sort(lines.begin(), lines.end());
+  std::vector<int> mem, idx;
+  mem.push_back(lines[0].b);
+  idx.push_back(0);
+  for (int i = 1; i < n; ++i) {
+    if (mem.back() < lines[i].b) {
+      idx.push_back(mem.size());
+      mem.push_back(lines[i].b);
+    } else {
+      auto iter = std::lower_bound(mem.begin(), mem.end(), lines[i].b);
+      int len = std::distance(mem.begin(), iter);
+      *iter = lines[i].b;
+      idx.push_back(len);
+    }
+  }
 
-	std::cout << n - mem.size() << '\n';
+  std::cout << n - mem.size() << '\n';
 
-
-	int j = mem.size() - 1;
-	std::vector<int> erase;
-	for (int i = n - 1; i >= 0; --i) {
-		if (idx[i] == j) {
-			--j;
-		}
-		else {
-			erase.push_back(lines[i].a);
-		}
-	}
-	for (auto iter = erase.rbegin(); iter != erase.rend(); ++iter) {
-		std::cout << *iter << '\n';
-	} 
+  int j = mem.size() - 1;
+  std::vector<int> erase;
+  for (int i = n - 1; i >= 0; --i) {
+    if (idx[i] == j) {
+      --j;
+    } else {
+      erase.push_back(lines[i].a);
+    }
+  }
+  for (auto iter = erase.rbegin(); iter != erase.rend(); ++iter) {
+    std::cout << *iter << '\n';
+  }
 }

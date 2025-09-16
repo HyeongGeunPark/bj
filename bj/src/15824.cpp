@@ -12,47 +12,47 @@ bj15824 너 봄에는 캡사이신이 맛있단다
 
 메뉴을 매운 순으로 정리한다.
 
-mem[n]을 n번째 메뉴가 가장 매운 메뉴로 포함된 메뉴 조합의 "주헌고통지수" 합이라 정의한다.
+mem[n]을 n번째 메뉴가 가장 매운 메뉴로 포함된 메뉴 조합의 "주헌고통지수" 합이라
+정의한다.
 
 mem[0] = 0
 mem[n] = (2^n-1) * (menu[n]-menu[n-1]) + mem[0] + ... + mem[n-1]
 
 답은
-mem[0] + mem[1] + ... mem[n-1].  
-*/ 
+mem[0] + mem[1] + ... mem[n-1].
+*/
 
-#include<iostream>
-#include<vector>
-#include<algorithm>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 
-constexpr int MOD = 1'000'000'007; 
+constexpr int MOD = 1'000'000'007;
 
 int main(void) {
-	int n;
-	std::cin >> n;
-	std::vector<int> menu;
-	for (int i = 0; i < n; ++i) {
-		int temp;
-		std::cin >> temp;
-		menu.push_back(temp); 
-	}
+  int n;
+  std::cin >> n;
+  std::vector<int> menu;
+  for (int i = 0; i < n; ++i) {
+    int temp;
+    std::cin >> temp;
+    menu.push_back(temp);
+  }
 
-	std::ranges::sort(menu);
-	std::vector<int> mem{ 0 };
-	std::vector<int> sum{ 0 };
-	long long pow = 2;
+  std::ranges::sort(menu);
+  std::vector<int> mem{0};
+  std::vector<int> sum{0};
+  long long pow = 2;
 
-	for (int i = 1; i < n; ++i) {
-		value %= MOD;
-		value += sum[i - 1];
-		value %= MOD;
-		mem.push_back(value);
-		value += sum[i - 1];
-		value %= MOD;
-		sum.push_back(value); 
-		pow <<= 1;
-		pow %= MOD;
-	} 
-	std::cout << sum[n-1]; 
+  for (int i = 1; i < n; ++i) {
+    value %= MOD;
+    value += sum[i - 1];
+    value %= MOD;
+    mem.push_back(value);
+    value += sum[i - 1];
+    value %= MOD;
+    sum.push_back(value);
+    pow <<= 1;
+    pow %= MOD;
+  }
+  std::cout << sum[n - 1];
 }
-

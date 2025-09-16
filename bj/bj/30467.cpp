@@ -17,126 +17,119 @@ n개의 등불을 1초에 1개씩 순서대로 날리며,
 
 시간복잡도: n * ( log(n) )^2
 */
-#include<iostream>
-#include<algorithm>
-#include<vector>
-#include<limits>
+#include <algorithm>
+#include <iostream>
+#include <limits>
+#include <vector>
 
 class mergeSortTree {
-public:
-	mergeSortTree(std::vector<int>& arr)
-		: sz{ arr.size() }, node(arr.size() * 4)
-	{
-		init(0, sz, 0, arr);
-	}
+ public:
+  mergeSortTree(std::vector<int>& arr) : sz{arr.size()}, node(arr.size() * 4) {
+    init(0, sz, 0, arr);
+  }
 
-	int queryLesser(int s, int e, int val){
-		return queryLesser_internal(s, e, val, 0, 0, sz);
-	}
-	int queryGreater(int s, int e, int val) {
-		return queryGreater_internal(s, e, val, 0, 0, sz); 
-	}
+  int queryLesser(int s, int e, int val) {
+    return queryLesser_internal(s, e, val, 0, 0, sz);
+  }
+  int queryGreater(int s, int e, int val) {
+    return queryGreater_internal(s, e, val, 0, 0, sz);
+  }
 
-private:
-	std::vector<std::vector<int>> node;
-	const size_t sz; 
+ private:
+  std::vector<std::vector<int>> node;
+  const size_t sz;
 
-	void init(int s, int e, int index, std::vector<int>& arr) {
-		if (e == s + 1) {
-			// base case
-			node[index].push_back(arr[s]);
-		}
-		else {
-			int mid = s + (e - s) / 2; // == (s+e)/2
-			int leftIndex = index * 2 + 1;
-			int rightIndex = index * 2 + 2;
-			init(s, mid, leftIndex, arr); // left subnode
-			init(mid, e, rightIndex, arr); // right subnode
-			// merge
-			node[index].resize(node[leftIndex].size() + node[rightIndex].size());
-			std::ranges::merge(node[leftIndex], node[rightIndex], node[index].begin());
-		}
-	}
-	
-	int queryLesser_internal(int s, int e, int val, int index, int l, int r){
-		if (r <= s || e <= l) {
-			// query in empty array
-			return default_value(); 
-		}
-		if (s <= l && r <= e) {
-			// current node is in the query range
-			return countLesser(val, index);
-		}
-		int mid = l + (r - l) / 2;
-		int result = 0;
-		result += queryLesser_internal(s, e, val, index * 2 + 1, l, mid);
-		result += queryLesser_internal(s, e, val, index * 2 + 2, mid, r);
-		return result;
-	}
-	int queryGreater_internal(int s, int e, int val, int index, int l, int r) {
-		if (r <= s || e <= l) {
-			// query in empty array
-			return default_value(); 
-		}
-		if (s <= l && r <= e) {
-			// current node is in the query range
-			return countGreater(val, index);
-		}
-		int mid = l + (r - l) / 2;
-		int result = 0;
-		result += queryGreater_internal(s, e, val, index * 2 + 1, l, mid);
-		result += queryGreater_internal(s, e, val, index * 2 + 2, mid, r);
-		return result;
+  void init(int s, int e, int index, std::vector<int>& arr) {
+    if (e == s + 1) {
+      // base case
+      node[index].push_back(arr[s]);
+    } else {
+      int mid = s + (e - s) / 2;  // == (s+e)/2
+      int leftIndex = index * 2 + 1;
+      int rightIndex = index * 2 + 2;
+      init(s, mid, leftIndex, arr);   // left subnode
+      init(mid, e, rightIndex, arr);  // right subnode
+      // merge
+      node[index].resize(node[leftIndex].size() + node[rightIndex].size());
+      std::ranges::merge(node[leftIndex], node[rightIndex],
+                         node[index].begin());
+    }
+  }
 
-	}
-	int default_value() {
-		return 0;
-	}
-	int countLesser(int val, int index) {
-		auto& arr = node[index];
-		auto iter = std::ranges::lower_bound(arr, val);
-		return std::distance(arr.begin(), iter);
-	}
-	int countGreater(int val, int index) {
-		auto& arr = node[index];
-		auto iter = std::ranges::upper_bound(arr, val);
-		return std::distance(iter, arr.end());
-	}
+  int queryLesser_internal(int s, int e, int val, int index, int l, int r) {
+    if (r <= s || e <= l) {
+      // query in empty array
+      return default_value();
+    }
+    if (s <= l && r <= e) {
+      // current node is in the query range
+      return countLesser(val, index);
+    }
+    int mid = l + (r - l) / 2;
+    int result = 0;
+    result += queryLesser_internal(s, e, val, index * 2 + 1, l, mid);
+    result += queryLesser_internal(s, e, val, index * 2 + 2, mid, r);
+    return result;
+  }
+  int queryGreater_internal(int s, int e, int val, int index, int l, int r) {
+    if (r <= s || e <= l) {
+      // query in empty array
+      return default_value();
+    }
+    if (s <= l && r <= e) {
+      // current node is in the query range
+      return countGreater(val, index);
+    }
+    int mid = l + (r - l) / 2;
+    int result = 0;
+    result += queryGreater_internal(s, e, val, index * 2 + 1, l, mid);
+    result += queryGreater_internal(s, e, val, index * 2 + 2, mid, r);
+    return result;
+  }
+  int default_value() { return 0; }
+  int countLesser(int val, int index) {
+    auto& arr = node[index];
+    auto iter = std::ranges::lower_bound(arr, val);
+    return std::distance(arr.begin(), iter);
+  }
+  int countGreater(int val, int index) {
+    auto& arr = node[index];
+    auto iter = std::ranges::upper_bound(arr, val);
+    return std::distance(iter, arr.end());
+  }
 };
 
 int main() {
+  std::vector<int> speed;
+  int n;
+  int s;
+  std::cin >> n >> s;
+  for (int i = 0; i < n; ++i) {
+    int temp;
+    std::cin >> temp;
+    speed.push_back(temp);
+  }
 
-	std::vector<int> speed;
-	int n;
-	int s;
-	std::cin >> n >> s;
-	for (int i = 0; i < n; ++i) {
-		int temp;
-		std::cin >> temp;
-		speed.push_back(temp);
-	}
+  mergeSortTree mstree{speed};
 
-	mergeSortTree mstree{ speed };
+  int l = 0;
+  int r = 1;
+  long long count = 0;
+  long long result = std::numeric_limits<long long>::min();
+  while (r < s) {
+    count += mstree.queryLesser(l, r, speed[r]);
+    ++r;
+  }
+  result = std::max(result, count);
+  while (r < n) {
+    count -= mstree.queryGreater(l + 1, r, speed[l]);
+    ++l;
+    count += mstree.queryLesser(l, r, speed[r]);
+    ++r;
+    result = std::max(result, count);
+  }
 
-	int l = 0;
-	int r = 1;
-	long long count = 0;
-	long long result = std::numeric_limits<long long>::min();
-	while (r < s) {
-		count += mstree.queryLesser(l, r, speed[r]);
-		++r;
-	}
-	result = std::max(result, count);
-	while (r < n) {
-		count -= mstree.queryGreater(l + 1, r, speed[l]);
-		++l;
-		count += mstree.queryLesser(l, r, speed[r]);
-		++r;
-		result = std::max(result, count); 
-	}
+  std::cout << result;
 
-	std::cout << result;
-
-	return 0;
-
+  return 0;
 }

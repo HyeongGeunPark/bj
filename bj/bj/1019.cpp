@@ -25,7 +25,8 @@ N = 5243
 (5) * 200번, (01) 100번씩, (00, 01, ..., 99) 2번씩(각각 20 * 2번) -> 5000 - 5199
 
 4. 1000의 자리
-(), (01234) 1000번씩, (000, 001, 002, ..., 999) 5번씩(각각 300 * 5번) -> 0000 - 4999
+(), (01234) 1000번씩, (000, 001, 002, ..., 999) 5번씩(각각 300 * 5번) -> 0000 -
+4999
 
 5. prefix zero 개수
 4자리수이므로,
@@ -44,51 +45,50 @@ N = 5243
 
 */
 
-#include<iostream>
-#include<array>
+#include <array>
+#include <iostream>
 
 int main() {
-	long long n;
-	std::cin >> n;
+  long long n;
+  std::cin >> n;
 
-	std::array<long long, 10> result = { 0 };
+  std::array<long long, 10> result = {0};
 
-	std::array<int, 20> digits = { 0 };
+  std::array<int, 20> digits = {0};
 
-	int m = 0;
-	while (n) {
-		digits[m] = n % 10;
-		n /= 10;
-		++m;
-	}
+  int m = 0;
+  while (n) {
+    digits[m] = n % 10;
+    n /= 10;
+    ++m;
+  }
 
-	int exp = 1;
-	for (int i = 0;i < m;++i) {
-		++result[digits[i]];
+  int exp = 1;
+  for (int i = 0; i < m; ++i) {
+    ++result[digits[i]];
 
-		int& num = digits[i];
-		for (int j = i + 1;j < m;++j) {
-			result[digits[j]] += exp * num;
-		}
+    int& num = digits[i];
+    for (int j = i + 1; j < m; ++j) {
+      result[digits[j]] += exp * num;
+    }
 
-		for (int j = 0; j < num; ++j) {
-			result[j] += exp;
-		}
+    for (int j = 0; j < num; ++j) {
+      result[j] += exp;
+    }
 
-		for (int j = 0;j < 10;++j) {
-			result[j] += (exp / 10) * i * num;
-		}
+    for (int j = 0; j < 10; ++j) {
+      result[j] += (exp / 10) * i * num;
+    }
 
-		result[0] -= exp;
+    result[0] -= exp;
 
-		exp *= 10;
-	}
+    exp *= 10;
+  }
 
-	for(auto i : result){
-		std::cout << i << ' ';
-	}
-	std::cout << '\n';
+  for (auto i : result) {
+    std::cout << i << ' ';
+  }
+  std::cout << '\n';
 
-	return 0;
-
+  return 0;
 }

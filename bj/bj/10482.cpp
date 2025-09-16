@@ -20,44 +20,42 @@ N: 테스트 케이스의 수 (1<=n<=100)
 ...
 */
 
-#include<iostream>
-#include<vector>
-
+#include <iostream>
+#include <vector>
 
 int main(void) {
-	int n;
-	std::cin >> n;
+  int n;
+  std::cin >> n;
 
-	std::vector<bool> is_prime(32001, true);
+  std::vector<bool> is_prime(32001, true);
 
-	is_prime[0] = false;
-	is_prime[1] = false;
-	for (int i = 2; i < 200; ++i) {
-		if (is_prime[i] == true) {
-			for (int j = i * 2; j < 32001; j += i) {
-				is_prime[j] = false;
-			}
-		}
-	}
+  is_prime[0] = false;
+  is_prime[1] = false;
+  for (int i = 2; i < 200; ++i) {
+    if (is_prime[i] == true) {
+      for (int j = i * 2; j < 32001; j += i) {
+        is_prime[j] = false;
+      }
+    }
+  }
 
- 
-	for (int i = 0; i < n; ++i) {
-		int x;
-		std::vector<std::pair<int, int>> results;
-		std::cin >> x;
+  for (int i = 0; i < n; ++i) {
+    int x;
+    std::vector<std::pair<int, int>> results;
+    std::cin >> x;
 
-		for (int j = 2; j <= x - j; ++j) {
-			if (is_prime[j] && is_prime[x - j]) {
-				results.push_back(std::move(std::pair{ j, x - j }));
-			}
-		} 
+    for (int j = 2; j <= x - j; ++j) {
+      if (is_prime[j] && is_prime[x - j]) {
+        results.push_back(std::move(std::pair{j, x - j}));
+      }
+    }
 
-		std::cout << x << " has " << results.size() << " representation(s)\n";
-		for (auto [a, b] : results) {
-			std::cout << a << '+' << b << '\n';
-		} 
-		std::cout << '\n';
-	}
+    std::cout << x << " has " << results.size() << " representation(s)\n";
+    for (auto [a, b] : results) {
+      std::cout << a << '+' << b << '\n';
+    }
+    std::cout << '\n';
+  }
 
-	return 0;
+  return 0;
 }

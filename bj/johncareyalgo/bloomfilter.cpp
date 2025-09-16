@@ -17,76 +17,65 @@
 
 */
 
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
 
-class bloom_filter
-{
-	std::vector<bool> data;
-	int nBits;
+class bloom_filter {
+  std::vector<bool> data;
+  int nBits;
 
-	int hash(int num, int key) const
-	{
-		switch (num)
-		{
-		case 0: return key % nBits;
-		case 1: return (key / 7) % nBits;
-		case 2: return (key / 11) % nBits;
-		}
-		return 0;
-	}
+  int hash(int num, int key) const {
+    switch (num) {
+      case 0:
+        return key % nBits;
+      case 1:
+        return (key / 7) % nBits;
+      case 2:
+        return (key / 11) % nBits;
+    }
+    return 0;
+  }
 
-public:
-	bloom_filter(int n) : nBits(n)
-	{
-		data = std::vector<bool>(nBits, false);
-	}
+ public:
+  bloom_filter(int n) : nBits(n) { data = std::vector<bool>(nBits, false); }
 
-	bool lookup(int key) const
-	{
-		bool result = true;
-		for (int i = 0; i < 3; ++i) {
-			result &= data[hash(i, key)];
-		}
+  bool lookup(int key) const {
+    bool result = true;
+    for (int i = 0; i < 3; ++i) {
+      result &= data[hash(i, key)];
+    }
 
-		if (result) {
-			std::cout << key << ": 있을 수 있음\n";
-		}
-		else {
-			std::cout << key << ": 절대 없음\n";
-		}
-		return result;
-	}
+    if (result) {
+      std::cout << key << ": 있을 수 있음\n";
+    } else {
+      std::cout << key << ": 절대 없음\n";
+    }
+    return result;
+  }
 
-	void insert(int key)
-	{
-		for (int i = 0; i < 3; ++i) {
-			data[hash(i, key)] = true;
-		}
-		std::cout << key << "를 삽입\n";
+  void insert(int key) {
+    for (int i = 0; i < 3; ++i) {
+      data[hash(i, key)] = true;
+    }
+    std::cout << key << "를 삽입\n";
 
-		test_print(); 
-	}
+    test_print();
+  }
 
-	void test_print() {
-		for (auto a : data)
-			std::cout << a << ' ';
-		std::cout << std::endl; 
-	}
-
+  void test_print() {
+    for (auto a : data) std::cout << a << ' ';
+    std::cout << std::endl;
+  }
 };
 
-int main()
-{
-	bloom_filter bf(7);
-	bf.insert(100);
-	bf.insert(54);
-	bf.insert(82);
+int main() {
+  bloom_filter bf(7);
+  bf.insert(100);
+  bf.insert(54);
+  bf.insert(82);
 
-	bf.lookup(5);
-	bf.lookup(50);
-	bf.lookup(20);
-	bf.lookup(54);
-
+  bf.lookup(5);
+  bf.lookup(50);
+  bf.lookup(20);
+  bf.lookup(54);
 }
-

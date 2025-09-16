@@ -29,54 +29,53 @@ s(n) = 1 + 2 + ... + 2^(n-1) ( for n >= 1 )이라 하면,
 -( a[0]*s(n-1) + a[1]*s(n-2) + ... + a[n-2]*s(0) + a[n-1]*s(0) )
 
 s(n)만 빠르게 계산하고 나머지를 계산하면 된다.
-*/ 
+*/
 
-#include<iostream>
-#include<vector>
-#include<algorithm>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 
-constexpr int MOD = 1'000'000'007; 
+constexpr int MOD = 1'000'000'007;
 
 int main(void) {
-	// does fast io matters?
-	std::cin.tie(0);
-	std::ios_base::sync_with_stdio(0);
-	int n;
-	std::cin >> n;
-	std::vector<int> menu;
-	// input
-	menu.reserve(n);
-	for (int i = 0; i < n; ++i) {
-		int temp;
-		std::cin >> temp;
-		menu.push_back(temp); 
-	}
+  // does fast io matters?
+  std::cin.tie(0);
+  std::ios_base::sync_with_stdio(0);
+  int n;
+  std::cin >> n;
+  std::vector<int> menu;
+  // input
+  menu.reserve(n);
+  for (int i = 0; i < n; ++i) {
+    int temp;
+    std::cin >> temp;
+    menu.push_back(temp);
+  }
 
-	// sort
-	std::ranges::sort(menu);
+  // sort
+  std::ranges::sort(menu);
 
-	// sum of power series(2)
-	std::vector<long long> sps;
-	sps.reserve(n);
-	{
-		long long sum = 0;
-		long long power = 1;
-		for (int i = 0;i < n;++i) {
-			sps.push_back(sum);
-			sum += power;
-			sum %= MOD;
-			power <<= 1;
-			power %= MOD;
-		}
-	}
+  // sum of power series(2)
+  std::vector<long long> sps;
+  sps.reserve(n);
+  {
+    long long sum = 0;
+    long long power = 1;
+    for (int i = 0; i < n; ++i) {
+      sps.push_back(sum);
+      sum += power;
+      sum %= MOD;
+      power <<= 1;
+      power %= MOD;
+    }
+  }
 
-	// final calculation
-	long long result = 0;
-	for (int i = 0; i < n; ++i) {
-		result += sps[i] * (menu[i] - menu[n - 1 - i]);
-		result %= MOD;
-	}
+  // final calculation
+  long long result = 0;
+  for (int i = 0; i < n; ++i) {
+    result += sps[i] * (menu[i] - menu[n - 1 - i]);
+    result %= MOD;
+  }
 
-	std::cout << result;
+  std::cout << result;
 }
-

@@ -11,7 +11,7 @@ N < 500,000
 접근법: 정렬? 그리디?
 1. 입력을 정렬한다.
 2. 정렬된 순서대로 1, 2,...의 수를 배정한다고 치고 입력과 배정된 수의 차이를
-	전부 더한다.
+  전부 더한다.
 
 주의
 1. c++의 경우 입력 시간에 주의한다. (tie, sync_with_stdio)
@@ -21,28 +21,27 @@ N < 500,000
 
 */
 
-#include<iostream>
-#include<vector>
-#include<algorithm>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 
 int main() {
-	std::cin.tie(0);
-	std::ios_base::sync_with_stdio(0);
-	int n;
-	std::cin >> n;
+  std::cin.tie(0);
+  std::ios_base::sync_with_stdio(0);
+  int n;
+  std::cin >> n;
 
-	std::vector<int> rank(n);
-	for (int i = 0;i < n;++i) {
-		std::cin >> rank[i];
-	}
+  std::vector<int> rank(n);
+  for (int i = 0; i < n; ++i) {
+    std::cin >> rank[i];
+  }
 
-	std::ranges::sort(rank);
+  std::ranges::sort(rank);
 
-	long long result = 0;
-	for (int i = 0;i < n;++i) {
-		result += std::abs(i + 1 - rank[i]);
-	}
+  long long result = 0;
+  for (int i = 0; i < n; ++i) {
+    result += std::abs(i + 1 - rank[i]);
+  }
 
-	std::cout << result << std::endl;
-
+  std::cout << result << std::endl;
 }

@@ -22,77 +22,73 @@ YES 혹은 NO
 
 1. 일단 입력을 다 받는다.
 2. 0번 구간에서 M-1번 구간까지 길이 M인 구간에 대해 A_i들의 값과 개수를 센다.
-	(map 등 사용)
+  (map 등 사용)
 3. 이후에 가장 앞의 구간을 1개 제거하고 뒤에 1개 구간을 추가하면서 조건을
-	만족하는지 평가한다.
+  만족하는지 평가한다.
 4. 언제든지 조건을 만족하면 종료한다.
 5. 그렇지 못하면, 배너를 걸지 못하는 것이다.
 */
 
 #include <iostream>
 #include <vector>
-//#include <unordered_map>
+// #include <unordered_map>
 #include <cmath>
 
-
 int main(void) {
-	//c++ fast io
-	std::cin.tie(0);
-	std::ios_base::sync_with_stdio(false);
+  // c++ fast io
+  std::cin.tie(0);
+  std::ios_base::sync_with_stdio(false);
 
-	// input and process
-	int n, m;
-	std::cin >> n >> m;
- 
-	std::vector<int> a(n);
-	for (int i = 0; i < n; ++i) {
-		std::cin >> a[i];
-	}
+  // input and process
+  int n, m;
+  std::cin >> n >> m;
 
-	// process
-	//std::unordered_map<int, int> counts;
-	std::vector<int> counts(1000001, 0);
-	for (int i = 0; i < m; ++i) {
-		/*
-		if (counts.count(a[i]) == 0) {
-			counts.emplace(a[i], 1);
-		}
-		else {
-			counts[a[i]] += 1;
-		} 
-		*/
-		counts[a[i]] += 1;
+  std::vector<int> a(n);
+  for (int i = 0; i < n; ++i) {
+    std::cin >> a[i];
+  }
 
-		// early return
-		if (counts[a[i]] >= std::ceil(9 * m / 10.0l))
-			goto print_yes;
-	}
+  // process
+  // std::unordered_map<int, int> counts;
+  std::vector<int> counts(1000001, 0);
+  for (int i = 0; i < m; ++i) {
+    /*
+    if (counts.count(a[i]) == 0) {
+      counts.emplace(a[i], 1);
+    }
+    else {
+      counts[a[i]] += 1;
+    }
+    */
+    counts[a[i]] += 1;
 
-	for (int i = m; i < n; ++i) {
-		counts[a[i - m]] -= 1;
-		
-		/*
-		if (counts.count(a[i]) == 0) {
-			counts.emplace(a[i], 1);
-		}
-		else {
-			counts[a[i]] += 1;
-		} 
-		*/
+    // early return
+    if (counts[a[i]] >= std::ceil(9 * m / 10.0l)) goto print_yes;
+  }
 
-		counts[a[i]] += 1;
+  for (int i = m; i < n; ++i) {
+    counts[a[i - m]] -= 1;
 
-		// early return
-		if (counts[a[i]] >= std::ceil(9 * m / 10.0l))
-			goto print_yes;
-	}
+    /*
+    if (counts.count(a[i]) == 0) {
+      counts.emplace(a[i], 1);
+    }
+    else {
+      counts[a[i]] += 1;
+    }
+    */
 
+    counts[a[i]] += 1;
 
-	// result print
-	std::cout << "NO"; 
-	return 0;
+    // early return
+    if (counts[a[i]] >= std::ceil(9 * m / 10.0l)) goto print_yes;
+  }
 
-print_yes: 
-	std::cout << "YES";
-	return 0;
+  // result print
+  std::cout << "NO";
+  return 0;
+
+print_yes:
+  std::cout << "YES";
+  return 0;
 }

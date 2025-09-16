@@ -3,9 +3,10 @@
 bj2252 줄 세우기
 
 접근법(위상 정렬- 스택, DFS)
-1. 키 비교 데이터를 입력받는다. (각 학생별로 자신보다 키가 작은 학생이 누구인지 상수 시간에 알 수 있도록)
+1. 키 비교 데이터를 입력받는다. (각 학생별로 자신보다 키가 작은 학생이 누구인지
+상수 시간에 알 수 있도록)
 2. 학생들의 번호를 하나하나 출력한다.
-	단 출력하기 전에 자신보다 키가 작은 학생을 먼저 출력한다.(재귀적 구현)
+  단 출력하기 전에 자신보다 키가 작은 학생을 먼저 출력한다.(재귀적 구현)
 
 다른 접근법(위상 정렬- 큐, Kahn 알고리즘)
 1. 키 비교 데이터를 인접 그래프로 저장한다.
@@ -19,40 +20,39 @@ bj2252 줄 세우기
 
 */
 
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
 
 std::vector<std::vector<int>> comparision;
 std::vector<bool> printed;
 
 void print(int n) {
-	if (printed[n]) return;
-	while (comparision[n].size()) {
-		int s = comparision[n].back();
-		print(s);
-		comparision[n].pop_back(); 
-	}
-	std::cout << n << ' ';
-	printed[n] = true; 
+  if (printed[n]) return;
+  while (comparision[n].size()) {
+    int s = comparision[n].back();
+    print(s);
+    comparision[n].pop_back();
+  }
+  std::cout << n << ' ';
+  printed[n] = true;
 }
 
-
 int main() {
-	std::cin.tie(0);
-	std::ios_base::sync_with_stdio(0);
+  std::cin.tie(0);
+  std::ios_base::sync_with_stdio(0);
 
-	int n, m;
-	std::cin >> n >> m;
-	comparision.resize(n + 1);
-	printed.resize(n + 1, false);
+  int n, m;
+  std::cin >> n >> m;
+  comparision.resize(n + 1);
+  printed.resize(n + 1, false);
 
-	for (int i = 0; i < m; ++i) {
-		int smaller, taller;
-		std::cin >> smaller >> taller;
-		comparision[taller].push_back(smaller);
-	}
+  for (int i = 0; i < m; ++i) {
+    int smaller, taller;
+    std::cin >> smaller >> taller;
+    comparision[taller].push_back(smaller);
+  }
 
-	for (int i = 1; i <= n; ++i) {
-		print(i);
-	}
+  for (int i = 1; i <= n; ++i) {
+    print(i);
+  }
 }
