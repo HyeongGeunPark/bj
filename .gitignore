@@ -17,3 +17,5 @@ bin
 *.ilk
 *.obj
 *.pdb
+.vscode
+.vs
